@@ -1,0 +1,14 @@
+  
+# /node_modules/* in the project root is ignored by default
+# build artefacts
+dist/*
+coverage/*
+
+# -- MAY NOT NEED! data definition files --
+# **/*.d.ts
+
+# -- MAY NOT NEED! 3rd party libs --
+# /src/public/
+
+# -- MAY NOT NEED! custom definition files --
+# /src/types/

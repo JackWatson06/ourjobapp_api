@@ -1,0 +1,37 @@
+{
+  "name": "unijobapp_api",
+  "version": "1.0.0",
+  "description": "This project contains the backend data processing, storing mechanisms, and logic for the UniJobApplication.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx nodemon src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/universaljobapplication/unijobapp_api.git"
+  },
+  "author": "Jack Watson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/universaljobapplication/unijobapp_api/issues"
+  },
+  "homepage": "https://github.com/universaljobapplication/unijobapp_api#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/jest": "^27.0.2",
+    "@types/node": "^16.10.1",
+    "@typescript-eslint/eslint-plugin": "^4.31.2",
+    "@typescript-eslint/parser": "^4.31.2",
+    "eslint": "^7.32.0",
+    "nodemon": "^2.0.13",
+    "ts-jest": "^27.0.5",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.4.3"
+  }
+}

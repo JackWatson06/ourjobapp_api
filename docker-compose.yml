@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+
+  nginx:
+    image: nginx
+    ports: 
+      - 8080:80
+    volumes:
+      - ./default-nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on: 
+      - node
+
+  node:
+    image: node:14.17.6-alpine
+    working_dir: /srv/www/unijobapp_api
+    expose: 
+      - 80
+    volumes:
+      - .:/srv/www/unijobapp_api
+    command: [sh, -c, "npm install && npm run dev"]
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    volumes: 
+      - ./.db:/data/db
+    expose: 
+      - 27017
