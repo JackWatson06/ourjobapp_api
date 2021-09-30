@@ -18,3 +18,19 @@ We are using DDD because I find that it allows you to create more scalable appli
 
     docker-compose up
 This command will create all of the reqiured containers, and also start watching the codebase for any changes that occur. You should be able to view the output of the node container in the terminal after running.
+
+## Directory Structure
+
+    - public : Directory which serves up static files that will not change. We simply copy contents in this file to the dist on build.
+    - seeders : Scripts which that add data into the mongoDB databse. Call using `node ./seeders/seed.ts`
+    - src
+        - bootstrap : Build the application
+        - core : Any core services that we have. (a.k.a) MongoDB, GoogleAPI, AutoMappers
+        - modules : Different bounded contexts for our domain (dictated by Use Cases)
+            - [Module Name]
+                - controllers : HTTP Endpoints which control the flow of data into other areas, and return a JSON view-model
+                - dto : A data transfer object. The view model that whatever client is interacting with our database should see.
+                - entities : The domain entities that are in this context. Can have more than one aggregate-root. Sub-Directories will be on a per-module basis.
+                - mappers : Infastructure layer mappers for the entities.
+                (router.ts) : The router for this context which handles where the data should go in the service.
+

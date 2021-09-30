@@ -1,5 +1,5 @@
-import { getPlaceByName } from "../../core/infastructure/GoogleApiAdaptor";
-import Place from "./Place";
+import { getPlaceByName } from "../../../core/infastructure/GoogleApiAdaptor";
+import Place from "../entities/Place";
 
 export async function read(name: string): Promise<Array<Place>>
 {   

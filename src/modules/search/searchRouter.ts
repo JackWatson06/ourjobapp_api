@@ -6,7 +6,7 @@
  */
 
 import express from "express";
-import { index } from "./PlaceController";
+import { index } from "./controllers/PlaceController";
 
 let searchRouter: express.Router = express.Router();
 
