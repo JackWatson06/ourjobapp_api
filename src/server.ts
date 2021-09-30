@@ -1,5 +1,5 @@
 import errorHandler from "errorhandler";
-import app from "./app";
+import app from "./bootstrap/app";
 
 
 /**

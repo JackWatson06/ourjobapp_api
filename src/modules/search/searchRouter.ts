@@ -10,6 +10,6 @@ import { index } from "./PlaceController";
 
 let searchRouter: express.Router = express.Router();
 
-searchRouter.get("places", index);
+searchRouter.get("/places", index);
 
 export default searchRouter;
