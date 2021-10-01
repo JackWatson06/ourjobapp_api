@@ -2,6 +2,8 @@ version: "3.8"
 
 services:
 
+  # Reverse proxy so that we can choose which subdomain we will want to use. Also allows us to do load balancing later.
+  # Expost to PUBLIC!
   nginx:
     image: nginx
     ports: 
@@ -11,17 +13,36 @@ services:
     depends_on: 
       - node
 
+  # Mongo Express container. Allows us to connect into, and see into the database. 
+  # Expost to PUBLIC!
+  mongo-express:
+    image: mongo-express
+    ports:
+      - 8081:8081
+    environment: 
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_EXPRESS_USERNAME}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_EXPRESS_PASSWORD}
+    depends_on:
+      - mongo
+
+  # Node enviornment for running our application. Private connection. Only NGINX can connect.
   node:
     image: node:14.17.6-alpine
+    container_name: unijobapp_api_node
     working_dir: /srv/www/unijobapp_api
     expose: 
       - 80
     volumes:
       - .:/srv/www/unijobapp_api
     command: [sh, -c, "npm install && npm run dev"]
+    environment: 
+      DB_HOST: mongo
     depends_on:
       - mongo
 
+  # Monog Database. Database information stored locally on .db folder. Private connection only Mongo Express and Node
+  # can connect to the database.
   mongo:
     image: mongo
     volumes: 
