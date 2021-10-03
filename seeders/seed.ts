@@ -10,15 +10,15 @@
  */
 
 
-import seedCareers from "./seed-careers";
-import seedCharities from "./seed-charities";
-import seedJobs from "./seed-jobs";
+// import seedCareers from "./seed-careers";
+// import seedCharities from "./seed-charities";
+// import seedJobs from "./seed-jobs";
 
 
-// We need to create an instance of mongoDB as well here.
+// // We need to create an instance of mongoDB as well here.
 
-seedCareers();
-seedCharities();
-seedJobs();
+// seedCareers();
+// seedCharities();
+// seedJobs();
 
 

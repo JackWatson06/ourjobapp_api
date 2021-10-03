@@ -19,9 +19,13 @@ We are using DDD because I find that it allows you to create more scalable appli
     docker-compose up
 This command will create all of the reqiured containers, and also start watching the codebase for any changes that occur. You should be able to view the output of the node container in the terminal after running.
 
+    npm run script -- ./script_name
+This command allows you to run a script on the actual docker container. You need to do this in order to get access to the database since that is not exposed on a port to the client only wihtin the network created by docker. Node you need to have the ./ for the script-runner to know what file to pull down.
+
 ## Directory Structure
 
     - public : Directory which serves up static files that will not change. We simply copy contents in this file to the dist on build.
+    - scripts : Any general scripts which are relevent to the project. For instance turning the charities excel sheet => charities json data. Only useful for development. Any packages installed for this process should be done with the --save-dev
     - seeders : Scripts which that add data into the mongoDB databse. Call using `node ./seeders/seed.ts`
     - src
         - bootstrap : Build the application

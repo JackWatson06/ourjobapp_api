@@ -1,7 +1,6 @@
 import errorHandler from "errorhandler";
 import app from "./bootstrap/app";
 
-
 /**
  * Error Handler. Provides full stack
  */
