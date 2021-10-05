@@ -4,6 +4,7 @@
  * Purpose: The purpose of this script is to turn the jobs xslx file that we have into a json file.
  */
 import * as MongoDb from "../../src/core/infastructure/MongoDb";
+import { titleCase } from "title-case";
 import * as XLSX from "xlsx";
 import fs from "fs";
 
@@ -14,9 +15,9 @@ type JobsRow = {
 };
 
 // Where is the file that we are looking for located.
-const INPUT            = __dirname + "/raw-data/job-list.xlsx";
-const OUTPUT_JOB       = __dirname + "/raw-data/jobs.json";
-const OUTPUT_JOB_GROUP = __dirname + "/raw-data/job-groups.json";
+const INPUT            = __dirname + "/../raw-data/job-list.xlsx";
+const OUTPUT_JOB       = __dirname + "/../raw-data/jobs.json";
+const OUTPUT_JOB_GROUP = __dirname + "/../raw-data/job-groups.json";
 
 
 export default async function exec()
@@ -36,12 +37,12 @@ export default async function exec()
     for(const row of worksheetJSON)
     {
         const job: MongoDb.Job = {
-            name: row["Employee List"],
+            name: titleCase( row["Employee List"].toLowerCase() ),
             created_at: MongoDb.now()
         }
 
         const jobGroup: MongoDb.JobGroup = {
-            name: row["Employer List"],
+            name: titleCase( row["Employer List"].toLowerCase() ),
             created_at: MongoDb.now()
         }
 

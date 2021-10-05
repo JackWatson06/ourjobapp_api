@@ -4,6 +4,7 @@
  * Purpose: The purpose of this script is to turn the majors xcl file that we have into a json file.
  */
 import * as MongoDb from "../../src/core/infastructure/MongoDb";
+import { titleCase } from "title-case";
 import * as XLSX from "xlsx";
 import fs from "fs";
 
@@ -13,8 +14,8 @@ type MajorRow = {
 };
 
 // Where is the file that we are looking for located.
-const INPUT  = __dirname + "../raw-data/college-majors.xlsx";
-const OUTPUT = __dirname + "../raw-data/majors.json";
+const INPUT  = __dirname + "/../raw-data/college-majors.xlsx";
+const OUTPUT = __dirname + "/../raw-data/majors.json";
 
 export default async function exec()
 {
@@ -30,7 +31,7 @@ export default async function exec()
     for(const row of worksheetJSON)
     {
         const major: MongoDb.Major = {
-            name: row.Column1,
+            name: titleCase( row.Column1.toLowerCase() ),
             created_at: MongoDb.now()
         }
 
