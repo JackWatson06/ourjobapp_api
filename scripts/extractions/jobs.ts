@@ -3,7 +3,8 @@
  * Created Date: 10/3/2021
  * Purpose: The purpose of this script is to turn the jobs xslx file that we have into a json file.
  */
-import * as MongoDb from "../../src/core/infastructure/MongoDb";
+import * as MongoDb from "infa/MongoDb";
+import * as Collections from "Collections";
 import { titleCase } from "title-case";
 import * as XLSX from "xlsx";
 import fs from "fs";
@@ -31,18 +32,22 @@ export default async function exec()
     const worksheetJSON: JobsRow[] = XLSX.utils.sheet_to_json(page);
 
     // The database records to be stored
-    const extractedJobsJSON: MongoDb.Job[]          = [];
-    const extractedJobGroupJSON: MongoDb.JobGroup[] = [];
+    const extractedJobsJSON: Collections.Job[]          = [];
+    const extractedJobGroupJSON: Collections.JobGroup[] = [];
 
     for(const row of worksheetJSON)
     {
-        const job: MongoDb.Job = {
-            name: titleCase( row["Employee List"].toLowerCase() ),
+        const jobString = titleCase( row["Employee List"].toLowerCase() );
+        const jobGroupString = titleCase( row["Employer List"].toLowerCase() );
+
+        const job: Collections.Job = {
+            name: jobString,
+            job_group: jobGroupString,
             created_at: MongoDb.now()
         }
 
-        const jobGroup: MongoDb.JobGroup = {
-            name: titleCase( row["Employer List"].toLowerCase() ),
+        const jobGroup: Collections.JobGroup = {
+            name: jobGroupString,
             created_at: MongoDb.now()
         }
 

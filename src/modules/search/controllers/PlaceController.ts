@@ -20,12 +20,4 @@ export async function index(req: express.Request, res: express.Response) : Promi
     read(name).then((data: Array<Place>) => {
         res.send(data);
     });
-    
-    // Map the places to their respective DTO
-    // for(const place in places)
-    // {
-    //     console.log(place);
-    // }
-    
-    // Return DTO converted into JSON.
 }

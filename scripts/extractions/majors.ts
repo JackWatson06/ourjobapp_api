@@ -3,7 +3,8 @@
  * Created Date: 9/30/2021
  * Purpose: The purpose of this script is to turn the majors xcl file that we have into a json file.
  */
-import * as MongoDb from "../../src/core/infastructure/MongoDb";
+import * as MongoDb from "infa/MongoDb";
+import * as Collections from "Collections";
 import { titleCase } from "title-case";
 import * as XLSX from "xlsx";
 import fs from "fs";
@@ -25,12 +26,12 @@ export default async function exec()
 
     // Excel worksheet
     const worksheetJSON: MajorRow[] = XLSX.utils.sheet_to_json(page);
-    const extractedJSON: MongoDb.Charity[] = [];
+    const extractedJSON: Collections.Charity[] = [];
 
     // Loop through the different rows we have and store them in the database.
     for(const row of worksheetJSON)
     {
-        const major: MongoDb.Major = {
+        const major: Collections.Major = {
             name: titleCase( row.Column1.toLowerCase() ),
             created_at: MongoDb.now()
         }

@@ -1,4 +1,4 @@
-import * as MongoDb from "../src/core/infastructure/MongoDb";
+import * as MongoDb from "infa/MongoDb";
 import load from "./services/load";
 
 export default async function exec()

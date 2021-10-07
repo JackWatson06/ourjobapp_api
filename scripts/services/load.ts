@@ -6,7 +6,7 @@
  * 
  */
 
-import * as MongoDb from "../../src/core/infastructure/MongoDb";
+import * as MongoDb from "../../src/core/infa/MongoDb";
 import fs from "fs";
 
 /**

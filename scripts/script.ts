@@ -1,5 +1,5 @@
 import bootstrap from "../src/bootstrap/dependencies";
-import * as mongoDb from "../src/core/infastructure/MongoDb";
+import * as mongoDb from "infa/MongoDb";
 
 /**
  * Create the environment in which we will be running all scripts under. Take the name of the script we want to execute

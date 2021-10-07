@@ -3,7 +3,8 @@
  * Created Date: 9/30/2021
  * Purpose: The purpose of this script is to turn the charities xcl file that we have into a json file.
  */
-import * as MongoDb from "../../src/core/infastructure/MongoDb";
+import * as MongoDb from "infa/MongoDb";
+import * as Collections from "Collections";
 import { titleCase } from "title-case";
 import * as XLSX from "xlsx";
 import fs from "fs";
@@ -26,7 +27,7 @@ export default async function exec()
     const workbook : XLSX.WorkBook = XLSX.readFile(INPUT);
 
     const charityDictionary: CharityDictionary = {};
-    const extractedJSON: MongoDb.Charity[]     = [];
+    const extractedJSON: Collections.Charity[]     = [];
 
     // let worksheetIndex = 0;
     // Charity data is stored in multiple sheets.
@@ -55,7 +56,7 @@ export default async function exec()
                  isNaN(+charityName) && 
                  charityDictionary[charityName] === undefined )
             {   
-                const charity: MongoDb.Charity    = {
+                const charity: Collections.Charity    = {
                     name: titleCase( charityName.toLowerCase() ),
                     created_at: MongoDb.now()
                 };

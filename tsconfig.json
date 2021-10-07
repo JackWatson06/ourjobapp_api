@@ -10,6 +10,7 @@
         "outDir": "dist",
         "baseUrl": ".",
         "paths": {
+            "infa/*" : [ "src/core/infa/*" ],
             "*": [
                 "node_modules/*",
                 "src/types/*"
@@ -17,6 +18,7 @@
         }
     },
     "include": [
-        "src/**/*"
+        "src/**/*",
+        "scripts/**/*"
     ]
 }
