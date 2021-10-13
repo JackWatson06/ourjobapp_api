@@ -1,3 +1,10 @@
+/**
+ * Original Author: Jack Watson
+ * Created Date: 10/7/2021
+ * Purpose: The purpose of this class is to search against the google api properties section. Then we will return a list of
+ * mapping properties. 
+ */
+
 import { getPlaceByName } from "../../../core/infa/GoogleApiAdaptor";
 import Place from "../entities/Place";
 

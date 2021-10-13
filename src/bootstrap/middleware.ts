@@ -7,9 +7,11 @@
  */
 
 import * as app from 'express-serve-static-core';
-
 import lusca from "lusca";
 import compression from "compression";
+import cors from "cors";
+// import express from "express";
+// import * as MongoDb from "infa/MongoDb";
 
 /**
  * Apply middleware to the passed in application.
@@ -20,6 +22,15 @@ export default function(app: app.Express) : void
     app.use(compression());
     app.use(lusca.xframe("SAMEORIGIN"));
     app.use(lusca.xssProtection(true));
+    app.use(cors());
+    // Middleware which turns off the database connection after the response has been 'finished'
+    // app.use(function( req: express.Request, res: express.Response, next: express.NextFunction) {
+    //     console.log("Step 9");
+    //     res.on("finish", function(){
+    //         MongoDb.close();
+    //     });
+    //     next();
+    // });
 }
 
 

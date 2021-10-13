@@ -30,6 +30,7 @@ export type JobGroup = {
 export type Charity = {
     _id?: ObjectId,
     name: string,
+    hash: string,
     created_at: number
 }
 

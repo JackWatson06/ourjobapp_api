@@ -1,3 +1,8 @@
+/**
+ * Original Author: Jack Watson
+ * Created Date: 9/25/2021
+ * Purpose: The purpose of this class is to hold the idea of a place that we just searched with some service in the backend.
+ */
 
 export default class Place
 {

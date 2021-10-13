@@ -12,9 +12,14 @@ import { connect } from "../core/infa/MongoDb";
  * Bootstrap the application
  */
 export default async function bootstrap()
-{
-    await connect().catch((err: Error) => {
-        console.error("Could not connect to the MongoDB Database!");
-        console.error(err);
-    });
+{   
+    try
+    {
+        await connect()
+    }
+    catch(err: any)
+    {
+        err = err as Error;
+        console.error(err.message);
+    }
 }

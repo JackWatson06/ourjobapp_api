@@ -19,6 +19,9 @@ We are using DDD because I find that it allows you to create more scalable appli
     docker-compose up
 This command will create all of the reqiured containers, and also start watching the codebase for any changes that occur. You should be able to view the output of the node container in the terminal after running.
 
+    npm run refresh-database
+This command will refresh the database to it's initial seed data. Us
+
     npm run script -- ./script_name
 This command allows you to run a script on the actual docker container. You need to do this in order to get access to the database since that is not exposed on a port to the client only wihtin the network created by docker. Node you need to have the ./ for the script-runner to know what file to pull down.
 

@@ -7,7 +7,7 @@
  * @TODO Add protection so that we don't aciddentaly run this on the production server and delete literally all of our data.
  */
 
-import * as MongoDb from "../src/core/infastructure/MongoDb";
+import * as MongoDb from "infa/MongoDb";
 
 export default async function exec()
 {

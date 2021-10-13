@@ -8,7 +8,6 @@ if (process.env.NODE_ENV === "development") {
     app.use(errorHandler());
 }
 
-
 /**
  * Start Express server.
  */

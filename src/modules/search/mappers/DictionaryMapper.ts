@@ -11,7 +11,7 @@ import * as MongoDb from "infa/MongoDb";
 import DictionaryResult from "../entities/DictionaryResult";
 
 type DictionaryQuery = { 
-    name: string;
+    name: RegExp;
 };
 
 // This is a pseudo type which allows us to represent any collection as a dictionary row. We may want to look in the future
@@ -26,12 +26,10 @@ export async function read(search: string, source: string): Promise<Array<Dictio
 {
     const db: MongoDb.MDb = MongoDb.db();
     const query: DictionaryQuery = {
-        "name": search
+        "name": new RegExp(`^${search}.*`)
     };
 
-    return db.collection(source).find<DictionaryRow>(query).map(( result ) => {
+    return db.collection(source).find<DictionaryRow>(query).limit(100).map(( result ) => {
         return new DictionaryResult( result._id, result.name );
     }).toArray();
 }
-
-

@@ -21,10 +21,10 @@ import { index as indexMajor }    from "./controllers/MajorController";
 let searchRouter: express.Router = express.Router();
 
 // Entites we can search through to find the one that matches closely.
-searchRouter.get("/places", indexProperty);
-searchRouter.get("/charities", indexCharity);
-searchRouter.get("/jobs", indexJob);
+searchRouter.get("/places",     indexProperty);
+searchRouter.get("/charities",  indexCharity);
+searchRouter.get("/jobs",       indexJob);
 searchRouter.get("/job-groups", indexJobGroup);
-searchRouter.get("/majors", indexMajor);
+searchRouter.get("/majors",     indexMajor);
 
 export default searchRouter;
