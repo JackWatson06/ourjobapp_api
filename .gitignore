@@ -45,4 +45,4 @@ yarn.lock
 /dist
 
 # ignore Excel data in the raw-data directory.
-scripts/raw-data/*.xlsx
+scripts/raw-data/*
