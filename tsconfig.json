@@ -7,10 +7,12 @@
         "noImplicitAny": true,
         "moduleResolution": "node",
         "sourceMap": true,
+        "strictNullChecks": true,
         "outDir": "dist",
         "baseUrl": ".",
         "paths": {
             "infa/*" : [ "src/core/infa/*" ],
+            "services/*" : [ "src/core/services/*" ],
             "*": [
                 "node_modules/*",
                 "src/types/*"

@@ -11,7 +11,7 @@ import axios from "axios";
  */
 export async function getPlaceByName(name: string): Promise<google.maps.places.AutocompleteResponse>
 {
-    const GOOGLE_API_KEY: string = process.env.GOOGLE_API_KEY;
+    const GOOGLE_API_KEY: string | undefined = process.env.GOOGLE_API_KEY;
     
     return new Promise<google.maps.places.AutocompleteResponse>((resolve, reject) => {
 
