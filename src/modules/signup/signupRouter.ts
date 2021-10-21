@@ -11,6 +11,7 @@ import express from "express";
 
 // We could put index in the controllers directory.
 import * as affiliate from "./controllers/AffiliateController";
+import * as verification from "./controllers/VerificationController";
 
 let signupRouter: express.Router = express.Router();
 
@@ -23,7 +24,7 @@ signupRouter.post("/employees",  affiliate.store);
 signupRouter.get("/affiliates/:id",     affiliate.show);
 
 // Verify Email Route
-signupRouter.patch("/verification/:id", affiliate.store);
+signupRouter.get("/verifications/:id", verification.update);
 
 
 export default signupRouter;

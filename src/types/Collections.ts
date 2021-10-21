@@ -38,7 +38,6 @@ export type Charity = {
 export type Affiliate = {
     _id          ?: ObjectId,
     affiliate_id ?: ObjectId,
-    updated_at   ?: string,
 
     name       : string,
     charity_id : string,
@@ -49,12 +48,13 @@ export type Affiliate = {
 
 // Verification Model
 export type Verification = {
-    _id        ?: ObjectId,
-    verifiedOn ?: number,
+    _id         ?: ObjectId,
+    verified_on ?: number,
+    token        : string,
 
-    resource          : string,
-    resource_id       : ObjectId,
-    verified          : boolean,
-    verificationToken : string,
-    created_at        : number
+    resource    : string,
+    resource_id : ObjectId,
+    verified    : boolean,
+    expired_at  : number,
+    created_at  : number
 }

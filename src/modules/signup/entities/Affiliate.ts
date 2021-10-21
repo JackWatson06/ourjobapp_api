@@ -8,7 +8,7 @@
  */
 
 // Value objects
-import Verification from "./Verification";
+import UnverifiedEmail from "./UnverifiedEmail";
 
 export default class Affiliate
 {
@@ -19,13 +19,13 @@ export default class Affiliate
     private charity_id: string;
 
     // Email of the affiliate.
-    private verification: Verification;
+    private unverifiedEmail: UnverifiedEmail;
 
-    constructor(name: string, charity_id: string, verification: Verification )
+    constructor(name: string, charity_id: string, unverifiedEmail: UnverifiedEmail )
     {
         this.name = name;
         this.charity_id = charity_id;
-        this.verification = verification;
+        this.unverifiedEmail = unverifiedEmail;
     }
 
     /**
@@ -33,7 +33,7 @@ export default class Affiliate
      */
     public async verify()
     {
-        return this.verification.sendVerificationEmail({
+        return this.unverifiedEmail.sendVerificationEmail({
             name: this.name
         });
     }
@@ -49,8 +49,8 @@ export default class Affiliate
         return this.charity_id;
     }
     
-    public getVerification() : Verification
+    public getVerification() : UnverifiedEmail
     {
-        return this.verification;
+        return this.unverifiedEmail;
     }
 }

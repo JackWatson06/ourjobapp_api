@@ -1,73 +1,89 @@
 
 /**
  * Original Author: Jack Watson
- * Created Date: 10/16/2021
- * Purpose: An email represents a value object in our domain since multiple aggregate roots need an email associated with them
- * we are using this as an abstracted verison of string designed to hole emails.
+ * Created Date: 10/20/2021
+ * Purpose: The purpose of this class would be to verify incoming resources through the url. If the url is hit by a frontend client
+ * it will verify whatever resource matches to that token.
  */
-import { email } from "services/Notify";
-import crypto from "crypto";
-
-export type VerificationEmail = {
-    name: string,
-    verificationLink ?: string
-}
 
 export default class Verification
 {
-    // Hold the meail we are verifiying.
-    private email: string;
+    // Identifier for the verification entity.
+    private id: string;
 
-    // Hold the verification token we have generated to verify this emaill.
-    private verificationToken: string;
+    // Expired date that we currently have for the verification. Need to make sure the current data is not greater than this date
+    private expiredDate: number;
 
-    // Hold the date for when we send the verification email.
-    private created_at: number;
+    // Hold state on if we become verified or not.
+    private verified: boolean;
 
-    // // Hold the date the email was verified.
-    // private verifiedDate: string;
+    // Date we are verified on.
+    private verifiedOn: number;
 
-    constructor(email: string)
+    // Keep track of the resource we are verifiying through email.
+    private resource: string;
+
+    // What is the resource id that we are verifiying.
+    private resource_id: string;
+
+    // Way to many damn properties.....
+    constructor(id: string, expiredDate: number, resource: string, resource_id: string)
     {
-        this.email = email;
+        this.id          = id;
+        this.expiredDate = expiredDate;
+        this.verified    = false;
+
+        this.resource    = resource;
+        this.resource_id = resource_id;
     }
 
     /**
-     * Send out the email in order to verify the person who just signedup to our platform.
-     * @param additionalText Additional Text to be supplied with standard verification text.
+     * Check to see if the verification link has timed out or not.
      */
-    public async sendVerificationEmail(binds: {        
-        name: string,
-        verificationToken ?: string
-    })
+    public timedOut()
     {
-
-        this.verificationToken = await new Promise((resolve, reject) => {
-            crypto.randomBytes(16, function(err: Error, buffer: Buffer) {
-                resolve(buffer.toString('hex'));
-            });
-        });
-        
-        binds.verificationToken = this.verificationToken;
-
-        email(this.email, "Please Verify your Account!", "verification", binds);
-    }
-
-
-    // === Getters ====
-    
-    // Get verification 
-    public getEmail(): string
-    {
-        return this.email;
+        return Date.now() > this.expiredDate;
     }
 
     /**
-     * Get the token for this email in order to verify the email.
+     * Verify the resource is good to go.
      */
-    public getToken() : string
+    public verify()
     {
-        return this.verificationToken;
+        this.verifiedOn = Date.now();
+        this.verified   = true;
+    }
+
+
+    // ==== Getters =====
+    public getId(): string
+    {
+        return this.id;
+    }
+
+    public getExpiredDate(): number
+    {
+        return this.expiredDate;
+    }
+
+    public getVerified(): boolean
+    {
+        return this.verified;
+    }
+
+    public getVerifiedOn(): number
+    {
+        return this.verifiedOn;
+    }
+
+    public getResource(): string
+    {
+        return this.resource;
+    }
+
+    public getResourceId(): string
+    {
+        return this.resource_id;
     }
 }
 

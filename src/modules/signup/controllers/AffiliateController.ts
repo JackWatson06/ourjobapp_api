@@ -11,7 +11,7 @@ import { create } from "../mappers/AffiliateMapper";
 
 // Entities
 import Affiliate from "../entities/Affiliate";
-import Email from "../entities/Verification";
+import UnverifiedEmail from "../entities/UnverifiedEmail";
 
  // Validator
 import { NewAffiliate, schema} from "../validators/NewAffiliateValidator";
@@ -37,15 +37,16 @@ export async function store(req: express.Request<any>, res: express.Response)
     {
         const data: NewAffiliate = req.body as NewAffiliate;
 
-        const email: Email         = new Email(data.email);
-        const affiliate: Affiliate = new Affiliate(data.name, data.charity_id, email);
+        const email: UnverifiedEmail = new UnverifiedEmail(data.email);
+        const affiliate: Affiliate   = new Affiliate(data.name, data.charity_id, email);
 
         // Verify the afiiliate is who they say they are.
         await affiliate.verify();
 
         return await create(affiliate).then( () => {
             res.send( { "success": true } )
-        }).catch( () => {
+        }).catch( (err) => {
+            console.error(err);
             res.send( { "error" : true } )
         });
     }

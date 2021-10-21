@@ -8,7 +8,7 @@ import { db, now, MDb } from "infa/MongoDb";
 import * as Collections from "Collections";
 
 import Affiliate from "../entities/Affiliate";
-import { InsertOneResult } from "mongodb";
+import { InsertOneResult, ObjectId } from "mongodb";
 
 /**
  * Store the affiliate in the database. Return true or false if we were sucessful.... that would be cought thow if there
@@ -17,27 +17,30 @@ import { InsertOneResult } from "mongodb";
  */
 export async function create(affiliate: Affiliate): Promise<boolean>
 {
-    const verification = affiliate.getVerification();
+    const unverifiedEmail = affiliate.getVerification();
 
     // Create the affiliate
     const mdb: MDb = db();
     const affiliateRow: Collections.Affiliate = {
-        name      : affiliate.getName(),
-        email     : verification.getEmail(),
-        charity_id: affiliate.getCharityId(),
-        verified  : false,
-        created_at: now()
+        name       : affiliate.getName(),
+        email      : unverifiedEmail.getEmail(),
+        charity_id : affiliate.getCharityId(),
+        verified   : false,
+        created_at : now()
     };
 
     const insertedAffiliate: InsertOneResult<Document> = await mdb.collection("affiliates").insertOne(affiliateRow);
-
+    
     // Create the verification email process
     const verificationRow: Collections.Verification = {
-        resource          : "affiliates",
-        resource_id       : insertedAffiliate.insertedId,
-        verified          : false,
-        verificationToken : verification.getToken(),
-        created_at        : now()
+        
+        resource           : "affiliates",
+        resource_id        : new ObjectId( insertedAffiliate.insertedId.toString() ),
+
+        verified           : false,
+        token              : unverifiedEmail.getToken(),
+        expired_at         : unverifiedEmail.getExpired(),
+        created_at         : now()
     }
 
     return (await mdb.collection("verifications").insertOne(verificationRow)).acknowledged;
