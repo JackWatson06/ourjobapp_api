@@ -14,13 +14,11 @@ import Affiliate from "../entities/Affiliate";
 import UnverifiedEmail from "../entities/UnverifiedEmail";
 
  // Validator
-import { NewAffiliate, schema} from "../validators/NewAffiliateValidator";
+import { schema } from "../validators/NewAffiliateValidator";
 
 // External dependencies
 import * as express from "express";
 import Ajv from "ajv";
-
-const ajv = new Ajv();
 
 /**
  * api.affiliate.store - Create a brand new affiliate in the system.
@@ -30,13 +28,14 @@ const ajv = new Ajv();
 export async function store(req: express.Request<any>, res: express.Response)
 {
     // Validate that the input coming on the request would be able to create a affiliate
+    const ajv = new Ajv();
     const valid = ajv.compile(schema);
 
-    // Create the affilaite domain entity.
-    if( valid(req.body) )
-    {
-        const data: NewAffiliate = req.body as NewAffiliate;
+    const data = req.body;
 
+    // Create the affilaite domain entity.
+    if( valid(data) )
+    {
         const email: UnverifiedEmail = new UnverifiedEmail(data.email);
         const affiliate: Affiliate   = new Affiliate(data.name, data.charity_id, email);
 

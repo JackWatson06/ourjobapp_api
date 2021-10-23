@@ -4,14 +4,18 @@ import { ObjectId } from "mongodb";
 // |   Models    |
 // ===============
 
-// Major Model
 export type Major = {
     _id?: ObjectId,
     name: string,
     created_at: number
 }
 
-// Job Model
+export type Country = {
+    _id?: ObjectId,
+    name: string,
+    created_at: number
+}
+
 export type Job = {
     _id?       : ObjectId,
     name       : string,
@@ -19,14 +23,12 @@ export type Job = {
     created_at : number
 }
 
-// Job Group Model
 export type JobGroup = {
     _id?       : ObjectId,
     name       : string,
     created_at : number
 }
 
-// Charity Model
 export type Charity = {
     _id?       : ObjectId,
     name       : string,
@@ -34,7 +36,6 @@ export type Charity = {
     created_at : number
 }
 
-// Affiliate Model
 export type Affiliate = {
     _id          ?: ObjectId,
     affiliate_id ?: ObjectId,
@@ -46,7 +47,6 @@ export type Affiliate = {
     created_at : number
 }
 
-// Verification Model
 export type Verification = {
     _id         ?: ObjectId,
     verified_on ?: number,
@@ -57,4 +57,45 @@ export type Verification = {
     verified    : boolean,
     expired_at  : number,
     created_at  : number
+}
+
+export type Employee = {
+    _id         ?: ObjectId,
+    major       ?: string[],
+    nations     ?: number[],
+    place_id    ?: string,
+
+    fname       : string,
+    lname       : string,
+    job_id      : string[],
+    hourly_rate : number,
+    commitment  : number,
+    where       : number,
+    authorized  : number[],
+    distance    : number,
+
+    education   : number,
+    experience  : number,
+    information : string,
+    email       : string,
+    phone       : string
+}
+
+export type Employer = {
+    _id         ?: ObjectId,
+    website     ?: string,
+
+    fname        : string
+    lname        : string
+    position     : string,
+    company_name : string,
+    place_id     : string,
+    industry     : string[],   // <= Select multiple of the job group
+    experience   : number[],   // <= Experience level is select multiple
+    salary       : number,
+    commitment   : number,
+    where        : number,
+    international: boolean,
+    authorized   : boolean,
+    email        : string
 }

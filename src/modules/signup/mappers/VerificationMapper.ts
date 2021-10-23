@@ -37,8 +37,6 @@ type UpdateResourceQuery = {
  */
 export async function read(verificationToken: string): Promise<Verification|null>
 {
-    console.log(verificationToken);
-    
     // Create the affiliate
     const mdb: MDb = db();
 
@@ -47,8 +45,6 @@ export async function read(verificationToken: string): Promise<Verification|null
         verified  : false
     }
 
-    console.log(query);
-    
     // Try to find the collection with the given verificaiton token passed in.
     return await mdb.collection("verifications").findOne(query).then((document: Collections.Verification) => {
 
@@ -67,19 +63,14 @@ export async function read(verificationToken: string): Promise<Verification|null
     });
 }
 
-
 /**
  * Update the status of a verification in our system. This will be set to whatever the domain layer spat out. 
  * @param verification Verification that we are persisting.
  */
 export async function update(verification: Verification): Promise<boolean>
 {
-
     // Create the affiliate
     const mdb: MDb = db();
-
-    console.log(verification.getId());
-    
 
     // Update information.
     const updateId: UpdateId = {

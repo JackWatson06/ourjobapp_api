@@ -4,6 +4,7 @@ import load from "./services/load";
 export default async function exec()
 {
     await load("charities.json",  "charities");
+    await load("countries.json",  "countries");
     await load("job-groups.json", "jobGroups");
     await load("jobs.json",       "jobs");
     await load("majors.json",     "majors");
@@ -20,6 +21,9 @@ export default async function exec()
         "name": 1
     });
     await db.collection("majors").createIndex({
+        "name": 1
+    });
+    await db.collection("countries").createIndex({
         "name": 1
     });
 }

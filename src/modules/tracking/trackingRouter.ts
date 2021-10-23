@@ -10,10 +10,7 @@
 import express from "express";
 
 // We could put index in the controllers directory.
-import * as affiliate from "./controllers/AffiliateController";
-import * as employee from "./controllers/EmployeeController";
-import * as employer from "./controllers/EmployerController";
-import * as verification from "./controllers/VerificationController";
+import * as cookie from "./controllers/CookieController";
 
 let signupRouter: express.Router = express.Router();
 

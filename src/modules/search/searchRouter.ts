@@ -12,11 +12,12 @@
 import express from "express";
 
 // We could put index in the controllers directory.
-import { index as indexProperty } from "./controllers/PlaceController";
-import { index as indexCharity }  from "./controllers/CharityController";
-import { index as indexJob }      from "./controllers/JobController";
-import { index as indexJobGroup } from "./controllers/JobGroupController";
-import { index as indexMajor }    from "./controllers/MajorController";
+import { index as indexProperty }  from "./controllers/PlaceController";
+import { index as indexCharity }   from "./controllers/CharityController";
+import { index as indexJob }       from "./controllers/JobController";
+import { index as indexJobGroup }  from "./controllers/JobGroupController";
+import { index as indexMajor }     from "./controllers/MajorController";
+import { index as indexCountries } from "./controllers/CountryController";
 
 let searchRouter: express.Router = express.Router();
 
@@ -26,5 +27,6 @@ searchRouter.get("/charities",  indexCharity);
 searchRouter.get("/jobs",       indexJob);
 searchRouter.get("/job-groups", indexJobGroup);
 searchRouter.get("/majors",     indexMajor);
+searchRouter.get("/countries",  indexCountries);
 
 export default searchRouter;

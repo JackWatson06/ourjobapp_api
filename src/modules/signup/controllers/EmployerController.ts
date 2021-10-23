@@ -7,14 +7,14 @@
  */
 
 // Data Mappers
-import { create } from "../mappers/EmployerMapper";
+import { create } from "../mappers/EmployeeMapper";
 
 // Entities
-import Employer  from "../entities/Employer";
+import Employee  from "../entities/Employee";
 import Email     from "../entities/UnverifiedEmail";
 
  // Validator
-import { NewEmployer, schema } from "../validators/NewEmployerValidator";
+import { NewEmployee, schema } from "../validators/NewEmployeeValidator";
 
 // External dependencies
 import * as express from "express";
@@ -31,18 +31,18 @@ export async function store(req: express.Request<any>, res: express.Response)
 {
     // Validate that the input coming on the request would be able to create a affiliate
     const valid = ajv.compile(schema);
-    const data: NewEmployer = req.body;
+    const data: NewEmployee = req.body;
 
     // Create the affilaite domain entity.
     if( valid(data) )
     {
         const email: Email       = new Email(data.email);
-        const employer: Employer = new Employer(data, email);
+        const employee: Employee = new Employee(data, email);
 
         // Verify the afiiliate is who they say they are.
-        await employer.verify();
+        await employee.verify();
 
-        return await create(employer).then( () => {
+        return await create(employee).then( () => {
             res.send( { "success": true } )
         }).catch( () => {
             res.send( { "error" : true } )
