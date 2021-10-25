@@ -11,19 +11,18 @@ import Affiliate from "../entities/Affiliate";
 import Email from "../entities/Email";
 import Token from "../entities/Token";
 
-import { InsertOneResult } from "mongodb";
+import { InsertOneResult, ObjectId } from "mongodb";
 
 type Query = {
-    _id      ?: string,
+    _id      ?: ObjectId,
+    token_id ?: ObjectId,
     name     ?: string,
-    token_id ?: string,
     email    ?: string,
     verified ?: boolean
 }
 
 type UpdateQuery = {
-    _id      ?: string,
-    token_id ?: string
+    token_id ?: ObjectId
 }
 /**
  * Store the affiliate in the database. Return true or false if we were sucessful.... that would be cought thow if there
@@ -32,11 +31,10 @@ type UpdateQuery = {
  */
 export async function read(query: Query): Promise<Affiliate|null>
 {
-    // Create the affiliate
     const mdb: MDb = db();
 
     const affiliateRow: Collections.Affiliate|null = await mdb.collection("affiliates").findOne<Collections.Affiliate>(query);
-
+    
     if( affiliateRow === null )
     {
         return null;
@@ -61,7 +59,6 @@ export async function read(query: Query): Promise<Affiliate|null>
  */
 export async function create(affiliate: Affiliate): Promise<boolean>
 {
-    // Create the affiliate
     const mdb: MDb = db();
     
     const email: Email = affiliate.getEmail();
@@ -95,12 +92,11 @@ export async function create(affiliate: Affiliate): Promise<boolean>
  */
 export async function update(query: UpdateQuery, affiliate: Affiliate): Promise<boolean>
 {
-    // Create the affiliate
     const mdb: MDb = db();
 
     // Update the current collection
     return (await mdb.collection("affiliates").updateOne(query, { $set: {
         verified    : true,
-        verified_at : affiliate.getVerifiedAt()
+        verified_on : affiliate.getVerifiedAt()
     } })).acknowledged;
 }

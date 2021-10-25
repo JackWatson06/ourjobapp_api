@@ -8,11 +8,14 @@
 
 // Data Mappers
 import { create, read, update } from "../mappers/AffiliateMapper";
+import { read as readProof } from "../mappers/ProofMapper";
+import { ObjectId } from "mongodb";
 
 // Entities
 import Affiliate from "../entities/Affiliate";
 import Email from "../entities/Email";
 import Token from "../entities/Token";
+import Proof from "../entities/Proof";
 
 import { unique } from "../repositories/AffiliateRepository";
 
@@ -24,7 +27,7 @@ import * as express from "express";
 import Ajv from "ajv";
 
 /**
- * api.affiliate.store - Create a brand new affiliate in the system.
+ * signup.affiliate.store - Create a brand new affiliate in the system.
  * @param req Express request object
  * @param res Express response object
  */
@@ -61,7 +64,7 @@ export async function store(req: express.Request<any>, res: express.Response)
 }
 
 /**
- * api.affiliate.show - Show the current affiliate to the frontend so we can grab useful properties from the url.
+ * signup.affiliate.show - Show the current affiliate to the frontend so we can grab useful properties from the url.
  * @param req Express request object
  * @param res Express response object
  */
@@ -69,19 +72,19 @@ export async function show(req: express.Request<any>, res: express.Response){ }
 
 
 /**
- * api.affiliate.verify - Create a brand new affiliate in the system.
+ * signup.affiliate.resend - Resend the verification link
  * @param req Express request object
  * @param res Express response object
  */
-export async function verify(req: express.Request<any>, res: express.Response)
+export async function resend(req: express.Request<any>, res: express.Response)
 {
-    const id: string = req.params.id.trim();
-
-    // Pull the affiliate from the database.,
-    const affiliate: Affiliate|null = await read({ _id: id });
+    const id: string = req.body.id;
+    
+    // Pull the affiliate from the database.
+    const affiliate: Affiliate|null = await read({ _id: new ObjectId( id ) });
     if(affiliate === null)
     {
-        return res.status(400).send( { "error": true } )
+        return res.status(400).send( { "error": "No affiliate found" } )
     }
 
     const sent: boolean = await affiliate.verify();
@@ -95,25 +98,34 @@ export async function verify(req: express.Request<any>, res: express.Response)
 }
 
 /**
- * api.affiliate.verify - Create a brand new affiliate in the system.
+ * signup.affiliate.verify - Verify the verification link
  * @param req Express request object
  * @param res Express response object
  */
-export async function authorize(req: express.Request<any>, res: express.Response)
+export async function verify(req: express.Request<any>, res: express.Response)
 {
-    const id: string = req.params.id.trim();
+    
+    const token: string = req.body.token;
 
-    // Pull the affiliate from the database.,
-    const affiliate: Affiliate|null = await read({ token_id: id });
+    const proof: Proof|null = await readProof(token);
 
     // Make sure that we can find the token
+    if(proof === null)
+    {
+        return res.status(404).send({"error" : "Invalid verification link."});    
+    }
+
+    // Pull the affiliate from the database.,
+    const affiliate: Affiliate|null = await read({ token_id: new ObjectId( proof.getId()) });
+
+    // Double check that the affiliate exists.
     if(affiliate === null)
     {
-        return res.status(404).send({"error" : "Could not find verification link."});    
+        return res.status(404).send({"error" : "Invalid verification link."});    
     }
 
     // If not unique then throw an error
-    if( !unique( affiliate ))
+    if( !( await unique( affiliate )) )
     {
         return res.status(400).send({"error" : "User with Email, or Link Name has already been authenticated."});    
     }
@@ -123,7 +135,7 @@ export async function authorize(req: express.Request<any>, res: express.Response
 
     if(authorized)
     {
-        await update({"token_id": id}, affiliate);
+        await update({ token_id: new ObjectId( proof.getId())}, affiliate);
         return res.status(200).send( {"success": true} );
     }
 

@@ -11,22 +11,23 @@ import express from "express";
 
 // We could put index in the controllers directory.
 import * as affiliate from "./controllers/AffiliateController";
-import * as employee from "./controllers/EmployeeController";
-import * as employer from "./controllers/EmployerController";
-import * as verification from "./controllers/VerificationController";
+import * as employee from "./controllers/EmployerController";
+import * as employer from "./controllers/EmployeeController";
 
 let signupRouter: express.Router = express.Router();
 
 // Entites we uise to store affiliates.
-signupRouter.post("/affiliates", affiliate.store);
 signupRouter.post("/employees",  employee.store);
 signupRouter.post("/employers",  employer.store);
 
 // Show the actual affiliate that just signed up.
-signupRouter.get("/affiliates/:id",     affiliate.show);
 
-// Verify Email Route
-signupRouter.get("/verifications/:id", verification.update);
 
+
+// Show the actual affiliate that just signed up.
+signupRouter.post("/affiliates",         affiliate.store);
+signupRouter.post("/affiliates/resend",  affiliate.resend);
+signupRouter.post("/affiliates/verify",  affiliate.verify);
+signupRouter.get("/affiliates/:id",      affiliate.show);
 
 export default signupRouter;

@@ -23,7 +23,7 @@ export default class Affiliate
     private email: Email;
 
     // Link to the contract that they have signed internally.
-    private verified_at: number;
+    private verified_on: number;
 
     constructor(name: string, charity_id: string, email: Email )
     { 
@@ -39,25 +39,26 @@ export default class Affiliate
      */
     public async verify() : Promise<boolean>
     {
-
         if( Date.now() < this.email.getExpiredDate() )
         {
             await email(this.email.getEmail(), "Please Verify Your Account!", "verification", {
                 name: this.name,
                 token: this.email.getToken()
             });
-
             return true;
         }
 
         return false;
     }
 
+    /**
+     * Authorize the affilite to operate. Confirm the expired date is not bad.
+     */
     public authorize()
     {
         if( Date.now() < this.email.getExpiredDate() )
         {   
-            this.verified_at = Date.now();
+            this.verified_on = Date.now();
             return true;
         }
 
@@ -77,7 +78,7 @@ export default class Affiliate
 
     public getVerifiedAt() : number
     {
-        return this.verified_at;
+        return this.verified_on;
     }
     
     public getEmail() : Email

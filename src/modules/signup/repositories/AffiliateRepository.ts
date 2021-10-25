@@ -12,16 +12,16 @@ import Email from "../entities/Email";
  * Confirm if the affiliate passed in is unique.
  * @param Affiliate Affiliate entity
  */
-export function unique( affiliate: Affiliate)
+export async function unique( affiliate: Affiliate) : Promise<boolean>
 {
     const email: Email = affiliate.getEmail();
-
-    if( read({ "name" : affiliate.getName(), "verified": true}) != null )
-    {
+    
+    if( await read({ "name" : affiliate.getName(), "verified": true}) != null )
+    {   
         return false;
     }
 
-    if( read({ "email" : email.getEmail(), "verified": true}) != null )
+    if( await read({ "email" : email.getEmail(), "verified": true}) != null )
     {
         return false;
     }

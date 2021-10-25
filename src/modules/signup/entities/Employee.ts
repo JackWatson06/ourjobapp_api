@@ -22,7 +22,7 @@ export default class Employee
     private email: Email;
 
     // Date verified
-    private verified_at: number;
+    private verified_on: number;
 
     constructor(data: NewEmployee, email: Email)
     {
@@ -55,7 +55,7 @@ export default class Employee
     {
         if( Date.now() < this.email.getExpiredDate() )
         {   
-            this.verified_at = Date.now();
+            this.verified_on = Date.now();
             return true;
         }
 
@@ -65,9 +65,9 @@ export default class Employee
     /**
      * Return verified at number which represents when the email for a employee was verified at.
      */
-    public getVerifiedAt(): number
+    public getVerifiedOn(): number
     {
-        return this.verified_at
+        return this.verified_on
     }
 
     /**
