@@ -8,6 +8,7 @@ import { db, now, MDb } from "infa/MongoDb";
 import * as Collections from "Collections";
 
 import Employee from "../entities/Employee";
+import Email from "../entities/Email";
 import { InsertOneResult, ObjectId } from "mongodb";
 
 /**
@@ -17,25 +18,24 @@ import { InsertOneResult, ObjectId } from "mongodb";
  */
 export async function create(employee: Employee): Promise<boolean>
 {
-    const unverifiedEmail = employee.getEmail();
-
     // Create the employee
     const mdb: MDb = db();
-    const employeeRow: Collections.Employee = { ...employee.getData() };
 
-    const insertedEmployee: InsertOneResult<Document> = await mdb.collection("employees").insertOne(employeeRow);
-    
-    // Create the verification email process
-    const verificationRow: Collections.Verification = {
-        
-        resource           : "employees",
-        resource_id        : new ObjectId( insertedEmployee.insertedId.toString() ),
-
-        verified           : false,
-        token              : unverifiedEmail.getToken(),
-        expired_at         : unverifiedEmail.getExpired(),
-        created_at         : now()
+    const email: Email = employee.getEmail();
+    const tokenRow: Collections.Token = {
+        token       : email.getToken(),
+        expired_at  : email.getExpiredDate(),
+        created_at  : now()
     }
 
-    return (await mdb.collection("verifications").insertOne(verificationRow)).acknowledged;
+    const newToken: InsertOneResult<Document> = await mdb.collection("tokens").insertOne(tokenRow)
+
+    const employeeRow: Collections.Employee = { 
+        ...employee.getData(), 
+        token_id: newToken.insertedId,
+        verified: false 
+    };
+
+    return ( await mdb.collection("employees").insertOne(employeeRow)).acknowledged;
+
 }

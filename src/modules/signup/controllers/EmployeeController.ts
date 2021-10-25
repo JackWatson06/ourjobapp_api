@@ -11,7 +11,7 @@ import { create } from "../mappers/EmployerMapper";
 
 // Entities
 import Employer  from "../entities/Employer";
-import Email     from "../entities/UnverifiedEmail";
+import Email     from "../entities/Email";
 
  // Validator
 import { NewEmployer, schema } from "../validators/NewEmployerValidator";
@@ -62,3 +62,9 @@ export async function store(req: express.Request<any>, res: express.Response)
  * @param res Express response object
  */
 export async function show(req: express.Request<any>, res: express.Response){ }
+
+export async function verify(req: express.Request<any>, res: express.Response)
+{
+
+
+}

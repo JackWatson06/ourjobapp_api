@@ -8,7 +8,8 @@
  */
 
 // Value objects
-import UnverifiedEmail from "./UnverifiedEmail";
+import { email } from "services/Notify";
+import Email from "./Email";
 
 export default class Affiliate
 {
@@ -19,23 +20,48 @@ export default class Affiliate
     private charity_id: string;
 
     // Email of the affiliate.
-    private unverifiedEmail: UnverifiedEmail;
+    private email: Email;
 
-    constructor(name: string, charity_id: string, unverifiedEmail: UnverifiedEmail )
-    {
-        this.name = name;
-        this.charity_id = charity_id;
-        this.unverifiedEmail = unverifiedEmail;
+    // Link to the contract that they have signed internally.
+    private verified_at: number;
+
+    constructor(name: string, charity_id: string, email: Email )
+    { 
+        this.name        = name;
+        this.charity_id  = charity_id;
+        this.email       = email;
     }
 
     /**
      * Verify the affiliate is who they say they are.
+     * true = Was able to send out the email
+     * false = Was not able to send out the email
      */
-    public async verify()
+    public async verify() : Promise<boolean>
     {
-        return this.unverifiedEmail.sendVerificationEmail({
-            name: this.name
-        });
+
+        if( Date.now() < this.email.getExpiredDate() )
+        {
+            await email(this.email.getEmail(), "Please Verify Your Account!", "verification", {
+                name: this.name,
+                token: this.email.getToken()
+            });
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public authorize()
+    {
+        if( Date.now() < this.email.getExpiredDate() )
+        {   
+            this.verified_at = Date.now();
+            return true;
+        }
+
+        return false;
     }
 
     // === GETTERS ===
@@ -48,9 +74,14 @@ export default class Affiliate
     {
         return this.charity_id;
     }
-    
-    public getVerification() : UnverifiedEmail
+
+    public getVerifiedAt() : number
     {
-        return this.unverifiedEmail;
+        return this.verified_at;
+    }
+    
+    public getEmail() : Email
+    {
+        return this.email;
     }
 }

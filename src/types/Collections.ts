@@ -39,31 +39,31 @@ export type Charity = {
 export type Affiliate = {
     _id          ?: ObjectId,
     affiliate_id ?: ObjectId,
-
-    name       : string,
-    charity_id : string,
-    email      : string,
-    verified   : boolean
-    created_at : number
+    token_id      : ObjectId,
+    verified_on  ?: number,
+    name          : string,
+    charity_id    : string,
+    email         : string,
+    verified      : boolean
+    created_at    : number
 }
 
-export type Verification = {
+export type Token = {
     _id         ?: ObjectId,
-    verified_on ?: number,
-    token        : string,
 
-    resource    : string,
-    resource_id : ObjectId,
-    verified    : boolean,
+    token       : string,
     expired_at  : number,
     created_at  : number
 }
 
 export type Employee = {
     _id         ?: ObjectId,
+    token_id     : ObjectId,
+
     major       ?: string[],
     nations     ?: number[],
     place_id    ?: string,
+    verified_on ?: number,
 
     fname       : string,
     lname       : string,
@@ -79,10 +79,14 @@ export type Employee = {
     information : string,
     email       : string,
     phone       : string
+    verified    : boolean
 }
 
 export type Employer = {
     _id         ?: ObjectId,
+    token_id     : ObjectId,
+
+    verified_on ?: number,
     website     ?: string,
 
     fname        : string
@@ -97,5 +101,6 @@ export type Employer = {
     where        : number,
     international: boolean,
     authorized   : boolean,
-    email        : string
+    email        : string,
+    verified     : boolean
 }

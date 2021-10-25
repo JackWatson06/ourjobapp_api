@@ -9,7 +9,9 @@
  */
 
 import { NewEmployee } from "../validators/NewEmployeeValidator";
-import UnverifiedEmail from "./UnverifiedEmail";
+import { email } from "services/Notify";
+
+import Email from "./Email";
 
 export default class Employee
 {
@@ -17,28 +19,61 @@ export default class Employee
     private data: NewEmployee;
 
     // Email verification data.
-    private email: UnverifiedEmail;
+    private email: Email;
 
-    constructor(data: NewEmployee, email: UnverifiedEmail)
+    // Date verified
+    private verified_at: number;
+
+    constructor(data: NewEmployee, email: Email)
     {
         this.data  = data;
         this.email = email;
     }
 
     /**
-     * Send a verification link for the employee that just signed up.
+     * Verify the affiliate is who they say they are.
+     * true = Was able to send out the email
+     * false = Was not able to send out the email
      */
-    public async verify()
+    public async verify() : Promise<boolean>
     {
-        return this.email.sendVerificationEmail({
-            name: this.data.fname + " " + this.data.lname
-        });
+
+        if( Date.now() < this.email.getExpiredDate() )
+        {
+            await email(this.email.getEmail(), "Please Verify Your Account!", "verification", {
+                name: this.data.fname + " " + this.data.lname,
+                token: this.email.getToken()
+            });
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public authorize()
+    {
+        if( Date.now() < this.email.getExpiredDate() )
+        {   
+            this.verified_at = Date.now();
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Return verified at number which represents when the email for a employee was verified at.
+     */
+    public getVerifiedAt(): number
+    {
+        return this.verified_at
     }
 
     /**
      * Get the employees email.
      */
-    public getEmail() : UnverifiedEmail
+    public getEmail() : Email
     {
         return this.email;
     }
