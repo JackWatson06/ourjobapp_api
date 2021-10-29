@@ -22,6 +22,8 @@ import { unique } from "../repositories/AffiliateRepository";
  // Validator
 import { NewAffiliate, schema } from "../validators/NewAffiliateValidator";
 
+import transform from "../views/VerifiedAffiliateView";
+
 // External dependencies
 import * as express from "express";
 import Ajv from "ajv";
@@ -64,14 +66,6 @@ export async function store(req: express.Request<any>, res: express.Response)
 }
 
 /**
- * signup.affiliate.show - Show the current affiliate to the frontend so we can grab useful properties from the url.
- * @param req Express request object
- * @param res Express response object
- */
-export async function show(req: express.Request<any>, res: express.Response){ }
-
-
-/**
  * signup.affiliate.resend - Resend the verification link
  * @param req Express request object
  * @param res Express response object
@@ -104,7 +98,6 @@ export async function resend(req: express.Request<any>, res: express.Response)
  */
 export async function verify(req: express.Request<any>, res: express.Response)
 {
-    
     const token: string = req.body.token;
 
     const proof: Proof|null = await readProof(token);
@@ -136,7 +129,10 @@ export async function verify(req: express.Request<any>, res: express.Response)
     if(authorized)
     {
         await update({ token_id: new ObjectId( proof.getId())}, affiliate);
-        return res.status(200).send( {"success": true} );
+        return res.status(200).send( {
+                "success": true,
+                "data": transform(affiliate)
+            } );
     }
 
     return res.status(400).send( {"error": "Token not valid"} )

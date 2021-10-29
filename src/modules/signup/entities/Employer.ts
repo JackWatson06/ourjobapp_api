@@ -42,7 +42,7 @@ export default class Employer
         {
             await email(this.email.getEmail(), "Please Verify Your Account!", "verification", {
                 name: this.data.fname + " " + this.data.lname,
-                token: this.email.getToken()
+                link: `${process.env.CLIENT_DOMAIN}/verify/employer/${this.email.getToken()}`
             });
 
             return true;
@@ -65,7 +65,7 @@ export default class Employer
     /**
      * Return the date that we were verified at.
      */
-    public getVerifiedAt() : number
+    public getVerifiedOn() : number
     {
         return this.verified_at;
     }

@@ -61,13 +61,6 @@ export async function store(req: express.Request<any>, res: express.Response)
 }
 
 /**
- * api.employer.show - Show the current employer to the frontend so we can grab useful properties from the url.
- * @param req Express request object
- * @param res Express response object
- */
-export async function show(req: express.Request<any>, res: express.Response){ }
-
-/**
  * api.employer.resend - Resend the employers verification link
  * @param req Express request object
  * @param res Express response object

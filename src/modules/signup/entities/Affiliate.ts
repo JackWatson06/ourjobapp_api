@@ -43,7 +43,7 @@ export default class Affiliate
         {
             await email(this.email.getEmail(), "Please Verify Your Account!", "verification", {
                 name: this.name,
-                token: this.email.getToken()
+                link: `${process.env.CLIENT_DOMAIN}/verify/sharer/${this.email.getToken()}` 
             });
             return true;
         }

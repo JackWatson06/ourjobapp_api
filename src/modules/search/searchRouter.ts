@@ -19,6 +19,9 @@ import { index as indexJobGroup }  from "./controllers/JobGroupController";
 import { index as indexMajor }     from "./controllers/MajorController";
 import { index as indexCountries } from "./controllers/CountryController";
 
+import * as ExistingLink from "./controllers/ExistingLinkController";
+import * as ExistingEmail from "./controllers/ExistingEmailController";
+
 let searchRouter: express.Router = express.Router();
 
 // Entites we can search through to find the one that matches closely.
@@ -28,5 +31,11 @@ searchRouter.get("/jobs",       indexJob);
 searchRouter.get("/job-groups", indexJobGroup);
 searchRouter.get("/majors",     indexMajor);
 searchRouter.get("/countries",  indexCountries);
+
+
+searchRouter.get("/existing/links",              ExistingLink.show);
+searchRouter.get("/existing/affiliate-emails",   ExistingEmail.affiliate);
+searchRouter.get("/existing/employee-emails",    ExistingEmail.employer);
+searchRouter.get("/existing/employer-emails",    ExistingEmail.employee);
 
 export default searchRouter;

@@ -6,7 +6,7 @@
  */
 
 import express from "express";
-import ExistingLink from "../entities/ExistingLink";
+import ExistingResource from "../entities/ExistingResource";
 import { read } from "../mappers/ExistingLinkMapper";
 
 /**
@@ -22,7 +22,7 @@ export async function show(req: express.Request, res: express.Response) : Promis
     const name: string = req.query.name as string;
 
     // Call up the repository.
-    read(name).then((data: ExistingLink) => {
-        res.send(data.getExists());
+    read(name).then((data: ExistingResource) => {
+        res.send( { result: data.getExists() } );
     });
 }

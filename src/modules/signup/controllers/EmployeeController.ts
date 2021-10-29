@@ -62,13 +62,6 @@ export async function store(req: express.Request<any>, res: express.Response)
 }
 
 /**
- * singup.employee.show - Show the current employee to the frontend so we can grab useful properties from the url.
- * @param req Express request object
- * @param res Express response object
- */
-export async function show(req: express.Request<any>, res: express.Response){ }
-
-/**
  * signup.employee.resend - Resend the employees verification link
  * @param req Express request object
  * @param res Express response object

@@ -42,7 +42,7 @@ export default class Employee
         {
             await email(this.email.getEmail(), "Please Verify Your Account!", "verification", {
                 name: this.data.fname + " " + this.data.lname,
-                token: this.email.getToken()
+                link: `${process.env.CLIENT_DOMAIN}/verify/employee/${this.email.getToken()}`
             });
 
             return true;

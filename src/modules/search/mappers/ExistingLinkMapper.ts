@@ -7,24 +7,27 @@
  * project once I have more defined boudned contexts.
  */
 
-import * as MongoDb from "infa/MongoDb";
-import ExistingLink from "../entities/ExistingLink";
+import * as MongoDb from "infa/MongoDb"
+import ExistingResource from "../entities/ExistingResource"
 
 type ExisitingLinkQuery = { 
-    name: RegExp;
+    name: string;
+    verified: true;
 };
 
 /**
  * Test to make sure that we only have one of a single link.
  * @param name Name of the link that we are searching for.
  */
-export async function read(name: string): Promise<ExistingLink>
+export async function read(name: string): Promise<ExistingResource>
 {
     const db: MongoDb.MDb = MongoDb.db();
+    
     const query: ExisitingLinkQuery = {
-        "name": new RegExp(`^${name}.*`)
+        "name"     : name,
+        "verified" : true
     };
-
+    
     const hasOneLink: number = await db.collection("affiliates").find(query).limit(1).count();
-    return new ExistingLink( hasOneLink === 0 );
+    return new ExistingResource( hasOneLink != 0 );
 }

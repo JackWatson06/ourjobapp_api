@@ -5,7 +5,7 @@
  * exists just so that we can check to see if an affiliate link has already been created.
  */
 
-export default class ExistingLink
+export default class ExistingResource
 {
 
     private exists: boolean;
