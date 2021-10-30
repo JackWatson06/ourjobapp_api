@@ -48,9 +48,10 @@ export async function create(employer: Employer): Promise<boolean>
     const data: NewEmployer = employer.getData();
     const employerRow: Collections.Employer = { 
         ...data,
-        affiliate_id: data.affiliate_id ? new ObjectId(data.affiliate_id) : undefined, 
-        token_id: newToken.insertedId,
-        verified: false 
+        industry     : data.industry.map((industry: string) => new ObjectId(industry)),
+        affiliate_id : data.affiliate_id ? new ObjectId(data.affiliate_id): undefined,
+        token_id     : newToken.insertedId,
+        verified     : false
     };
 
     return ( await mdb.collection("employers").insertOne(employerRow)).acknowledged;
@@ -91,7 +92,6 @@ export async function read(query: Query): Promise<Employer|null>
         company_name : employerRow.company_name,
         website      : employerRow.website,
         place_id     : employerRow.place_id,
-        industry     : employerRow.industry,
         experience   : employerRow.experience,
         salary       : employerRow.salary,
         commitment   : employerRow.commitment,
@@ -99,6 +99,7 @@ export async function read(query: Query): Promise<Employer|null>
         international: employerRow.international,
         authorized   : employerRow.authorized,
         email        : employerRow.email,
+        industry     : employerRow.industry.map((industry: ObjectId) => industry.toString()),
         affiliate_id : employerRow.affiliate_id?.toString()
       }
     return new Employer(employer, email);

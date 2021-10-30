@@ -62,18 +62,18 @@ export type Employee = {
     token_id      : ObjectId,
  
     affiliate_id ?: ObjectId,
-    major        ?: string[],
-    nations      ?: number[],
+    major        ?: ObjectId[],
+    nations      ?: ObjectId[],
     place_id     ?: string,
     verified_on  ?: number,
 
+    job_id        : ObjectId[],
+    authorized    : ObjectId[],
     fname         : string,
     lname         : string,
-    job_id        : string[],
     hourly_rate   : number,
     commitment    : number,
     where         : number,
-    authorized    : number[],
     distance      : number,
   
     education     : number,
@@ -92,18 +92,18 @@ export type Employer = {
     verified_on  ?: number,
     website      ?: string,
 
+    industry     : ObjectId[],
     fname        : string
     lname        : string
     position     : string,
     company_name : string,
-    place_id     : string,
-    industry     : string[],   // <= Select multiple of the job group
+    place_id     : string,   // <= Select multiple of the job group
     experience   : number[],   // <= Experience level is select multiple
     salary       : number,
     commitment   : number,
     where        : number,
     international: boolean,
     authorized   : boolean,
+    verified     : boolean,
     email        : string,
-    verified     : boolean
 }

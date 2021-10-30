@@ -1,7 +1,9 @@
 import { JSONSchemaType } from "ajv";
+import * as Constants from "Constants";
+import * as Collections from "Collections";
 
 export interface NewEmployee {
-    nations       ?: number[],
+    nations       ?: string[],
     place_id      ?: string,
     major         ?: string[],
     affiliate_id  ?: string
@@ -9,10 +11,10 @@ export interface NewEmployee {
     fname         : string
     lname         : string
     job_id        : string[],
+    authorized    : string[],
     hourly_rate   : number,
     commitment    : number,
     where         : number,
-    authorized    : number[],
     distance      : number,
     education     : number,
     experience    : number,
@@ -41,15 +43,17 @@ export const schema: JSONSchemaType<NewEmployee> = {
             type: "integer" 
         }, // <= Enumeration
         commitment:  { 
-            type: "integer" 
+            type: "integer",
+            enum: Object.values(Constants.Commitment)
         }, // <= Enumeration
         where:       { 
-            type: "integer" 
+            type: "integer",
+            enum: Object.values(Constants.Where) 
         }, // <= Enumeration
         authorized:  { 
             type  : "array",
             items : {
-                type: "integer"
+                type: "string"
             }
         },
         distance:    { 
@@ -58,7 +62,7 @@ export const schema: JSONSchemaType<NewEmployee> = {
         nations:     {
             type : "array",
             items: {
-                type: "integer"
+                type: "string"
             },
             nullable: true
         },
@@ -67,7 +71,8 @@ export const schema: JSONSchemaType<NewEmployee> = {
             nullable: true 
         }, // <= This would be the place id.
         education:    { 
-            type: "integer" 
+            type: "integer",
+            enum: Object.values(Constants.Education) 
         },
         major:        {
             type: "array",
@@ -77,7 +82,8 @@ export const schema: JSONSchemaType<NewEmployee> = {
             nullable: true
         },
         experience:   { 
-            type: "integer" 
+            type: "integer",
+            enum: Object.values(Constants.Experience)
         }, // <= Enumeration
         information:  { 
             type: "string" 

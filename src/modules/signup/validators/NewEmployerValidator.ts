@@ -1,4 +1,6 @@
 import { JSONSchemaType } from "ajv";
+import * as Constants from "../../../types/Constants";
+
 
 export interface NewEmployer {
     website      ?: string,
@@ -51,24 +53,27 @@ export const schema: JSONSchemaType<NewEmployer> = {
         experience  : {
             type : "array",
             items: {
-                type: "integer"
+                type: "integer",
+                enum: Object.values(Constants.Experience)
             },
         },
         salary       : { 
             type: "integer"
         },             // <= Enumeration
         commitment   : { 
-            type: "integer" 
+            type: "integer",
+            enum: Object.values(Constants.Commitment)
         },   // <= Enumeration
         where        : { 
-            type: "integer" 
+            type: "integer",
+            enum: Object.values(Constants.Where)
         },   // <= Enumeration
         international: { 
             type: "boolean" 
-        },   // <= Enumeration
+        },
         authorized   : { 
             type: "boolean" 
-        },   // <= Enumeration
+        },
         email        : { 
             type: "string" 
         },

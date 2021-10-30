@@ -46,9 +46,13 @@ export async function create(employee: Employee): Promise<boolean>
     const data: NewEmployee = employee.getData();
     const employeeRow: Collections.Employee = { 
         ...data,
-        affiliate_id: data.affiliate_id ? new ObjectId(data.affiliate_id) : undefined, 
-        token_id: newToken.insertedId,
-        verified: false 
+        authorized   : data.authorized.map((authorized: string) => new ObjectId(authorized)),
+        job_id       : data.job_id.map((job_id: string) => new ObjectId(job_id)),
+        nations      : data.nations      ? data.nations.map((nation: string) => new ObjectId(nation)) : undefined,
+        major        : data.major        ? data.major.map((major: string) => new ObjectId(major)) : undefined,
+        affiliate_id : data.affiliate_id ? new ObjectId(data.affiliate_id) : undefined, 
+        token_id     : newToken.insertedId,
+        verified     : false 
     };
 
     return ( await mdb.collection("employees").insertOne(employeeRow)).acknowledged;
@@ -83,17 +87,19 @@ export async function read(query: Query): Promise<Employee|null>
     const employee: NewEmployee = {
         fname        : employeeRow.fname,
         lname        : employeeRow.lname,
-        job_id       : employeeRow.job_id,
         hourly_rate  : employeeRow.hourly_rate,
         commitment   : employeeRow.commitment,
         where        : employeeRow.where,
-        authorized   : employeeRow.authorized,
         distance     : employeeRow.distance,
         education    : employeeRow.education,
         experience   : employeeRow.experience,
         information  : employeeRow.information,
         email        : employeeRow.email,
         phone        : employeeRow.phone,
+
+        // Map the following properties to the corresponding object id.
+        job_id       : employeeRow.job_id.map((auth: ObjectId) => auth.toString()),
+        authorized   : employeeRow.authorized.map((auth: ObjectId) => auth.toString()),
         affiliate_id : employeeRow.affiliate_id?.toString()
       }
     return new Employee(employee, email);

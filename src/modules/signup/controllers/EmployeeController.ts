@@ -34,6 +34,10 @@ import Ajv from "ajv";
  */
 export async function store(req: express.Request<any>, res: express.Response)
 {
+
+    console.log("TEsting");
+    
+
     const ajv = new Ajv();
 
     // Validate that the input coming on the request would be able to create a employee
@@ -46,9 +50,12 @@ export async function store(req: express.Request<any>, res: express.Response)
         const email: Email       = new Email(data.email, Token.generate());
         const employee: Employee = new Employee(data, email);
 
+        console.log(employee);
+        
+
         await create(employee).catch( (err) => {
             console.error(err);
-            res.status(400).send( { "error" : true } )
+            res.status(400).send( { "error" : "Could not create" } )
         });
 
         // Verify the afiiliate is who they say they are.
@@ -58,7 +65,7 @@ export async function store(req: express.Request<any>, res: express.Response)
     }
     
     // Error code did not work
-    return res.send( { "error" : true } );
+    return res.status(400).send( { "error" : "Can not create." } );
 }
 
 /**

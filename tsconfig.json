@@ -14,8 +14,8 @@
             "infa/*" : [ "src/core/infa/*" ],
             "services/*" : [ "src/core/services/*" ],
             "*": [
-                "node_modules/*",
-                "src/types/*"
+                "src/types/*",
+                "node_modules/*"
             ]
         }
     },
