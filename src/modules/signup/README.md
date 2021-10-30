@@ -6,6 +6,8 @@ the verification process by sending out an email as well as allowing data to be 
 Lets use the affiliate as an example. So an affiliate enters there data into our site and it will go to the affiliates
 collection. In this collection we then have a tokenId which holds a reference to a token of the verification email that
 goes out. Then when the email is verified by the client they will send a verification token back.
+We also have the ability to sign up an affiliate in this module. If we define an affiliate_id on the request then we will
+pass that into the collection in the backend. 
 
 ## TODO
 - Right now each the employer, employee, and affiliate all handle there own verification process. This is not ideal since it 

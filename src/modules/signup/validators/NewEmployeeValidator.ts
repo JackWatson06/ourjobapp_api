@@ -89,7 +89,8 @@ export const schema: JSONSchemaType<NewEmployee> = {
             type: "string" 
         },
         affiliate_id: {
-            type: "string"
+            type: "string",
+            nullable: true 
         }
     },
     required: [ "fname", "lname", "job_id", "hourly_rate", "commitment", "where", "authorized", "distance", "education",

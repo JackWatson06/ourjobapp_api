@@ -20,7 +20,8 @@ export const schema: JSONSchemaType<NewAffiliate> = {
             type: "string" 
         },
         affiliate_id: { 
-            type: "string" 
+            type: "string",
+            nullable: true 
         }
     },
     required: ["name", "email", "charity_id" ],
