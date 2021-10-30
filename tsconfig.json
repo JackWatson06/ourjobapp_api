@@ -9,7 +9,7 @@
         "sourceMap": true,
         "strictNullChecks": true,
         "outDir": "dist",
-        "baseUrl": ".",
+        "baseUrl": "./",
         "paths": {
             "infa/*" : [ "src/core/infa/*" ],
             "services/*" : [ "src/core/services/*" ],

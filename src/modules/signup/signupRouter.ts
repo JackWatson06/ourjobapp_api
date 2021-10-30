@@ -12,8 +12,8 @@ import express from "express";
 
 // We could put index in the controllers directory.
 import * as affiliate from "./controllers/AffiliateController";
-import * as employee from "./controllers/EmployerController";
-import * as employer from "./controllers/EmployeeController";
+import * as employee from "./controllers/EmployeeController";
+import * as employer from "./controllers/EmployerController";
 
 let signupRouter: express.Router = express.Router();
 

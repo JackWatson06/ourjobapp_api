@@ -42,7 +42,7 @@ export async function store(req: express.Request<any>, res: express.Response)
 
     // Validate that the input coming on the request would be able to create a employee
     const valid = ajv.compile(schema);
-    const data: NewEmployee = req.body;
+    const data: NewEmployee = req.body;    
 
     // Create the employee domain entity.
     if( valid(data) )
@@ -50,12 +50,9 @@ export async function store(req: express.Request<any>, res: express.Response)
         const email: Email       = new Email(data.email, Token.generate());
         const employee: Employee = new Employee(data, email);
 
-        console.log(employee);
-        
-
         await create(employee).catch( (err) => {
             console.error(err);
-            res.status(400).send( { "error" : "Could not create" } )
+            res.status(400).send( { "error" : true } )
         });
 
         // Verify the afiiliate is who they say they are.
@@ -63,9 +60,9 @@ export async function store(req: express.Request<any>, res: express.Response)
 
         return res.status(200).send( { "success": true } )
     }
-    
+
     // Error code did not work
-    return res.status(400).send( { "error" : "Can not create." } );
+    return res.status(400).send( { "error" : true } );
 }
 
 /**

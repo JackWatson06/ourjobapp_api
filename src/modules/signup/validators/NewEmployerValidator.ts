@@ -1,6 +1,5 @@
 import { JSONSchemaType } from "ajv";
-import * as Constants from "../../../types/Constants";
-
+import * as Constants from "infa/Constants";
 
 export interface NewEmployer {
     website      ?: string,

@@ -1,6 +1,5 @@
 import { JSONSchemaType } from "ajv";
-import * as Constants from "Constants";
-import * as Collections from "Collections";
+import * as Constants from "infa/Constants";
 
 export interface NewEmployee {
     nations       ?: string[],

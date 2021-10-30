@@ -117,7 +117,7 @@ export async function update(query: UpdateQuery, employer: Employer): Promise<bo
     const mdb: MDb = db();
 
     // Update the current collection
-    return (await mdb.collection("employers").updateOne({query}, { $set: {
+    return (await mdb.collection("employers").updateOne(query, { $set: {
         verified    : true,
         verified_on : employer.getVerifiedOn()
     } })).acknowledged;
