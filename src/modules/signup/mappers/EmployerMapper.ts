@@ -45,8 +45,10 @@ export async function create(employer: Employer): Promise<boolean>
 
     const newToken: InsertOneResult<Document> = await mdb.collection("tokens").insertOne(tokenRow)
 
+    const data: NewEmployer = employer.getData();
     const employerRow: Collections.Employer = { 
-        ...employer.getData(), 
+        ...data,
+        affiliate_id: data.affiliate_id ? new ObjectId(data.affiliate_id) : undefined, 
         token_id: newToken.insertedId,
         verified: false 
     };
@@ -96,7 +98,8 @@ export async function read(query: Query): Promise<Employer|null>
         where        : employerRow.where,
         international: employerRow.international,
         authorized   : employerRow.authorized,
-        email        : employerRow.email
+        email        : employerRow.email,
+        affiliate_id : employerRow.affiliate_id?.toString()
       }
     return new Employer(employer, email);
 }

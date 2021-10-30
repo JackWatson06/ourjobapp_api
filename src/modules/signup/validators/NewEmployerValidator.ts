@@ -1,11 +1,13 @@
 import { JSONSchemaType } from "ajv";
 
 export interface NewEmployer {
+    website      ?: string,
+    affiliate_id ?: string,
+
     fname        : string
     lname        : string
     position     : string,
     company_name : string,
-    website      ?: string,
     place_id     : string,
     industry     : string[],
     experience   : number[],
@@ -68,6 +70,9 @@ export const schema: JSONSchemaType<NewEmployer> = {
             type: "boolean" 
         },   // <= Enumeration
         email        : { 
+            type: "string" 
+        },
+        affiliate_id : { 
             type: "string" 
         }
     },

@@ -7,6 +7,8 @@
 import { db, now, MDb } from "infa/MongoDb";
 import * as Collections from "Collections";
 
+import { NewAffiliate } from "../validators/NewAffiliateValidator";
+
 import Affiliate from "../entities/Affiliate";
 import Email from "../entities/Email";
 import Token from "../entities/Token";
@@ -49,7 +51,7 @@ export async function read(query: Query): Promise<Affiliate|null>
 
     const token = new Token(tokenRow.token, tokenRow.expired_at);
     const email = new Email(affiliateRow.email, token);
-    return new Affiliate(affiliateRow.name, affiliateRow.charity_id, email);
+    return new Affiliate(affiliateRow as NewAffiliate, email);
 }
 
 /**
@@ -70,14 +72,15 @@ export async function create(affiliate: Affiliate): Promise<boolean>
 
     const newToken: InsertOneResult<Document> = await mdb.collection("tokens").insertOne(tokenRow)
 
-
+    const data: NewAffiliate = affiliate.getData();
     const affiliateRow: Collections.Affiliate = {
-        name       : affiliate.getName(),
-        email      : email.getEmail(),
-        charity_id : affiliate.getCharityId(),
-        verified   : false,
-        token_id   : newToken.insertedId,
-        created_at : now()
+        name        : data.name,
+        charity_id  : data.charity_id,
+        affiliate_id: data.affiliate_id ? new ObjectId(data.affiliate_id): undefined,
+        email       : email.getEmail(),
+        verified    : false,
+        token_id    : newToken.insertedId,
+        created_at  : now()
     };
 
     return ( await mdb.collection("affiliates").insertOne(affiliateRow) ).acknowledged;
@@ -87,7 +90,7 @@ export async function create(affiliate: Affiliate): Promise<boolean>
  * Yes I know this is awful code. But it was quick and dirty since we were on a TIGHT deadline. Get it working or die
  * as a company. Essentially here we are saying that when we UPDATE we automiatcally are only able to set if they are verified.
  * That is 100% business logic. DO NOT CALL FROM OUTSIDE authorize method iniside AffiliateController. If you do change the code
- * below so it is more general, and add a verified on the affilaite entity.
+ * below so it is more general, and add a verified on the affiliate entity.
  * @param affiliate Affiliate we want to persist to memory.
  */
 export async function update(query: UpdateQuery, affiliate: Affiliate): Promise<boolean>

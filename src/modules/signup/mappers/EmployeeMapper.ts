@@ -43,8 +43,10 @@ export async function create(employee: Employee): Promise<boolean>
 
     const newToken: InsertOneResult<Document> = await mdb.collection("tokens").insertOne(tokenRow)
 
+    const data: NewEmployee = employee.getData();
     const employeeRow: Collections.Employee = { 
-        ...employee.getData(), 
+        ...data,
+        affiliate_id: data.affiliate_id ? new ObjectId(data.affiliate_id) : undefined, 
         token_id: newToken.insertedId,
         verified: false 
     };
@@ -79,19 +81,20 @@ export async function read(query: Query): Promise<Employee|null>
     const token = new Token(tokenRow.token, tokenRow.expired_at);
     const email = new Email(employeeRow.email, token);
     const employee: NewEmployee = {
-        fname       : employeeRow.fname,
-        lname       : employeeRow.lname,
-        job_id      : employeeRow.job_id,
-        hourly_rate : employeeRow.hourly_rate,
-        commitment  : employeeRow.commitment,
-        where       : employeeRow.where,
-        authorized  : employeeRow.authorized,
-        distance    : employeeRow.distance,
-        education   : employeeRow.education,
-        experience  : employeeRow.experience,
-        information : employeeRow.information,
-        email       : employeeRow.email,
-        phone       : employeeRow.phone
+        fname        : employeeRow.fname,
+        lname        : employeeRow.lname,
+        job_id       : employeeRow.job_id,
+        hourly_rate  : employeeRow.hourly_rate,
+        commitment   : employeeRow.commitment,
+        where        : employeeRow.where,
+        authorized   : employeeRow.authorized,
+        distance     : employeeRow.distance,
+        education    : employeeRow.education,
+        experience   : employeeRow.experience,
+        information  : employeeRow.information,
+        email        : employeeRow.email,
+        phone        : employeeRow.phone,
+        affiliate_id : employeeRow.affiliate_id?.toString()
       }
     return new Employee(employee, email);
 }

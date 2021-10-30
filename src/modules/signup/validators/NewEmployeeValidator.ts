@@ -1,22 +1,24 @@
 import { JSONSchemaType } from "ajv";
 
 export interface NewEmployee {
-    fname       : string
-    lname       : string
-    job_id      : string[],
-    hourly_rate : number,
-    commitment  : number,
-    where       : number,
-    authorized  : number[],
-    distance    : number,
-    nations     ?: number[],
-    place_id    ?: string,
-    education   : number,
-    experience  : number,
-    major       ?: string[],
-    information : string,
-    email       : string,
-    phone       : string
+    nations       ?: number[],
+    place_id      ?: string,
+    major         ?: string[],
+    affiliate_id  ?: string
+
+    fname         : string
+    lname         : string
+    job_id        : string[],
+    hourly_rate   : number,
+    commitment    : number,
+    where         : number,
+    authorized    : number[],
+    distance      : number,
+    education     : number,
+    experience    : number,
+    information   : string,
+    email         : string,
+    phone         : string
   }
   
 export const schema: JSONSchemaType<NewEmployee> = {
@@ -60,31 +62,34 @@ export const schema: JSONSchemaType<NewEmployee> = {
             },
             nullable: true
         },
-        place_id:    { 
+        place_id:     { 
             type: "string", 
             nullable: true 
         }, // <= This would be the place id.
-        education:   { 
+        education:    { 
             type: "integer" 
         },
-        major:       {
+        major:        {
             type: "array",
             items: {
                 type: "string"
             }, 
             nullable: true
         },
-        experience:  { 
+        experience:   { 
             type: "integer" 
         }, // <= Enumeration
-        information: { 
+        information:  { 
             type: "string" 
         },
-        email:       { 
+        email:        { 
             type: "string" 
         },
-        phone:       { 
+        phone:        { 
             type: "string" 
+        },
+        affiliate_id: {
+            type: "string"
         }
     },
     required: [ "fname", "lname", "job_id", "hourly_rate", "commitment", "where", "authorized", "distance", "education",

@@ -9,15 +9,14 @@
 
 // Value objects
 import { email } from "services/Notify";
+import { NewAffiliate } from "../validators/NewAffiliateValidator";
+
 import Email from "./Email";
 
 export default class Affiliate
 {
     // Name of the affiliate. This will be used during link generation.
-    private name: string;
-
-    // Link to the contract that they have signed internally.
-    private charity_id: string;
+    private data: NewAffiliate
 
     // Email of the affiliate.
     private email: Email;
@@ -25,10 +24,9 @@ export default class Affiliate
     // Link to the contract that they have signed internally.
     private verified_on: number;
 
-    constructor(name: string, charity_id: string, email: Email )
+    constructor(data: NewAffiliate, email: Email )
     { 
-        this.name        = name;
-        this.charity_id  = charity_id;
+        this.data        = data;
         this.email       = email;
     }
 
@@ -42,7 +40,7 @@ export default class Affiliate
         if( Date.now() < this.email.getExpiredDate() )
         {
             await email(this.email.getEmail(), "Please Verify Your Account!", "verification", {
-                name: this.name,
+                name: this.data.name,
                 link: `${process.env.CLIENT_DOMAIN}/verify/sharer/${this.email.getToken()}` 
             });
             return true;
@@ -68,12 +66,12 @@ export default class Affiliate
     // === GETTERS ===
     public getName() : string
     {
-        return this.name;
+        return this.data.name;
     }
 
-    public getCharityId() : string
+    public getData() : NewAffiliate
     {
-        return this.charity_id;
+        return this.data;
     }
 
     public getVerifiedAt() : number

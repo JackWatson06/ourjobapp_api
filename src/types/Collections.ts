@@ -36,18 +36,6 @@ export type Charity = {
     created_at : number
 }
 
-export type Affiliate = {
-    _id          ?: ObjectId,
-    affiliate_id ?: ObjectId,
-    token_id      : ObjectId,
-    verified_on  ?: number,
-    name          : string,
-    charity_id    : string,
-    email         : string,
-    verified      : boolean
-    created_at    : number
-}
-
 export type Token = {
     _id         ?: ObjectId,
 
@@ -56,38 +44,53 @@ export type Token = {
     created_at  : number
 }
 
+export type Affiliate = {
+    _id          ?: ObjectId,
+    affiliate_id ?: ObjectId,
+    verified_on  ?: number,
+
+    token_id      : ObjectId,
+    name          : string,
+    charity_id    : string,
+    email         : string,
+    verified      : boolean
+    created_at    : number
+}
+
 export type Employee = {
-    _id         ?: ObjectId,
-    token_id     : ObjectId,
+    _id          ?: ObjectId,
+    token_id      : ObjectId,
+ 
+    affiliate_id ?: ObjectId,
+    major        ?: string[],
+    nations      ?: number[],
+    place_id     ?: string,
+    verified_on  ?: number,
 
-    major       ?: string[],
-    nations     ?: number[],
-    place_id    ?: string,
-    verified_on ?: number,
-
-    fname       : string,
-    lname       : string,
-    job_id      : string[],
-    hourly_rate : number,
-    commitment  : number,
-    where       : number,
-    authorized  : number[],
-    distance    : number,
-
-    education   : number,
-    experience  : number,
-    information : string,
-    email       : string,
-    phone       : string
-    verified    : boolean
+    fname         : string,
+    lname         : string,
+    job_id        : string[],
+    hourly_rate   : number,
+    commitment    : number,
+    where         : number,
+    authorized    : number[],
+    distance      : number,
+  
+    education     : number,
+    experience    : number,
+    information   : string,
+    email         : string,
+    phone         : string
+    verified      : boolean
 }
 
 export type Employer = {
-    _id         ?: ObjectId,
-    token_id     : ObjectId,
+    _id          ?: ObjectId,
+    token_id      : ObjectId,
 
-    verified_on ?: number,
-    website     ?: string,
+    affiliate_id ?: ObjectId,
+    verified_on  ?: number,
+    website      ?: string,
 
     fname        : string
     lname        : string

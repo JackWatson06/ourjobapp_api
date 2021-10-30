@@ -1,3 +1,10 @@
+/**
+ * Original Author: Jack Watson
+ * Created Date: 10/30/2021
+ * Purpose: This mapper manages the process to convert a AffiliateCookie entity to the database.
+ */
+
+
 import * as MongoDb from "infa/MongoDb";
 import AffiliateCookie from "../entities/AffiliateCookie"
 

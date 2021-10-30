@@ -45,7 +45,7 @@ export async function store(req: express.Request<any>, res: express.Response)
     if( valid(data) )
     {
         const email: Email = new Email(data.email, Token.generate());
-        const affiliate: Affiliate   = new Affiliate(data.name, data.charity_id, email);
+        const affiliate: Affiliate   = new Affiliate(data, email);
 
         await create(affiliate).catch( (err) => {
             console.error(err);
