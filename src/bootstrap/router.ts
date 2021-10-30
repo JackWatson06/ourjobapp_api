@@ -9,11 +9,13 @@
 import express from 'express'
 import searchRouter from '../modules/search/searchRouter';
 import signupRouter from '../modules/signup/signupRouter';
+import trackingRouter from '../modules/tracking/trackingRouter';
 
 let router: express.Router = express.Router();
 
-router.use('/search', searchRouter);
-router.use('/signup', signupRouter);
+router.use('/search',   searchRouter);
+router.use('/signup',   signupRouter);
+router.use('/tracking', trackingRouter);
 
 export default router;
 
