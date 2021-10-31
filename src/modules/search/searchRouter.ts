@@ -35,7 +35,7 @@ searchRouter.get("/countries",  indexCountries);
 
 searchRouter.get("/existing/links",              ExistingLink.show);
 searchRouter.get("/existing/affiliate-emails",   ExistingEmail.affiliate);
-searchRouter.get("/existing/employee-emails",    ExistingEmail.employer);
-searchRouter.get("/existing/employer-emails",    ExistingEmail.employee);
+searchRouter.get("/existing/employee-emails",    ExistingEmail.employee);
+searchRouter.get("/existing/employer-emails",    ExistingEmail.employer);
 
 export default searchRouter;
