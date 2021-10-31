@@ -23,6 +23,14 @@ The structuure of this applicaiton is based heavily on two github repositories.
 ## Why Are We Using DDD
 We are using DDD because I find that it allows you to create more scalable applications. Obviously, you're going to say why would you start doing DDD from the beginning if you don't even know your application has a valid market fit (I would ask that at least). To that, I say fair point. It does require more upfront time. But on the off chance that we do have market fit at least, we'll be able to have less technical debt thus hopefully giving us a more headstart if we do become successful. Lastly, I think this application works well with DDD because there will be complex business logic built into the affiliate program.
 
+## Production
+
+In productiuno this applicatino exposes two ports on the server. The first being 8080, and the second being 8081. 8080 for our copy of NGINX so we can have inter-container communication and to hide away our database. The second being 8081 for Mongo Express. We have the iptables rules set on the server such that we restrict access to these ports only on the case of our servers NGINX
+proxy redirect to these ports. So what this means is that they are ONLY accessible through SSL and no other communicates. The following URLs map to our corresponding ports.
+
+- db.ourjob.app   : Mongo Express Container
+- api.ourjob.app  : NGINX Api
+
 ## Commands
 
     docker-compose up
