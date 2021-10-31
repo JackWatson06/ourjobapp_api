@@ -11,9 +11,10 @@ export type Major = {
 }
 
 export type Country = {
-    _id?: ObjectId,
-    name: string,
-    created_at: number
+    _id          ?: ObjectId,
+    country_code  : string,
+    name          : string,
+    created_at    : number
 }
 
 export type Job = {

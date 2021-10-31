@@ -11,7 +11,8 @@ import fs from "fs";
 
 // Just look at the coutnry data lol for some reason when we turn to JSON it is all Afghanistan.
 type CountryRow = {
-    Afghanistan: string;
+    Code: string;
+    Country: string;
 };
 
 // Where is the file that we are looking for located.
@@ -32,8 +33,9 @@ export default async function exec()
     for(const row of worksheetJSON)
     {
         const country: Collections.Country = {
-            name: titleCase( row.Afghanistan.toLowerCase() ),
-            created_at: MongoDb.now()
+            country_code : row.Code,
+            name         : titleCase( row.Country.toLowerCase() ),
+            created_at   : MongoDb.now()
         }
 
         extractedJSON.push(country);
