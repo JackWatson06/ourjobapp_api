@@ -34,10 +34,6 @@ import Ajv from "ajv";
  */
 export async function store(req: express.Request<any>, res: express.Response)
 {
-
-    console.log("TEsting");
-    
-
     const ajv = new Ajv();
 
     // Validate that the input coming on the request would be able to create a employee

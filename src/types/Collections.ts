@@ -37,6 +37,22 @@ export type Charity = {
     created_at : number
 }
 
+export type Contract = {
+    _id       ?: ObjectId,
+
+    hash       : string,
+    created_at : number
+}
+
+export type Location = {
+    _id         ?: ObjectId,
+
+    place_id     : string,
+    country_code : string,
+    latitutde    : number,
+    longitude    : number,
+}
+
 export type Token = {
     _id         ?: ObjectId,
 
@@ -60,6 +76,7 @@ export type Affiliate = {
 
 export type Employee = {
     _id          ?: ObjectId,
+    contract_id  ?: ObjectId,
     token_id      : ObjectId,
  
     affiliate_id ?: ObjectId,
@@ -87,6 +104,7 @@ export type Employee = {
 
 export type Employer = {
     _id          ?: ObjectId,
+    contract_id  ?: ObjectId,
     token_id      : ObjectId,
 
     affiliate_id ?: ObjectId,
