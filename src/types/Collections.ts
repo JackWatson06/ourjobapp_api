@@ -102,7 +102,6 @@ export type Employer = {
     salary       : number,
     commitment   : number,
     where        : number,
-    international: boolean,
     authorized   : boolean,
     verified     : boolean,
     email        : string,

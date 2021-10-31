@@ -6,13 +6,13 @@
  */
 
 import { getPlaceByName } from "../../../core/infa/GoogleApiAdaptor";
-import Place from "../entities/Place";
+import DictionaryResult from "../entities/DictionaryResult";
 
-export async function read(name: string): Promise<Array<Place>>
+export async function read(name: string): Promise<Array<DictionaryResult>>
 {   
-    let places: google.maps.places.AutocompleteResponse = await getPlaceByName(name);
+    const places: google.maps.places.AutocompleteResponse = await getPlaceByName(name);
 
     return places.predictions.map((prediction:  google.maps.places.AutocompletePrediction) => {
-        return new Place( prediction.place_id, prediction.description);
+        return new DictionaryResult( prediction.place_id, prediction.description);
     });
 }

@@ -15,11 +15,11 @@ export const Where: Constant = {
 }
 
 export const Distance: Constant = {
-    WORLDWIDE         : 1,
-    NATIONALLY        : 2,
-    TEN_MILES         : 3,
-    FIFTY_MILES       : 4,
-    ONE_HUNDRED_MILES : 5
+    NATIONALLY              : 1,
+    TEN_MILES               : 2,
+    FIFTY_MILES             : 3,
+    ONE_HUNDRED_MILES       : 4,
+    TWO_HUNDRED_FIFTY_MILES : 5
 }
 
 export const Education: Constant = {

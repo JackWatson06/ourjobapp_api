@@ -96,7 +96,6 @@ export async function read(query: Query): Promise<Employer|null>
         salary       : employerRow.salary,
         commitment   : employerRow.commitment,
         where        : employerRow.where,
-        international: employerRow.international,
         authorized   : employerRow.authorized,
         email        : employerRow.email,
         industry     : employerRow.industry.map((industry: ObjectId) => industry.toString()),

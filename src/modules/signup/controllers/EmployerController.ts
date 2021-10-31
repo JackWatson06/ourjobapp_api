@@ -55,7 +55,7 @@ export async function store(req: express.Request<any>, res: express.Response)
             res.send( { "error" : true } )
         });
     }
-    
+
     // Error code did not work
     return res.send( { "error" : true } );
 }

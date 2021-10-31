@@ -15,7 +15,6 @@ export interface NewEmployer {
     salary       : number,
     commitment   : number,
     where        : number,
-    international: boolean,
     authorized   : boolean,
     email        : string
   }
@@ -67,10 +66,7 @@ export const schema: JSONSchemaType<NewEmployer> = {
             type: "integer",
             enum: Object.values(Constants.Where)
         },   // <= Enumeration
-        international: { 
-            type: "boolean" 
-        },
-        authorized   : { 
+        authorized: { 
             type: "boolean" 
         },
         email        : { 
@@ -82,7 +78,7 @@ export const schema: JSONSchemaType<NewEmployer> = {
         }
     },
     required: ["fname", "lname", "position", "company_name", "place_id", "industry", "experience", "salary", "commitment",
-        "where", "international", "authorized", "email"
+        "where", "authorized", "email"
     ],
     additionalProperties: false
 }

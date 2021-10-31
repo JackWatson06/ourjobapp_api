@@ -1,5 +1,5 @@
 import express from "express";
-import Place from "../entities/Place";
+import DictionaryResult from "../entities/DictionaryResult";
 import { read } from "../mappers/PlaceMapper";
 
 /**
@@ -17,7 +17,7 @@ export async function index(req: express.Request, res: express.Response) : Promi
     const name: string = req.query.name as string;
 
     // Call up the repository.
-    read(name).then((data: Array<Place>) => {
+    read(name).then((data: Array<DictionaryResult>) => {
         res.send(data);
     });
 }

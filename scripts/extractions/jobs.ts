@@ -6,6 +6,7 @@
 import * as MongoDb from "infa/MongoDb";
 import * as Collections from "Collections";
 import { titleCase } from "title-case";
+import * as crypto from "crypto";
 import * as XLSX from "xlsx";
 import fs from "fs";
 
@@ -15,6 +16,10 @@ type JobsRow = {
     "Employer List": string;
 };
 
+type TitleDictionary = {
+    [name: string]: number;
+}
+
 // Where is the file that we are looking for located.
 const INPUT            = __dirname + "/../raw-data/job-list.xlsx";
 const OUTPUT_JOB       = __dirname + "/../raw-data/jobs.json";
@@ -23,10 +28,12 @@ const OUTPUT_JOB_GROUP = __dirname + "/../raw-data/job-groups.json";
 
 export default async function exec()
 {
+    const jobDictionary: TitleDictionary = {};
+    const jobGroupDictionary: TitleDictionary = {};
+
     // Read in the relevant page in the xlsx file.
     const workbook : XLSX.WorkBook = XLSX.readFile(INPUT);
     const page: XLSX.WorkSheet = workbook.Sheets[ workbook.SheetNames[1] ];
-
 
     // Excel worksheet
     const worksheetJSON: JobsRow[] = XLSX.utils.sheet_to_json(page);
@@ -37,24 +44,38 @@ export default async function exec()
 
     for(const row of worksheetJSON)
     {
-        const jobString = titleCase( row["Employee List"].toLowerCase() );
-        const jobGroupString = titleCase( row["Employer List"].toLowerCase() );
+        const jobString = titleCase( row["Employee List"].toLowerCase().trim() );
+        const jobGroupString = titleCase( row["Employer List"].toLowerCase().trim() );
 
-        const job: Collections.Job = {
-            name: jobString,
-            job_group: jobGroupString,
-            created_at: MongoDb.now()
+        const jobHash: string = crypto.createHash('md5').update(jobString).digest('hex');
+        const jobGroupHash: string = crypto.createHash('md5').update(jobGroupString).digest('hex');
+
+        // If the charity is already in the list then we just want to skip the charity.
+        if( !jobDictionary.hasOwnProperty(jobHash) )
+        {   
+            const job: Collections.Job = {
+                name: jobString,
+                job_group: jobGroupString,
+                created_at: MongoDb.now()
+            }
+
+            jobDictionary[jobHash] = 0;
+            extractedJobsJSON.push(job);
+
         }
 
-        const jobGroup: Collections.JobGroup = {
-            name: jobGroupString,
-            created_at: MongoDb.now()
-        }
+        // If the charity is already in the list then we just want to skip the charity.
+        if( !jobGroupDictionary.hasOwnProperty(jobGroupHash) )
+        {   
+            const jobGroup: Collections.JobGroup = {
+                name: jobGroupString,
+                created_at: MongoDb.now()
+            }
 
-        extractedJobsJSON.push(job);
-        extractedJobGroupJSON.push(jobGroup);
+            jobGroupDictionary[jobGroupHash] = 0;
+            extractedJobGroupJSON.push(jobGroup);
+        }
     }
-
 
     const error = (error: NodeJS.ErrnoException) => {
         if(error)
