@@ -16,42 +16,43 @@ import Token from "../entities/Token";
 import { InsertOneResult, ObjectId } from "mongodb";
 
 type Query = {
-    _id      ?: ObjectId,
-    token_id ?: ObjectId,
-    name     ?: string,
-    email    ?: string,
-    verified ?: boolean
-}
+  _id?: ObjectId;
+  token_id?: ObjectId;
+  name?: string;
+  email?: string;
+  verified?: boolean;
+};
 
 type UpdateQuery = {
-    token_id ?: ObjectId
-}
+  token_id?: ObjectId;
+};
 /**
  * Store the affiliate in the database. Return true or false if we were sucessful.... that would be cought thow if there
  * were an error maybe we just return void.
  * @param affiliate Affiliate we want to persist to memory.
  */
-export async function read(query: Query): Promise<Affiliate|null>
-{
-    const mdb: MDb = db();
+export async function read(query: Query): Promise<Affiliate | null> {
+  const mdb: MDb = db();
 
-    const affiliateRow: Collections.Affiliate|null = await mdb.collection("affiliates").findOne<Collections.Affiliate>(query);
-    
-    if( affiliateRow === null )
-    {
-        return null;
-    }
+  const affiliateRow: Collections.Affiliate | null = await mdb
+    .collection("affiliates")
+    .findOne<Collections.Affiliate>(query);
 
-    const tokenRow: Collections.Token|null = await mdb.collection("tokens").findOne<Collections.Token>({ _id: affiliateRow.token_id});
+  if (affiliateRow === null) {
+    return null;
+  }
 
-    if(tokenRow === null)
-    {
-        return null;
-    }
+  const tokenRow: Collections.Token | null = await mdb
+    .collection("tokens")
+    .findOne<Collections.Token>({ _id: affiliateRow.token_id });
 
-    const token = new Token(tokenRow.token, tokenRow.expired_at);
-    const email = new Email(affiliateRow.email, token);
-    return new Affiliate(affiliateRow as NewAffiliate, email);
+  if (tokenRow === null) {
+    return null;
+  }
+
+  const token = new Token(tokenRow.token, tokenRow.expired_at);
+  const email = new Email(affiliateRow.email, token);
+  return new Affiliate(affiliateRow as NewAffiliate, email);
 }
 
 /**
@@ -59,31 +60,35 @@ export async function read(query: Query): Promise<Affiliate|null>
  * were an error maybe we just return void.
  * @param affiliate Affiliate we want to persist to memory.
  */
-export async function create(affiliate: Affiliate): Promise<boolean>
-{
-    const mdb: MDb = db();
-    
-    const email: Email = affiliate.getEmail();
-    const tokenRow: Collections.Token = {
-        token       : email.getToken(),
-        expired_at  : email.getExpiredDate(),
-        created_at  : now()
-    }
+export async function create(affiliate: Affiliate): Promise<boolean> {
+  const mdb: MDb = db();
 
-    const newToken: InsertOneResult<Document> = await mdb.collection("tokens").insertOne(tokenRow)
+  const email: Email = affiliate.getEmail();
+  const tokenRow: Collections.Token = {
+    token: email.getToken(),
+    expired_at: email.getExpiredDate(),
+    created_at: now(),
+  };
 
-    const data: NewAffiliate = affiliate.getData();
-    const affiliateRow: Collections.Affiliate = {
-        name        : data.name,
-        charity_id  : data.charity_id,
-        affiliate_id: data.affiliate_id ? new ObjectId(data.affiliate_id): undefined,
-        email       : email.getEmail(),
-        verified    : false,
-        token_id    : newToken.insertedId,
-        created_at  : now()
-    };
+  const newToken: InsertOneResult<Document> = await mdb
+    .collection("tokens")
+    .insertOne(tokenRow);
 
-    return ( await mdb.collection("affiliates").insertOne(affiliateRow) ).acknowledged;
+  const data: NewAffiliate = affiliate.getData();
+  const affiliateRow: Collections.Affiliate = {
+    name: data.name,
+    charity_id: data.charity_id,
+    affiliate_id: data.affiliate_id
+      ? new ObjectId(data.affiliate_id)
+      : undefined,
+    email: email.getEmail(),
+    verified: false,
+    token_id: newToken.insertedId,
+    created_at: now(),
+  };
+
+  return (await mdb.collection("affiliates").insertOne(affiliateRow))
+    .acknowledged;
 }
 
 /**
@@ -93,13 +98,19 @@ export async function create(affiliate: Affiliate): Promise<boolean>
  * below so it is more general, and add a verified on the affiliate entity.
  * @param affiliate Affiliate we want to persist to memory.
  */
-export async function update(query: UpdateQuery, affiliate: Affiliate): Promise<boolean>
-{
-    const mdb: MDb = db();
+export async function update(
+  query: UpdateQuery,
+  affiliate: Affiliate
+): Promise<boolean> {
+  const mdb: MDb = db();
 
-    // Update the current collection
-    return (await mdb.collection("affiliates").updateOne(query, { $set: {
-        verified    : true,
-        verified_on : affiliate.getVerifiedAt()
-    } })).acknowledged;
+  // Update the current collection
+  return (
+    await mdb.collection("affiliates").updateOne(query, {
+      $set: {
+        verified: true,
+        verified_on: affiliate.getVerifiedAt(),
+      },
+    })
+  ).acknowledged;
 }
