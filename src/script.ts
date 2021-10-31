@@ -1,4 +1,4 @@
-import bootstrap from "../src/bootstrap/dependencies";
+import bootstrap from "./bootstrap/dependencies";
 import * as mongoDb from "infa/MongoDb";
 
 /**

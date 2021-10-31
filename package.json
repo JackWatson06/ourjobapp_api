@@ -10,10 +10,11 @@
     "start": "node dist/bootstrap/server.js",
     "dev": "npx nodemon src/server.ts",
     "build": "tsc",
-    "script": "npx ts-node scripts/script.ts",
+    "script": "npx ts-node src/script.ts",
     "docker-script": "docker exec unijobapp_api_node npm run script",
-    "refresh-database": "docker exec unijobapp_api_node sh -c \"npm run script -- ./database-delete && npm run script -- ./database-seed\"",
-    "seed-database": "docker exec unijobapp_api_node npm run script -- ./database-seed",
+    "refresh-database": "docker exec unijobapp_api_node sh -c \"npm run script -- ../database/database-delete && npm run script -- ../database/database-seed\"",
+    "seed-database": "docker exec unijobapp_api_node npm run script -- ../database/database-seed",
+    "match": "docker exec unijobapp_api_node npm run script -- ./modules/connection/run",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
