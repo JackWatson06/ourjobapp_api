@@ -13,7 +13,7 @@
     "script": "npx ts-node src/script.ts",
     "docker-script": "docker exec unijobapp_api_node npm run script",
     "refresh-database": "docker exec unijobapp_api_node sh -c \"npm run script -- ../database/database-delete && npm run script -- ../database/database-seed\"",
-    "seed-database": "docker exec unijobapp_api_node npm run script -- ../database/database-seed",
+    "seed-database": "docker exec unijobapp_api_node npm run script -- ../database/seed/matching-seeder",
     "match": "docker exec unijobapp_api_node npm run script -- ./modules/connection/run",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
