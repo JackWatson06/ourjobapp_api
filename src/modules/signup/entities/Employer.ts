@@ -8,10 +8,13 @@
  * "Reasoning Validation" is a word I came up for in order to validate the input meets expected values. Reduces spam.
  */
 
-import { NewEmployer } from "../validators/NewEmployerValidator";
-import { email } from "services/Notify";
+import * as EmailMs from "services/notify/Email";
+import { sendEmail } from "services/Notify";
+import { generateContract } from "services/Contract";
 
 import Email from "./Email";
+
+import { NewEmployer } from "../validators/NewEmployerValidator";
 
 export default class Employer
 {
@@ -20,6 +23,9 @@ export default class Employer
 
     // Email verification data.
     private email: Email;
+
+    // Name of the contract file.
+    private fileName: string;
 
     // Email verification data.
     private verified_at: number;
@@ -40,11 +46,17 @@ export default class Employer
 
         if( Date.now() < this.email.getExpiredDate() )
         {
-            await email(this.email.getEmail(), "Please Verify Your Account!", "verification", {
+            // Figure out what to do here.
+            this.fileName = "";
+
+            let email: EmailMs.Email = EmailMs.makeEmail(this.email.getEmail(), "Please Verify Your Account!");
+            // email = EmailMs.addAttachment(email, this.fileName, "Employer Contract");
+            email = await EmailMs.addHtml(email, "verification", {
                 name: this.data.fname + " " + this.data.lname,
                 link: `${process.env.CLIENT_DOMAIN}/verify/employer/${this.email.getToken()}`
             });
 
+            await sendEmail(email);
             return true;
         }
 

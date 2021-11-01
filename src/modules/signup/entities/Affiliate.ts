@@ -7,11 +7,15 @@
  * email before proceeding onto the next steps.
  */
 
-// Value objects
-import { email } from "services/Notify";
-import { NewAffiliate } from "../validators/NewAffiliateValidator";
+// Short for Email Message
+import * as EmailMs from "services/notify/Email";
+import { sendEmail } from "services/Notify";
+import { generateContract } from "services/Contract";
 
+// Value Objects
 import Email from "./Email";
+
+import { NewAffiliate } from "../validators/NewAffiliateValidator";
 
 export default class Affiliate
 {
@@ -20,6 +24,9 @@ export default class Affiliate
 
     // Email of the affiliate.
     private email: Email;
+
+    // Contract of the affiliate.
+    private fileName: string;
 
     // Link to the contract that they have signed internally.
     private verified_on: number;
@@ -39,10 +46,17 @@ export default class Affiliate
     {
         if( Date.now() < this.email.getExpiredDate() )
         {
-            await email(this.email.getEmail(), "Please Verify Your Account!", "verification", {
+            // Figure out what to do here.
+            this.fileName = "Hey";
+
+            let email: EmailMs.Email = EmailMs.makeEmail(this.email.getEmail(), "Please Verify Your Account!");
+            // email = EmailMs.addAttachment(email, this.fileName, "Affilaite Contract");
+            email = await EmailMs.addHtml(email, "verification", {
                 name: this.data.name,
                 link: `${process.env.CLIENT_DOMAIN}/verify/sharer/${this.email.getToken()}` 
             });
+
+            await sendEmail(email);
             return true;
         }
 

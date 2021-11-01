@@ -26,7 +26,7 @@ export async function read(search: string, source: string): Promise<Array<Dictio
 {
     const db: MongoDb.MDb = MongoDb.db();
     const query: DictionaryQuery = {
-        "name": new RegExp(`^${search}.*`)
+        "name": new RegExp(`.*${search}.*`, "i"),
     };
 
     return db.collection(source).find<DictionaryRow>(query).limit(100).map(( result ) => {

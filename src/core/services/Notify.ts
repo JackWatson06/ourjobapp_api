@@ -5,12 +5,9 @@
  * app emails, or just general marketing emails.
  */
 
-import Handlebars       from "handlebars";
-import path             from "path";
-import fs               from "fs";
 import * as nodemailer  from "nodemailer";
-
-import * as env         from "environment";
+import * as Email from "./notify/Email";
+import * as env         from "environment"; // This just sets the types for the environment variables
 
 const from: string     = process.env.MAIL_FROM_ADDRESS
 const fromName: string = process.env.MAIL_FROM_NAME
@@ -25,19 +22,19 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// async..await is not allowed in global scope, must use a wrapper
-export async function email(to: string, subject: string, template: string, binds: {}) 
+
+/**
+ * Send out en email using the current settings.
+ * @param email Email we are sending (create thee email form the Notify folder)
+ */
+export async function sendEmail(email: Email.Email)
 {
-  const templateFile = path.join(__dirname, `../../../templates/email/${template}.hbs`);
-
-  const compiled = await Handlebars.compile( fs.readFileSync(templateFile, 'utf8') );
-
   // send mail with defined transport object
   return await transporter.sendMail({
-    from: `"${fromName}" <${from}>`,
-    to: to,
-    subject: subject,
-    html: compiled(binds),
+    from        : `"${fromName}" <${from}>`,
+    to          : email.to,
+    subject     : email.subject,
+    html        : email.html,
+    attachments : email.attachments
   });
-  
 }
