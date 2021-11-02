@@ -110,7 +110,7 @@ export default async function exec()
             email         : "email@gmail.com",
             phone         : "000-000-0000",
             verified      : true,
-            education     : 1,
+            education     : 1, 
             place_id      : "ChIJkYgocFYl6IARJi7MRwF6Lo0",   // Thousand Oaks California
             job_id        : [ aircraftEngineer ],
             authorized    : [ unitedStatesId ],
@@ -219,7 +219,7 @@ export default async function exec()
     }
     
     // Insert the employees
-    for(const employee of employers)
+    for(const employee of employees)
     {
         await db.collection("employees").insertOne(employee);
     }
