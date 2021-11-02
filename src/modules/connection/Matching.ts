@@ -1,7 +1,7 @@
-import { db, now, MDb } from "infa/MongoDb";
+import * as MongoDb from "infa/MongoDb";
 import * as Collections from "Collections";
 
-const mdb = db();
+const mdb = MongoDb.db();
 const MATCH_LIMIT = 100;
 
 let jobs      : Array<Collections.Job>;
@@ -30,8 +30,6 @@ function matchAll() {
 Matches against all employees based on: location, work auth, wage.
 */
 export async function singleMatch(employerId: string): Promise<string> {
-
-    console.log("Testing");
     
     seedMemory();
 
@@ -67,7 +65,7 @@ export async function singleMatch(employerId: string): Promise<string> {
     const match = {
       employer_id: employer._id,
       employee_ids: Object.keys(matchingEmployees),
-      created_at: now()
+      created_at: MongoDb.now()
     }
 
     // await mdb.collections("matches").insertOne(match);
@@ -80,9 +78,9 @@ export async function singleMatch(employerId: string): Promise<string> {
  * Seed the in memory collections of constants that won't change. Saves database hits.
  */
 async function seedMemory() {
-  jobs      = await mdb.collection("jobs").find();
-  jobGroups = await mdb.collection("job-groups").find();
-  countries = await mdb.collection("countires").find();
+  jobs      = await mdb.collection("jobs").find<Collections.Job>({}).toArray();
+  jobGroups = await mdb.collection("jobs-groups").find<Collections.JobGroup>({}).toArray();
+  countries = await mdb.collection("countries").find<Collections.Country>({}).toArray();
 }
 
 // // Take in employee id & employer id:
