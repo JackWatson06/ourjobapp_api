@@ -31,7 +31,7 @@ Matches against all employees based on: location, work auth, wage.
 */
 export async function singleMatch(employerId: string): Promise<string> {
     
-    seedMemory();
+    await seedMemory();
 
     console.log(jobs);
     console.log(jobGroups);
