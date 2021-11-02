@@ -4,6 +4,11 @@ import { ObjectId } from "mongodb";
 // |   Models    |
 // ===============
 
+
+
+/**
+ * === Constants ====
+ */
 export type Major = {
     _id?: ObjectId,
     name: string,
@@ -37,20 +42,47 @@ export type Charity = {
     created_at : number
 }
 
-export type Contract = {
-    _id       ?: ObjectId,
 
-    hash       : string,
+/**
+ * === Matching ====
+ */
+export type Batch = {
+    _id       ?: ObjectId,
+    created_at : number
+}
+
+export type Match = {
+    _id        ?: ObjectId,
+    batch_id   ?: ObjectId,
+    employer_id : ObjectId,
+    matches     : ObjectId[],
+    scores      : number[],
+    created_at  : number
+}
+
+export type Email = {
+    _id       ?: ObjectId,
+    match_id   : ObjectId,
     created_at : number
 }
 
 export type Location = {
     _id         ?: ObjectId,
-
     place_id     : string,
     country_code : string,
     latitutde    : number,
     longitude    : number,
+    created_at   : number
+}
+
+/**
+ * === Signup ====
+ */
+export type Contract = {
+    _id       ?: ObjectId,
+
+    hash       : string,
+    created_at : number
 }
 
 export type Token = {

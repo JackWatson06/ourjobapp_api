@@ -12,6 +12,7 @@
         "baseUrl": ".",
         "paths": {
             "infa/*" : [ "src/core/infa/*" ],
+            "modules/*" : [ "src/modules/*" ],
             "services/*" : [ "src/core/services/*" ],
             "*": [
                 "src/types/*",
@@ -21,6 +22,7 @@
     },
     "include": [
         "src/**/*",
-        "database/**/*"
+        "database/**/*",
+        "tests/**/*"
     ]
 }

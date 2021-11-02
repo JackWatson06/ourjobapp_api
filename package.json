@@ -15,7 +15,7 @@
     "refresh-database": "docker exec unijobapp_api_node sh -c \"npm run script -- ../database/database-delete && npm run script -- ../database/database-seed\"",
     "seed-database": "docker exec unijobapp_api_node npm run script -- ../database/seed/matching-seeder",
     "match": "docker exec unijobapp_api_node npm run script -- ./modules/connection/commands/MatchAllCommand",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --forceExit --coverage --verbose"
   },
   "repository": {
     "type": "git",
@@ -38,6 +38,7 @@
     "errorhandler": "^1.5.1",
     "express": "^4.17.1",
     "handlebars": "^4.7.7",
+    "jest": "^27.3.1",
     "lusca": "^1.7.0",
     "migrate": "^1.7.0",
     "module-alias": "^2.2.2",
