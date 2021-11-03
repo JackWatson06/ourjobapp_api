@@ -10,7 +10,7 @@ export default class Batch
 
     constructor(id: string)
     {
-        this.id = id;
+        this.id        = id;
     }
 
     public getId(): string
@@ -18,4 +18,3 @@ export default class Batch
         return this.id;
     }
 }
-

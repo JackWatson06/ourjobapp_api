@@ -1,25 +1,32 @@
-import BatchMatch from "modules/connection/entities/BatchMatch";
+import BatchMatch from "modules/matching/entities/BatchMatch";
+import Match from "modules/matching/entities/Match";
 
 test("can add multiple employee score", () => {
     const batch: BatchMatch = new BatchMatch("RANDOM", "RANDOM");
 
-    batch.integrateEmployeeId("1", 10);
-    batch.integrateEmployeeId("2", 5);
-    batch.integrateEmployeeId("3", 2);
+    const match: Match = new Match("1", 10, "123");
+    const matchTwo: Match = new Match("2", 5, "123");
+    const matchThree: Match = new Match("3", 2, "123");
+    
+    batch.integrateMatch(match);
+    batch.integrateMatch(matchTwo);
+    batch.integrateMatch(matchThree);
 
-    expect(batch.getEmployees()).toEqual(["1", "2", "3"]);
-    expect(batch.getScores()).toEqual([10, 5, 2]);
+    expect(batch.getMatches()).toEqual([match, matchTwo, matchThree]);
 });
 
 test("can insert if better score", () => {
     const batch: BatchMatch = new BatchMatch("RANDOM", "RANDOM");
 
-    batch.integrateEmployeeId("1", 10);
-    batch.integrateEmployeeId("2", 5);
-    batch.integrateEmployeeId("3", 8);
+    const match: Match = new Match("1", 10, "123");
+    const matchTwo: Match = new Match("2", 5, "123");
+    const matchThree: Match = new Match("3", 8, "123");
+    
+    batch.integrateMatch(match);
+    batch.integrateMatch(matchTwo);
+    batch.integrateMatch(matchThree);
 
-    expect(batch.getEmployees()).toEqual(["1", "3", "2"]);
-    expect(batch.getScores()).toEqual([10, 8, 5]);
+    expect(batch.getMatches()).toEqual([match, matchThree, matchTwo]);
 });
 
 
@@ -27,23 +34,25 @@ test("does not excede max limit", () => {
     const batch: BatchMatch = new BatchMatch("RANDOM", "RANDOM");
     const limit: number = 100;
 
-    for(let i = 0; i < limit; i++)
+    for(let i = 0; i < limit + 50; i++)
     {
-        batch.integrateEmployeeId(i.toString(), i);
+        batch.integrateMatch(new Match(i.toString(), i, "123") );
     }
 
-    expect(batch.getEmployees().length).toEqual(limit);
-    expect(batch.getScores().length).toEqual(limit);
+    expect(batch.getMatches().length).toEqual(limit);
 });
 
 
 test("inserting highest score", () => {
     const batch: BatchMatch = new BatchMatch("RANDOM", "RANDOM");
 
-    batch.integrateEmployeeId("1", 10);
-    batch.integrateEmployeeId("2", 5);
-    batch.integrateEmployeeId("3", 15);
+    const match: Match      = new Match("1", 10, "123");
+    const matchTwo: Match   = new Match("2", 5, "123");
+    const matchThree: Match = new Match("3", 15, "123");
+    
+    batch.integrateMatch(match);
+    batch.integrateMatch(matchTwo);
+    batch.integrateMatch(matchThree);
 
-    expect(batch.getEmployees()).toEqual(["3", "1", "2"]);
-    expect(batch.getScores()).toEqual([15, 10, 5]);
+    expect(batch.getMatches()).toEqual([matchThree, match, matchTwo]);
 });

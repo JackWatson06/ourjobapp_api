@@ -3,7 +3,7 @@ import * as EmployerRepository from "../repositories/EmployerRepository";
 
 import * as MatchingService from "../services/Matching";
 
-import * as MatchMapper from "../mappers/MatchMapper";
+import * as MatchMapper from "../mappers/BatchMatchMapper";
 import * as BatchMapper from "../mappers/BatchMapper";
 
 import Batch from "../entities/Batch";
