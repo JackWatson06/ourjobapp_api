@@ -69,6 +69,11 @@ export type Match = {
 export type Email = {
     _id       ?: ObjectId,
     match_id   : ObjectId,
+    email      : string,
+    message    : string,
+    sent       : boolean,
+    error      : boolean,
+    sent_at    : number,
     created_at : number
 }
 

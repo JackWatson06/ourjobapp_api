@@ -1,0 +1,1 @@
+Cache represents a cache directory where we can store email files that get sent out. We will want to clear this periodically.

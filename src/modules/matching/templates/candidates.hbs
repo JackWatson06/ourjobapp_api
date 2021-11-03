@@ -1,0 +1,47 @@
+
+<p>Good morning, {{ name }}. Here is your candidate list. These candidates are sorted from the ones that recieved the highest
+    score to matched with you. If you have any issues seeing candidates then please reach out to info@ourjob.app so we promptly
+    addres the issue. Remember as well to that as soon as you are set to hire. Hit the blue hire now button!</p>
+
+
+<table>
+    <thead>
+        <tr>
+        <th>Name</th>
+        <th>Job</th>
+        <th>Rate</th>
+        <th>Location</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Authorized</th>
+        <th>Remote</th>
+        <th>Commitment</th>
+        <th>Resume</th>
+        <th>Hire</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {{#each matches}}
+            <tr>
+                <th>{{this.name}}</th>      {{!-- Can come from the employee --}}
+                <th>{{this.job}}</th>       {{!-- Can come from the match --}}
+                <th>{{this.rate}}</th>      {{!-- Can come from the employee --}}
+                <th>{{this.location}}</th>  {{!-- Can come from the employee --}}
+                <th>{{this.email}}</th>     {{!-- Can come from the employee --}}
+                <th>{{this.phone}}</th>     {{!-- Can come from the employee --}}
+                <th>{{this.authorized}}</th> {{!-- Can come from the match --}}
+                <th>{{this.remote}}</th>    {{!-- Can come from the employee --}}
+                <th>{{this.commitment}}</th> {{!-- Can come from the employee --}} 
+                <th>{{this.resume}}</th> {{!-- Can come from the employee --}}
+                <th>{{this.paymentLink}}</th> {{!-- Can come from the employee --}}
+            </tr>
+        {{/each}}
+    </tbody>
+
+<table>
+
+
+
+
+

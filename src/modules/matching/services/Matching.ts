@@ -1,142 +1,128 @@
-import * as MongoDb from "infa/MongoDb";
-import * as Constants from "infa/Constants";
-import * as Collections from "Collections";
+/**
+ * Original Author: Jack Watson + Mark Chang (thx!)
+ * Created Date: 11/3/2021
+ * Purpose: This matching class holds the algorithm behind how we match the employer with the employee. We seek to improve this
+ * in the further seeing as it is quite archaic in it's current implementation. 
+ */
 
+// Entities (Damn there a lot of entities. I guess this is quite the operation here.)
 import Location from "../entities/Location";
 import Batch from "../entities/Batch";
 import BatchMatch from "../entities/BatchMatch";
+import Match from "../entities/Match";
+import Employee from "../entities/Employee";
+import Employer from "../entities/Employer";
+import Industry from "../entities/Industry";
+import CountryCode from "../entities/CountryCode";
 
-import * as EmployeeRepository from "../repositories/EmployeeRepository";
+// Persistance Layer items
+import * as EmployeeMapper from "../mappers/EmployeeMapper";
 
-import { read as getLocation } from "../mappers/LocationMapper";
+// Constants imports
+import * as Constants from "infa/Constants";
+import Job from "../entities/Job";
 
-import { ObjectId } from "mongodb";
-
-const mdb = MongoDb.db();
-
-
-type CountriesMap = {
-    [ key: string ]: string
-}
-
-type JobMap = {
-    [ key: string ]: string
-}
-
-const jobs: JobMap = {};
-const countries: CountriesMap = {};
-let started: boolean = false;
-
-/**
- * Start up the matching service by loading in the required collections.
- */
-export async function startup() {
-
-    // await mdb.collection("jobs").find<Collections.Job>({}).forEach(async (job) => {
-
-    //     jobs[job._id?.toString() ?? ""] = ( await mdb.collection("jobs-groups").findOne<Collections.JobGroup>({
-    //         name: job.job_group
-    //     }) )
-
-    // });
-        
-    await mdb.collection("countries").find<Collections.Country>({}).forEach((country) => {
-        countries[country._id?.toString() ?? ""] = country.country_code;
-    });
-    started = true;
-}
 
 /**
  * Return a batch match which will list all of the employees which match that employer on the given batch.
  * @param batch The batch that we are using to match the employer.
  * @param employer The employer that we are currently matching
  */
-export async function match(batch: Batch, employer: Collections.Employer): Promise<BatchMatch> {
+export async function match(batch: Batch, employer: Employer): Promise<BatchMatch> {
+    
+    const newMatch: BatchMatch = new BatchMatch(batch.getId(), employer);
 
-    if (!started)
-    {
-        throw "Matching Service not seeded yet!";
-    }
+    for await (const employee of EmployeeMapper.readBulk()) {
 
-    if(employer._id === undefined)
-    {
-        throw "Employer does not have a id";
-    }
+        if( employee === undefined )
+        {
+            break;
+        }
 
-
-    const newMatch: BatchMatch = new BatchMatch(batch.getId(), employer._id.toString());
-
-    // Loop through all of the employees using the employee repository. This will handle looping thorugh the collection.
-    await EmployeeRepository.forEach(async (employee: Collections.Employee) => {
-        const score: number = await computeScore(employer, employee);
+        // We return undefined here if there is no map
+        const match: Match|undefined = await createMatchIfExists(employer, employee);
 
         // Zero is a no-no we do not want to match the employer with the employee with a zero... most matches will have a zero.
-        if( employee._id != undefined)
+        if( match != undefined )
         {   
-            newMatch.integrateEmployeeId(employee._id.toString(), score);
+            newMatch.integrateMatch(match);
         }
-    });
+    }
     
     return newMatch;
 }
 
-// // Take in employee id & employer id:
 
-async function computeScore(employer: Collections.Employer, employee: Collections.Employee): Promise<number> {
+// Take in employee id & employer id:
+async function createMatchIfExists(employer: Employer, employee: Employee): Promise<Match|undefined> {
 
-    console.log("Matching:");
-    console.log(employer);
-    console.log(employee);
+    return new Match(employee, new Job("123", "TEsting", new Industry("Fatty")), 30);
 
-    // console.log("Constants: ");
-    // console.log(Constants.Distance.TEN_MILES);
-    // console.log(Constants.Where.IN_PERSON);
-
-    locationScore(employee, employer);
-
-    // Calculate Distance.
-    if (!(employer.experience.includes( employee.experience))){
-        
-        return 0;
-
-    } else if (! ( employee.hourly_rate >= employer.salary)){
-
-        return 0;
-        
+    // ==== Match the experience ====
+    if (!(employer.experience.includes( employee.experience)))
+    {
+        //console.log("Failed on Experience!");
+        return undefined;
+    } 
+    
+    // ==== Match the hourly rate ====
+    if (! ( employee.hourlyRate >= employer.salary)) // If they are further under maybe we give a higher score? 
+    {
+        //console.log("Failed on Rate!");
+        return undefined;    
     }
 
-    // Each job matches to 1 job group.
 
-    //Pull employee info and employer info:
-    //COnvert from Longitude/Latitude
-
-    // location_score = await locationScore(employer, employee);
-
-    // auth_score = 1 + 2;
-
-    // total_score = location_score + auth_score;
-
-    // employer =
-    // if (employer)
+    // ==== Match the commitment ====
+    // Make sure that the employer, and the employee don't want different things.
+    if( employer.where === Constants.Commitment.PART_TIME && employee.where === Constants.Commitment.FULL_TIME )
+    {
+        //console.log("Failed on Commitment!");
+        return undefined;
+    } 
 
 
-    return 1;
+    // ==== Match the jobs ====
+    // Determine if the job type matches that of the employers group.
+    for(const desiredJob of employee.jobs)
+    {
+        const industry: Industry = desiredJob.getIndustry();
+
+        if( employer.industry.includes(industry) )
+        {
+            const score: number = await locationScore(employee, employer);
+
+            if( score != 0 )
+            {   
+                return new Match(employee, desiredJob, score);
+            }
+            else
+            {
+                //console.log("Failed on Job!");
+                return undefined;
+            }
+        }
+    }
+
+    // Get the socre based on the location of the employee relative to the employer.
+    
+
 
 }
 
 /**
  * Generate a location score for the employee and the employer.
  */
-async function locationScore(employee: Collections.Employee, employer: Collections.Employer)
+async function locationScore(employee: Employee, employer: Employer): Promise<number>
 {
-    const employerLocation: Location = await getLocation(employer.place_id);
-    const employeeLocation: Location|undefined = employee.place_id != undefined ? await getLocation(employee.place_id) : undefined; 
-
-    let employeeAuthorized = employee.authorized.map( (countryID: ObjectId) => countries[countryID.toString()] );
-    let employeeNations    = employee.nations?.map(   (countryID: ObjectId) => countries[countryID.toString()] );
+    const employerLocation: Location             = employer.location;
+    const employeeLocation: Location|undefined   = employee.location; 
+    const employeeAuthorized: Array<CountryCode> = employee.authorized;
 
     // Authorized
-    if( !(employerLocation.getCountry() in employee.authorized) ){
+    if( (employer.authorized) && !(employeeAuthorized.includes( employerLocation.getCountry() ) ) )
+    {
+        //console.log("Failed on Authorized!");
         return 0;
     }
 
@@ -146,15 +132,16 @@ async function locationScore(employee: Collections.Employee, employer: Collectio
         return checkDistance(employee, employerLocation, employeeLocation);
     }
 
+    //console.log("Failed on no location!");
     return 0;
 }
 
 /**
  * Check if the employee wants to work with the employer based on the distance that the EMPLOYEE has set.
  */
-function checkDistance(employee: Collections.Employee, employerLocation: Location, employeeLocation: Location|undefined )
+function checkDistance(employee: Employee, employerLocation: Location, employeeLocation: Location|undefined ): number
 {
-    const employeeNations = employee.nations?.map( (countryID: ObjectId) => countries[countryID.toString()] );
+    const employeeNations: Array<CountryCode>|undefined = employee.national;
 
     if(employee.distance === Constants.Where.NATIONALLY 
         && employeeNations != undefined
@@ -172,6 +159,7 @@ function checkDistance(employee: Collections.Employee, employerLocation: Locatio
         }
     }
 
+    //console.log("Failed on Distance!");
     return 0;
 }
 

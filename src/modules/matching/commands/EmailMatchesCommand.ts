@@ -16,23 +16,8 @@ import BatchMatch from "../entities/BatchMatch";
  */
 export default async function *exec()
 {
-    
     // Get latest batch
     const mostRecent: Batch = await BatchRepo.getMostRecentBatch();
-
-    // Iterate over the batchmatch. Can't afford to load all in meomry
-    const batchMatchIterable: AsyncGenerator<BatchMatch|undefined> = 
-        await ( yield BatchMatchRepo.getFromBatchIterable(mostRecent) ); 
-    let batchMatch = batchMatchIterable.next();
-
-    while(batchMatch != undefined)
-    {
-        // Send out email with batch match. First conver to view. Then create email then send!
-
-
-        batchMatch = batchMatchIterable.next();
-    }
-
-
-
+    
+    
 }

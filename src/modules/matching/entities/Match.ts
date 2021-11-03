@@ -5,33 +5,38 @@
  * BatchMatch ... Batch => BatchMatch => Match
  */
 
+import Employee from "./Employee";
+import Job      from "./Job";
+
 export default class Match
 {
     // The employee identifier that this match had.
-    private employeeId: string;
+    private employee: Employee;
+
+    // The job that this match is assoicated with.
+    private job: Job;
 
     // The score that this match got.
     private score: number;
 
     // The job name that we matched on. Pulled from the jobs database.
-    private jobId: string;
 
-    constructor(employeeId: string, score: number, jobId: string)
+    constructor(employee: Employee, job: Job, score: number)
     {
-        this.employeeId = employeeId;
-        this.score      = score;
-        this.jobId      = jobId;
+        this.employee = employee;
+        this.score    = score;
+        this.job      = job;
     }
 
     // === GETTERS ====
-    public getJob(): string
+    public getJob(): Job
     {
-        return this.jobId;
+        return this.job;
     }
 
-    public getEmployee(): string
+    public getEmployee(): Employee
     {
-        return this.employeeId;
+        return this.employee;
     }
 
     public getScore(): number

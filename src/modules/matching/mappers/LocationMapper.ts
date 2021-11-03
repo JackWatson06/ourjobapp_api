@@ -4,6 +4,7 @@ import * as MongoDb from "infa/MongoDb"
 import * as Collections from "Collections";
 
 import Location from "../entities/Location";
+import CountryCode from "../entities/CountryCode";
 
 const NULL_COUNTRY   = "NULL";
 const NULL_LATITUDE  = 0;
@@ -65,11 +66,11 @@ export async function read(placeId: string): Promise<Location>
 
         await db.collection("locations").insertOne(newLocation);
         
-        return new Location(newLocation.latitutde, newLocation.longitude, newLocation.country_code);
+        return new Location(newLocation.latitutde, newLocation.longitude, new CountryCode( newLocation.country_code ) );
     }
     else
     {
-        return new Location(location.latitutde, location.longitude, location.country_code);
+        return new Location(location.latitutde, location.longitude, new CountryCode( location.country_code ));
     }
 
 }

@@ -8,22 +8,23 @@
  * is.
  */
 
-import Match from "./Match";
+import Match    from "./Match";
+import Employer from "./Employer";
 
 export default class BatchMatch
 {
     private MATCH_LIMIT = 100;
 
     private batchId: string;
-    private employerId: string;
+    private employer: Employer;
 
     // Get employee with the scores.
     private matches: Array<Match>;
 
-    constructor(batchId: string, employerId: string)
+    constructor(batchId: string, employer: Employer)
     {
         this.batchId    = batchId;
-        this.employerId = employerId;
+        this.employer   = employer;
 
         this.matches = [];
     }
@@ -52,7 +53,7 @@ export default class BatchMatch
             this.matches.push(match);
         }
 
-        this.matches     = this.matches.slice(0, this.MATCH_LIMIT);
+        this.matches = this.matches.slice(0, this.MATCH_LIMIT);
     }
 
     // === GETTERS ===
@@ -62,9 +63,12 @@ export default class BatchMatch
         return this.batchId;
     }
 
+    /**
+     * Below should not return an error but rather return a result of if this method was successful or not.
+     */
     public getEmployerId(): string
     {
-        return this.employerId;
+        return this.employer.id;
     }
 
     public getMatches(): Array<Match>
