@@ -66,9 +66,9 @@ export default class BatchMatch
     /**
      * Below should not return an error but rather return a result of if this method was successful or not.
      */
-    public getEmployerId(): string
+    public getEmployer(): Employer
     {
-        return this.employer.id;
+        return this.employer;
     }
 
     public getMatches(): Array<Match>

@@ -15,6 +15,7 @@ import Job         from "../entities/Job";
 import CountryCode from "../entities/CountryCode";
 import Location    from "../entities/Location";
 import Industry    from "../entities/Industry";
+import { employee } from "modules/search/controllers/ExistingEmailController";
 
 /**
  * Map the jobs of the employee to what they are going to be used during the matching service.
@@ -94,12 +95,17 @@ export async function *readBulk()
         
         yield new Employee(
             employeeMatchRow._id.toString(),
+            `${employeeMatchRow.fname} ${employeeMatchRow.lname}`,
+            employeeMatchRow.phone,
+            employeeMatchRow.email,
+            employeeMatchRow.education,
             employeeMatchRow.experience,
             employeeMatchRow.hourly_rate,
             employeeMatchRow.where,
             employeeMatchRow.distance,
             jobMap,
             authorizedCodes,
+            employeeMatchRow.information,
             nationalCodes,
             location
         )

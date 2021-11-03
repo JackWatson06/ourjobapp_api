@@ -12,15 +12,22 @@ import Location from "./Location";
 export default class Employee
 {
     constructor(
-        public id: string,
+        public id     : string,
+        public name   : string,
+        public phone  : string,
+        public email  : string,
+
+        // Enums
+        public education: number,
         public experience: number,
         public hourlyRate: number,
         public where: number,
         public distance: number,
+
         public jobs       : Array<Job>,
         public authorized : Array<CountryCode>,
+        public info       ?: string,
         public national   ?: Array<CountryCode>,
-        public location   ?: Location
-
+        public location   ?: Location,
     ){}
 }

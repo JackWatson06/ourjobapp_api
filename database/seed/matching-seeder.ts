@@ -153,7 +153,7 @@ export default async function exec()
             hourly_rate   : 15,
             commitment    : C.Commitment.PART_TIME,
             where         : C.Where.BOTH,
-            distance      : C.Distance.WORLD_WIDE,
+            distance      : C.Distance.WORLDWIDE,
             experience    : C.Experience.ENTRY
         },
         {

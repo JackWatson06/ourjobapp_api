@@ -18,7 +18,7 @@ export default class Job
         return this.id;
     }
 
-    public getJob()
+    public getName()
     {
         return this.job;
     }

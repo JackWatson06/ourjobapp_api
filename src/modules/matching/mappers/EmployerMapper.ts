@@ -51,6 +51,8 @@ export async function *readBulk()
         
         yield new Employer(
             employerMatchRow._id.toString(),
+            `${employerMatchRow.fname} ${employerMatchRow.lname}`,
+            employerMatchRow.email,
             employerMatchRow.salary,
             employerMatchRow.where,
             employerMatchRow.authorized,
