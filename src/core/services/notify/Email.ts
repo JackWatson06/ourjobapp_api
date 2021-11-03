@@ -68,8 +68,17 @@ export function addAttachment(email: Email, path: string, name: string): Email
  */
 export async function addHtml(email: Email, template: string, binds: {}): Promise<Email>
 {
-    const templateFile: string                      = path.join(__dirname, `../../../../templates/email/${template}.hbs`);
-    const compiled: HandlebarsTemplateDelegate<any> = await Handlebars.compile( fs.readFileSync(templateFile, 'utf8') );
+    const templateFile: string = path.join(__dirname, `../../../../templates/email/${template}.hbs`);
+    const templateData: string = await new Promise( (resolve, reject) => {
+        fs.readFile(templateFile, "utf8", (err, data) => {
+            if(err)
+            {
+                reject(err);
+            }
+            resolve(data);
+        } );
+    });
+    const compiled: HandlebarsTemplateDelegate<any> = await Handlebars.compile(templateData);
 
     return { 
         ...email,

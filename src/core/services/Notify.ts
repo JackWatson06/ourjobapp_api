@@ -7,6 +7,10 @@
 
 import * as nodemailer  from "nodemailer";
 import * as Email from "./notify/Email";
+import path       from "path";
+import objectHash from "object-hash";
+import fs         from "fs";
+
 import * as env         from "environment"; // This just sets the types for the environment variables
 
 const from: string     = process.env.MAIL_FROM_ADDRESS
@@ -37,4 +41,53 @@ export async function sendEmail(email: Email.Email)
     html        : email.html,
     attachments : email.attachments
   });
+}
+
+export async function cacheEmail(email: Email.Email): Promise<string>
+{
+    const hash: string  = objectHash.MD5(email);
+    const cache: string = path.join(__dirname, `../../../.cache/${hash}`);
+
+    return new Promise((resolve, reject) => {
+        fs.writeFile(cache, JSON.stringify(email), { flag: 'a' }, err => {
+            if(err)
+            {
+                reject("");
+            }
+
+            resolve(hash);
+        });
+    })
+}
+
+export async function sendFromCache(token: string): Promise<string>
+{
+    const cache: string = path.join(__dirname, `../../../.cache/${token}`);
+
+    return new Promise((resolve, reject) => {
+        fs.readFile(cache, "utf8", async ( err, data) => {
+            // If the file with the given token does not exist.
+            if(err)
+            {
+                reject("Invalid email token");
+            }
+
+            // Try sending the email out.
+            try
+            {
+                // If we sent email and delete proimse mark return true to singify we send.
+                await sendEmail(JSON.parse(data) as Email.Email);
+                await fs.promises.unlink(cache);
+
+                resolve("Sent candidate email");
+            }
+            // If we could not send out an email unlink the read file.
+            catch(err)
+            {
+                await fs.promises.unlink(cache);
+
+                reject("Could not send candidate email");
+            }
+        });
+    })
 }

@@ -14,7 +14,10 @@
     "docker-script": "docker exec unijobapp_api_node npm run script",
     "refresh-database": "docker exec unijobapp_api_node sh -c \"npm run script -- ../database/database-delete && npm run script -- ../database/database-seed\"",
     "seed-database": "docker exec unijobapp_api_node npm run script -- ../database/seed/matching-seeder",
+
     "match": "docker exec unijobapp_api_node npm run script -- ./modules/matching/commands/MatchAllCommand",
+    "email": "docker exec unijobapp_api_node npm run script -- ./modules/matching/commands/EmailMatchesCommand",
+
     "test": "jest --forceExit --coverage --verbose"
   },
   "repository": {
@@ -29,6 +32,7 @@
   "homepage": "https://github.com/universaljobapplication/unijobapp_api#readme",
   "dependencies": {
     "@types/ajv": "^1.0.0",
+    "@types/object-hash": "^2.2.1",
     "@types/xlsx": "0.0.36",
     "ajv": "^8.6.3",
     "axios": "^0.21.4",
@@ -44,6 +48,7 @@
     "module-alias": "^2.2.2",
     "mongodb": "^4.1.2",
     "nodemailer": "^6.7.0",
+    "object-hash": "^2.2.0",
     "title-case": "^3.0.3"
   },
   "devDependencies": {

@@ -5,19 +5,23 @@
  * then send out the results every morning around 9.
  */
 
-import * as BatchRepo from "../repositories/BatchRepository";
-import * as BatchMatchRepo from "../repositories/BatchMatchRepository";
 
-import Batch from "../entities/Batch";
-import BatchMatch from "../entities/BatchMatch";
+import * as CandidateEmailMapper from "../mappers/CandidateEmailMapper";
+
+import CandidateEmail from "../entities/CandidateEmail";
 
 /**
  * Execute the matching algorithm in our application. Prepare the matches to later be sent out through a seperate algorithm
  */
-export default async function *exec()
-{
+export default async function exec()
+{   
     // Get latest batch
-    const mostRecent: Batch = await BatchRepo.getMostRecentBatch();
+    const candidateEmails: Array<CandidateEmail> = await CandidateEmailMapper.read();
     
-    
+    for(const email of candidateEmails)
+    {       
+        await email.send();
+    }
+
+    await CandidateEmailMapper.update(candidateEmails);
 }

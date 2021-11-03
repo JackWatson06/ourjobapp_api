@@ -46,4 +46,8 @@ yarn.lock
 # ignore seed data in the raw-data directory.
 database/raw-data/*
 
+# ignore any data in the email chache
+.cache/*
+
+
 !*.gitkeep

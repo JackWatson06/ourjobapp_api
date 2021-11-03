@@ -56,7 +56,7 @@ export async function match(batch: Batch, employer: Employer): Promise<BatchMatc
 // Take in employee id & employer id:
 async function createMatchIfExists(employer: Employer, employee: Employee): Promise<Match|undefined> {
 
-    return new Match(employee, new Job("123", "TEsting", new Industry("Fatty")), 30);
+    return new Match(employee, new Job("507f1f77bcf86cd799439011", "TEsting", new Industry("Fatty")), 30);
 
     // ==== Match the experience ====
     if (!(employer.experience.includes( employee.experience)))

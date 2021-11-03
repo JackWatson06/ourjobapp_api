@@ -67,14 +67,15 @@ export type Match = {
 }
 
 export type Email = {
-    _id       ?: ObjectId,
-    match_id   : ObjectId,
-    email      : string,
-    message    : string,
-    sent       : boolean,
-    error      : boolean,
-    sent_at    : number,
-    created_at : number
+    _id            ?: ObjectId,
+    sent_at        ?: number,
+    
+    batch_match_id : ObjectId,
+    message_token  : string,
+    email          : string,
+    sent           : boolean,
+    error          : boolean,
+    created_at     : number
 }
 
 export type Location = {

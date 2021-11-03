@@ -53,7 +53,7 @@ export default async function exec()
             position     : "Manager",
             company_name : "SpaceX",
             verified     : true,
-            email        : "spacex@gmail.com",
+            email        : "watson.jack.p@gmail.com",
             industry     : [ aerspaceEngineersId ],
             place_id     : "ChIJ8S7MWiu0woARAbM4zB1xwWI", // <= Hawthorne California
             experience   : [ C.Experience.INTERMEDIATE, C.Experience.EXPERIENCED ],
@@ -69,7 +69,7 @@ export default async function exec()
             position     : "Manager",
             company_name : "Berkshire",
             verified     : true,
-            email        : "berkshire@gmail.com",
+            email        : "j.watson@americanlaborcompany.com",
 
 
             industry     : [ graphicDesignerId ],
@@ -79,24 +79,24 @@ export default async function exec()
             commitment   : C.Commitment.PART_TIME,
             where        : C.Where.REMOTE,
             authorized   : false
-        },
-        {
-            token_id     : token,
-            fname        : "Employer Three",
-            lname        : "Employer Three",
-            position     : "Manager",
-            company_name : "Tesla",
-            verified     : true,
-            email        : "Tesla@gmail.com",
+        }// },
+        // {
+        //     token_id     : token,
+        //     fname        : "Employer Three",
+        //     lname        : "Employer Three",
+        //     position     : "Manager",
+        //     company_name : "Tesla",
+        //     verified     : true,
+        //     email        : "m.morgan@americanlaborcompany.com",
 
-            industry     : [ financialAnalystId, financialManagerId ],
-            place_id     : "ChIJS5dFe_cZTIYRj2dH9qSb7Lk",   // <= Texas United States
-            experience   : [ C.Experience.ENTRY, C.Experience.INTERMEDIATE, C.Experience.EXPERIENCED ],
-            salary       : 35,         
-            commitment   : C.Commitment.BOTH,
-            where        : C.Where.BOTH,
-            authorized   : true
-        }
+        //     industry     : [ financialAnalystId, financialManagerId ],
+        //     place_id     : "ChIJS5dFe_cZTIYRj2dH9qSb7Lk",   // <= Texas United States
+        //     experience   : [ C.Experience.ENTRY, C.Experience.INTERMEDIATE, C.Experience.EXPERIENCED ],
+        //     salary       : 35,         
+        //     commitment   : C.Commitment.BOTH,
+        //     where        : C.Where.BOTH,
+        //     authorized   : true
+        // }
     ]
 
 

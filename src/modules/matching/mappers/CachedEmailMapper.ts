@@ -1,29 +1,40 @@
 import * as MongoDb from "infa/MongoDb";
 import * as Collections from "Collections";
-import { Collection, ObjectId } from "mongodb";
 
-import BatchMatch from "../entities/BatchMatch";
 import Match from "../entities/Match";
+import BatchMatch from "../entities/BatchMatch";
+import CachedEmail from "../entities/CachedEmail";
 
-/**
- * Persist the batch match aggregate root object.
- * @param match Instance of a batchmatch domain object. This will be the aggregate root that we are persisting here.
- */
-export async function create(match: BatchMatch): Promise<boolean>
+import { ObjectId } from "mongodb";
+
+export async function create(email: CachedEmail)
 {
     const db: MongoDb.MDb = MongoDb.db();
+    
+    const match: BatchMatch = email.getMatch();
     const matches: Array<Match> = match.getMatches();
-
 
     // Create the employer match.
     const batchMatchRow: Collections.BatchMatch = {
         batch_id    : MongoDb.toObjectId( match.getBatchId() ),
-        employer_id : MongoDb.toObjectId( match.getEmployerId() ),
+        employer_id : MongoDb.toObjectId( match.getEmployer().id ),
         created_at  : MongoDb.now()
     };
 
-    const batchMatchId: ObjectId = (await db.collection("batch_matches").insertOne(batchMatchRow)).insertedId;
+    // Batchmatch
+    const batchMatchId: ObjectId = (await db.collection("batchMatches").insertOne(batchMatchRow)).insertedId;
 
+    // Create the email
+    const emailRow: Collections.Email = {
+        batch_match_id : batchMatchId,
+        message_token  : email.getMessageToken(),
+        email          : match.getEmployer().email,
+        sent           : false,
+        error          : false,
+        created_at     : MongoDb.now()
+    };   
+
+    await db.collection("emails").insertOne(emailRow);
 
     // Loop through all of the employees that matched with the employer.
     for(const match of matches)
@@ -40,3 +51,4 @@ export async function create(match: BatchMatch): Promise<boolean>
 
     return true;
 }
+
