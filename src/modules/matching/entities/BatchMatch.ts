@@ -8,6 +8,8 @@
  * is.
  */
 
+import Match from "./Match";
+
 export default class BatchMatch
 {
     private MATCH_LIMIT = 100;
@@ -16,16 +18,14 @@ export default class BatchMatch
     private employerId: string;
 
     // Get employee with the scores.
-    private employeeIds: Array<string>;
-    private scores: Array<number>;
+    private matches: Array<Match>;
 
     constructor(batchId: string, employerId: string)
     {
         this.batchId    = batchId;
         this.employerId = employerId;
 
-        this.employeeIds = [];
-        this.scores      = [];
+        this.matches = [];
     }
 
     /**
@@ -33,29 +33,26 @@ export default class BatchMatch
      * @param employeeId Employee we are trying to put in this match.
      * @param score The score that the employee got for the match with the current employer in this class
      */
-    public integrateEmployeeId(employeeId: string, score: number)
+    public integrateMatch(match: Match)
     {
-        const originalLength = this.employeeIds.length;
+        const originalLength = this.matches.length;
         // Try to insert into the current list if we have it.
         for(let i = 0; i < originalLength; i++)
         {
-            if(this.scores[i] < score)
+            if(this.matches[i].getScore() < match.getScore())
             {
-                this.scores.splice(i, 0, score);
-                this.employeeIds.splice(i, 0, employeeId);
+                this.matches.splice(i, 0, match);
                 break;
             }
         }
 
         // If the length of the array is zero
-        if( originalLength === this.employeeIds.length )
+        if( originalLength === this.matches.length )
         {
-            this.employeeIds.push(employeeId);
-            this.scores.push(score);
+            this.matches.push(match);
         }
 
-        this.scores      = this.scores.slice(0, this.MATCH_LIMIT);
-        this.employeeIds = this.employeeIds.slice(0, this.MATCH_LIMIT);
+        this.matches     = this.matches.slice(0, this.MATCH_LIMIT);
     }
 
     // === GETTERS ===
@@ -70,14 +67,8 @@ export default class BatchMatch
         return this.employerId;
     }
 
-
-    public getEmployees(): Array<string>
+    public getMatches(): Array<Match>
     {
-        return this.employeeIds;
-    }
-
-    public getScores(): Array<number>
-    {
-        return this.scores;
+        return this.matches;
     }
 }

@@ -47,17 +47,23 @@ export type Charity = {
  * === Matching ====
  */
 export type Batch = {
-    _id       ?: ObjectId,
+    _id        : ObjectId,
     created_at : number
 }
 
-export type Match = {
+export type BatchMatch = {
     _id        ?: ObjectId,
     batch_id   ?: ObjectId,
     employer_id : ObjectId,
-    matches     : ObjectId[],
-    scores      : number[],
     created_at  : number
+}
+
+export type Match = {
+    _id            ?: ObjectId,
+    batch_match_id  : ObjectId,
+    employee_id     : ObjectId,
+    job_id          : ObjectId,
+    score           : number
 }
 
 export type Email = {
