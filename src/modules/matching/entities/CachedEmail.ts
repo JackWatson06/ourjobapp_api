@@ -6,8 +6,8 @@
  * are ready to go but still just need to trigger the go button. The template has been generated however.
  */
 
-import * as EmailMs from "services/notify/Email";
-import { cacheEmail } from "services/Notify";
+import * as EmailMs from "notify/Email";
+import { cacheEmail } from "notify/Notify";
 
 import BatchMatch from "./BatchMatch";
 import * as BatchMatchView from "../views/BatchMatchView"; // Not a huge fan of using view here but it is what we got.

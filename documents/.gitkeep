@@ -1,0 +1,4 @@
+Documents are any user uploaded documents into the system. We will want to look to keep these more secure as time goes on
+we need to encrypt the rested documents so that if someone got into our server they cant decrypt... although if our key is
+on the server that is just security through obfuscation of the key. Maybe we just use a third party for that. No need to re-invent
+the wheel.

@@ -13,7 +13,7 @@
         "paths": {
             "infa/*" : [ "src/core/infa/*" ],
             "modules/*" : [ "src/modules/*" ],
-            "services/*" : [ "src/core/services/*" ],
+            "notify/*" : [ "src/core/notify/*" ],
             "*": [
                 "src/types/*",
                 "node_modules/*"

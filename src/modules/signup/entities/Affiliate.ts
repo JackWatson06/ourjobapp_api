@@ -8,8 +8,8 @@
  */
 
 // Short for Email Message
-import * as EmailMs from "services/notify/Email";
-import { sendEmail } from "services/Notify";
+import * as EmailMs from "notify/Email";
+import { sendEmail } from "notify/Notify";
 import { generateContract } from "services/Contract";
 
 // Value Objects

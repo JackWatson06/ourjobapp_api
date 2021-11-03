@@ -6,7 +6,8 @@
  */
 
 import * as nodemailer  from "nodemailer";
-import * as Email from "./notify/Email";
+import * as Email from "./Email";
+
 import path       from "path";
 import objectHash from "object-hash";
 import fs         from "fs";
