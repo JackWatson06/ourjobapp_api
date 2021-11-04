@@ -34,13 +34,34 @@ export async function match(batch: Batch, employer: Employer): Promise<BatchMatc
 
     for await (const employee of EmployeeMapper.readBulk()) {
 
+        // console.log(employee?.id);
+        
+
         if( employee === undefined )
         {
             break;
         }
 
         // We return undefined here if there is no map
+        // console.log(employer);
+        // console.log(employee);
+        
+        
         const match: Match|undefined = await createMatchIfExists(employer, employee);
+        if (match !== undefined){
+
+            console.log("Match found------------------------");
+            
+            console.log(employer);
+            console.log(employee);
+            console.log(match);
+            console.log("------------------------------\n");
+
+        }
+
+        // break;
+        
+        
 
         // Zero is a no-no we do not want to match the employer with the employee with a zero... most matches will have a zero.
         if( match != undefined )
@@ -56,19 +77,19 @@ export async function match(batch: Batch, employer: Employer): Promise<BatchMatc
 // Take in employee id & employer id:
 async function createMatchIfExists(employer: Employer, employee: Employee): Promise<Match|undefined> {
 
-    return new Match(employee, new Job("507f1f77bcf86cd799439011", "TEsting", new Industry("Fatty")), 30);
+    // return new Match(employee, new Job("507f1f77bcf86cd799439011", "TEsting", new Industry("Fatty")), 30);
 
     // ==== Match the experience ====
     if (!(employer.experience.includes( employee.experience)))
     {
-        //console.log("Failed on Experience!");
+        // console.log("Failed on Experience!");
         return undefined;
     } 
     
     // ==== Match the hourly rate ====
-    if (! ( employee.hourlyRate >= employer.salary)) // If they are further under maybe we give a higher score? 
+    if ( employee.hourlyRate >= employer.salary) // If they are further under maybe we give a higher score? 
     {
-        //console.log("Failed on Rate!");
+        // console.log("Failed on Rate! Employee rate is: " + employee.hourlyRate + " Employer rate is: " + employer.salary);
         return undefined;    
     }
 
@@ -77,28 +98,49 @@ async function createMatchIfExists(employer: Employer, employee: Employee): Prom
     // Make sure that the employer, and the employee don't want different things.
     if( employer.where === Constants.Commitment.PART_TIME && employee.where === Constants.Commitment.FULL_TIME )
     {
-        //console.log("Failed on Commitment!");
+        // console.log("Failed on Commitment!");
         return undefined;
     } 
 
 
     // ==== Match the jobs ====
+
+    // console.log(employer.industry);
+    // console.log(employee.jobs);
+    
     // Determine if the job type matches that of the employers group.
     for(const desiredJob of employee.jobs)
     {
         const industry: Industry = desiredJob.getIndustry();
+        // console.log("Indisde desired jobs:\n");
+        
+        // console.log(employer.industry.find(industry));
 
-        if( employer.industry.includes(industry) )
+        if( employer.industry.some(i=>{
+
+            if(i.getName() === industry.getName())
+            {
+                return true;
+            }
+            // else{
+            //     return false;
+            // }
+
+        }) )
         {
+
+            // console.log("Industry matches.");
+            
             const score: number = await locationScore(employee, employer);
 
             if( score != 0 )
             {   
+                // console.log("Score isn't 0");
                 return new Match(employee, desiredJob, score);
             }
             else
             {
-                //console.log("Failed on Job!");
+                // console.log("Failed on Location!");
                 return undefined;
             }
         }
@@ -120,9 +162,23 @@ async function locationScore(employee: Employee, employer: Employer): Promise<nu
     const employeeAuthorized: Array<CountryCode> = employee.authorized;
 
     // Authorized
-    if( (employer.authorized) && !(employeeAuthorized.includes( employerLocation.getCountry() ) ) )
+    // if( (employer.authorized) && !(employeeAuthorized.includes( employerLocation.getCountry() ) ) )
+    if( (employer.authorized) && !(employeeAuthorized.some(i => {
+
+        if (i.getCountryCode() === employerLocation.getCountry().getCountryCode()){
+
+            return true;
+
+        } 
+        // else {
+
+        //     return false;
+
+        // }
+
+    })) )
     {
-        //console.log("Failed on Authorized!");
+        // console.log("Failed on Authorized! Employer authorization is : " + employer.authorized + " Employee authorization is : " + employeeAuthorized + "\n");
         return 0;
     }
 
@@ -132,7 +188,7 @@ async function locationScore(employee: Employee, employer: Employer): Promise<nu
         return checkDistance(employee, employerLocation, employeeLocation);
     }
 
-    //console.log("Failed on no location!");
+    // console.log("Failed on no location!");
     return 0;
 }
 
@@ -145,7 +201,15 @@ function checkDistance(employee: Employee, employerLocation: Location, employeeL
 
     if(employee.distance === Constants.Where.NATIONALLY 
         && employeeNations != undefined
-        && employeeNations.includes( employerLocation.getCountry()) )
+        // && employeeNations.includes( employerLocation.getCountry()) )
+        && employeeNations.some(i=>{
+
+            if (i.getCountryCode() === employerLocation.getCountry().getCountryCode()){
+
+                return true;
+            }
+
+        }))
     {
         return 1;
     }

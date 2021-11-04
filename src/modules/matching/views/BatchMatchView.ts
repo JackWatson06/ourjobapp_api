@@ -72,7 +72,7 @@ const experienceMapping = {
  */
 export function transform(batchMatch: BatchMatch): BatchMatchView
 {
-    console.log(batchMatch);
+    // console.log(batchMatch);
     
     return {
         

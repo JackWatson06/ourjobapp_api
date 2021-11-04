@@ -17,7 +17,7 @@ import Industry from "../entities/Industry";
 function mapIndustry(db: MongoDb.MDb, employerMatchRow: Collections.Employer): Array<Promise<Industry>>
 {
     return employerMatchRow.industry.map( async (industryId: ObjectId) => {
-        const industry: Collections.JobGroup|null = await db.collection("job-groups").find<Collections.JobGroup>({ _id: industryId}).next()
+        const industry: Collections.JobGroup|null = await db.collection("jobGroups").find<Collections.JobGroup>({ _id: industryId}).next()
 
         if( industry != null && industry._id != undefined)
         {
