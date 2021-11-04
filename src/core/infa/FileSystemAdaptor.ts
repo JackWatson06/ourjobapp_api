@@ -1,0 +1,96 @@
+/**
+ * Original Author: Jack Watson
+ * Created Date: 11/3/2021
+ * Purpose: This class serves as a wrapper to the fs dependency in node.js. I was debating having multiple methods to 
+ * make it very strict which folders you can write to. But I have decided that it would be best to simply just write to
+ * the different elements based on the parameter you pass in. So you pick from the folders that have read / write access
+ * then you can read and write to those select folders.
+ */
+
+import objectHash from "object-hash";
+import fs from "fs";
+
+// Define the types that are allowed into the functions below... this is interesting to say the least. Like these
+// are still string types.
+type Document = string;
+type Cache    = string;
+type Template = string;
+
+const DOCUMENT: Document = "/../../../documents/";
+const CACHE: Cache       = "/../../../.cache/";
+const TEMPLATE: Template = "/../../../templates/";
+
+/**
+ * Remove a file from the operating syste.
+ * @param directory Directory we are currently removing from.
+ * @param file File we are removing from within the directory.
+ */
+async function remove(directory: Cache, file: string): Promise<string>
+{
+    const qualifiedPath = `${__dirname}${directory}${file}`;
+    return new Promise( (resolve, reject) => {
+        fs.unlink( qualifiedPath, err => {
+            if(err)
+            {
+                reject(err);
+            }
+
+            resolve(`${file} successfully removed`);
+        } );
+    } );
+}
+
+/**
+ * Return as a string the expected output. I should be able to set the expected output through a template
+ * @param directory Directory we are reading from.
+ * @param file Get the file that we want to read
+ */
+async function read(directory: Document|Cache|Template, file: string): Promise<string>
+{
+    const qualifiedPath = `${__dirname}${directory}${file}`;
+    return new Promise( (resolve, reject) => {
+        fs.readFile(qualifiedPath, "utf8", ( err, data ) => {
+            if(err)
+            {
+                reject(err);
+            }
+
+            resolve(data);
+        } );
+    } );
+}
+
+/**
+ * Write a file to the drive on the system. Use only the allowed directories to be written to within the function.
+ * @param directory Directory we are writing to.
+ * @param file File name we are writing to within the directory.
+ * @param data Data we are writing to the file.
+ */
+async function write(directory: Document|Cache, data: any, file?: string): Promise<string>
+{
+    // If we don't pass in a filename then we will generate a file name. this can be useful if we are
+    // storing something in the cache. We will seperate the filesystem API with the caching API soon!
+    let determinedFileName: string;
+    if(file === undefined)
+    {
+        determinedFileName = objectHash.MD5(data);
+    }
+    else
+    {
+        determinedFileName = file;
+    }
+
+    const qualifiedPath = `${__dirname}${directory}${determinedFileName}`;
+    return new Promise( (resolve, reject) => {
+        fs.writeFile(qualifiedPath, data, { flag: 'a' }, err => {
+            if(err)
+            {
+                reject(err);
+            }
+
+            resolve(determinedFileName);
+        } );
+    } );
+}
+
+export default { write, read, remove, DOCUMENT, CACHE, TEMPLATE }

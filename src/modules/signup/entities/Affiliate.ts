@@ -10,7 +10,7 @@
 // Short for Email Message
 import * as EmailMs from "notify/Email";
 import { sendEmail } from "notify/Notify";
-import { generateContract } from "services/Contract";
+// import { generateContract } from "services/Contract";
 
 // Value Objects
 import Email from "./Email";

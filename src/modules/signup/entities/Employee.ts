@@ -8,8 +8,8 @@
  * "Reasoning Validation" is a word I came up for in order to validate the input meets expected values. Reduces spam.
  */
 
-import * as EmailMs from "services/notify/Email";
-import { sendEmail } from "services/Notify";
+import * as EmailMs from "notify/Email";
+import { sendEmail } from "notify/Notify";
 
 import Email from "./Email";
 

@@ -4,7 +4,7 @@
  * Purpose: The candidate email represents the email that we recieve when we are looking for candidates.
  */
 
-import { sendFromCache } from "services/Notify";
+import { sendFromCache } from "notify/Notify";
 
 export default class CandidateEmail
 {

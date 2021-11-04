@@ -7,8 +7,7 @@
 
 
 import Handlebars from "handlebars";
-import path       from "path";
-import fs         from "fs";
+import fs         from "infa/FileSystemAdaptor";
 
 // Types that we are defining in this funciton. These should be moved to the /types at some point. They should be a d.ts? Potentially
 // I wonder where these types should go for a specific file.
@@ -68,17 +67,8 @@ export function addAttachment(email: Email, path: string, name: string): Email
  */
 export async function addHtml(email: Email, template: string, binds: {}): Promise<Email>
 {
-    const templateFile: string = path.join(__dirname, `../../../../templates/email/${template}.hbs`);
-    const templateData: string = await new Promise( (resolve, reject) => {
-        fs.readFile(templateFile, "utf8", (err, data) => {
-            if(err)
-            {
-                reject(err);
-            }
-            resolve(data);
-        } );
-    });
-    const compiled: HandlebarsTemplateDelegate<any> = await Handlebars.compile(templateData);
+    const templateFile: string = await fs.read( fs.TEMPLATE, `email/${template}.hbs`);
+    const compiled: HandlebarsTemplateDelegate<any> = await Handlebars.compile(templateFile);
 
     return { 
         ...email,

@@ -3,8 +3,6 @@
  * Created Date: 10/25/2021
  * Purpose: This class takes in a affiliate then transforms it into a link which will be displayed on the front-end
  */
-
-
 import Affiliate from "../entities/Affiliate";
 
 export type VerifiedAffiliateView = {
