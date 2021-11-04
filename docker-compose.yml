@@ -28,7 +28,7 @@ services:
 
   # Node enviornment for running our application. Private connection. Only NGINX can connect.
   node:
-    image: node:14.17.6-alpine
+    build: .
     container_name: unijobapp_api_node
     working_dir: /srv/www/unijobapp_api
     expose: 

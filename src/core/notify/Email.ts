@@ -4,8 +4,6 @@
  * Purpose: This class uses the builder pattern in order to create a new email that we are sending out. This email will
  * have a list of potential attachments as well that we are sending out.
  */
-
-
 import Handlebars from "handlebars";
 import fs         from "infa/FileSystemAdaptor";
 

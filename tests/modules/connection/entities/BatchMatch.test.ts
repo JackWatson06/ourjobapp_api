@@ -1,12 +1,46 @@
 import BatchMatch from "modules/matching/entities/BatchMatch";
 import Match from "modules/matching/entities/Match";
 
-test("can add multiple employee score", () => {
-    const batch: BatchMatch = new BatchMatch("RANDOM", "RANDOM");
+import Employee    from "modules/matching/entities/Employee";
+import Employer    from "modules/matching/entities/Employer";
+import Job         from "modules/matching/entities/Job";
+import CountryCode from "modules/matching/entities/CountryCode";
+import Industry    from "modules/matching/entities/Industry";
+import Location    from "modules/matching/entities/Location";
 
-    const match: Match = new Match("1", 10, "123");
-    const matchTwo: Match = new Match("2", 5, "123");
-    const matchThree: Match = new Match("3", 2, "123");
+/**
+ * === Global Implementations === 
+ */
+const newChemist = new Job("EFEFefefEFEFefefEFEFefef", "Chemist", new Industry( "Chemical Engineers" ));
+
+const newEmployee = new Employee(
+    "EFEFefefEFEFefefEFEFefef",
+    "Joe Schmoe",
+    "000-000-0000",
+    "joe@gmail.com",
+    1, 1, 50, 1, 1,
+    [ newChemist ],
+    [ new CountryCode("US") ]
+);
+
+const newEmployer = new Employer(
+    "EFEFefefEFEFefefEFEFefef",
+    "Joe Schmoe",
+    "joe@gmail.com",
+    50, 1, false,
+    new Location(0, 0, new CountryCode("US")),
+    [ 1, 1 ],
+    [ new Industry("Chemical Engineers") ]
+);
+// ==============================
+
+
+test("can add multiple employee score", () => {
+    const batch: BatchMatch = new BatchMatch("RANDOM", newEmployer);
+
+    const match: Match      = new Match(newEmployee, newChemist, 10);
+    const matchTwo: Match   = new Match(newEmployee, newChemist, 5);
+    const matchThree: Match = new Match(newEmployee, newChemist, 2);
     
     batch.integrateMatch(match);
     batch.integrateMatch(matchTwo);
@@ -16,11 +50,12 @@ test("can add multiple employee score", () => {
 });
 
 test("can insert if better score", () => {
-    const batch: BatchMatch = new BatchMatch("RANDOM", "RANDOM");
+    const batch: BatchMatch = new BatchMatch("RANDOM", newEmployer);
 
-    const match: Match = new Match("1", 10, "123");
-    const matchTwo: Match = new Match("2", 5, "123");
-    const matchThree: Match = new Match("3", 8, "123");
+    const match: Match      = new Match(newEmployee, newChemist, 10);
+    const matchTwo: Match   = new Match(newEmployee, newChemist, 5);
+    const matchThree: Match = new Match(newEmployee, newChemist, 8);
+
     
     batch.integrateMatch(match);
     batch.integrateMatch(matchTwo);
@@ -31,12 +66,12 @@ test("can insert if better score", () => {
 
 
 test("does not excede max limit", () => {
-    const batch: BatchMatch = new BatchMatch("RANDOM", "RANDOM");
-    const limit: number = 100;
+    const batch: BatchMatch = new BatchMatch("RANDOM", newEmployer);
+    const limit: number     = 100;
 
     for(let i = 0; i < limit + 50; i++)
     {
-        batch.integrateMatch(new Match(i.toString(), i, "123") );
+        batch.integrateMatch(new Match(newEmployee, newChemist, i) );
     }
 
     expect(batch.getMatches().length).toEqual(limit);
@@ -44,11 +79,12 @@ test("does not excede max limit", () => {
 
 
 test("inserting highest score", () => {
-    const batch: BatchMatch = new BatchMatch("RANDOM", "RANDOM");
+    const batch: BatchMatch = new BatchMatch("RANDOM", newEmployer);
 
-    const match: Match      = new Match("1", 10, "123");
-    const matchTwo: Match   = new Match("2", 5, "123");
-    const matchThree: Match = new Match("3", 15, "123");
+    const match: Match      = new Match(newEmployee, newChemist, 10);
+    const matchTwo: Match   = new Match(newEmployee, newChemist, 5);
+    const matchThree: Match = new Match(newEmployee, newChemist, 15);
+
     
     batch.integrateMatch(match);
     batch.integrateMatch(matchTwo);

@@ -20,6 +20,17 @@ const DOCUMENT: Document = "/../../../documents/";
 const CACHE: Cache       = "/../../../.cache/";
 const TEMPLATE: Template = "/../../../templates/";
 
+
+/**
+ * Get the full path of the contract in our system.
+ * @param directory Directory we chose in the root of the project
+ * @param file The file we want to get the full path of
+ */
+function absolutePath(directory: Document|Cache|Template, file: string)
+{
+    return `${__dirname}${directory}${file}`;
+}
+
 /**
  * Remove a file from the operating syste.
  * @param directory Directory we are currently removing from.
@@ -27,9 +38,8 @@ const TEMPLATE: Template = "/../../../templates/";
  */
 async function remove(directory: Cache, file: string): Promise<string>
 {
-    const qualifiedPath = `${__dirname}${directory}${file}`;
     return new Promise( (resolve, reject) => {
-        fs.unlink( qualifiedPath, err => {
+        fs.unlink( absolutePath(directory, file), err => {
             if(err)
             {
                 reject(err);
@@ -47,9 +57,8 @@ async function remove(directory: Cache, file: string): Promise<string>
  */
 async function read(directory: Document|Cache|Template, file: string): Promise<string>
 {
-    const qualifiedPath = `${__dirname}${directory}${file}`;
     return new Promise( (resolve, reject) => {
-        fs.readFile(qualifiedPath, "utf8", ( err, data ) => {
+        fs.readFile(absolutePath(directory, file), "utf8", ( err, data ) => {
             if(err)
             {
                 reject(err);
@@ -80,9 +89,8 @@ async function write(directory: Document|Cache, data: any, file?: string): Promi
         determinedFileName = file;
     }
 
-    const qualifiedPath = `${__dirname}${directory}${determinedFileName}`;
     return new Promise( (resolve, reject) => {
-        fs.writeFile(qualifiedPath, data, { flag: 'a' }, err => {
+        fs.writeFile(absolutePath(directory, determinedFileName), data, { flag: 'a' }, err => {
             if(err)
             {
                 reject(err);
@@ -93,4 +101,4 @@ async function write(directory: Document|Cache, data: any, file?: string): Promi
     } );
 }
 
-export default { write, read, remove, DOCUMENT, CACHE, TEMPLATE }
+export default { absolutePath, write, read, remove, DOCUMENT, CACHE, TEMPLATE }

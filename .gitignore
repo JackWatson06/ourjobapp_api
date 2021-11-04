@@ -49,5 +49,7 @@ database/raw-data/*
 # ignore any data in the email chache
 .cache/*
 
+# ignore all documents
+documents/*
 
 !*.gitkeep

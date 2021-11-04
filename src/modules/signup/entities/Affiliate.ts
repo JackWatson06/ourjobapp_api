@@ -10,7 +10,7 @@
 // Short for Email Message
 import * as EmailMs from "notify/Email";
 import { sendEmail } from "notify/Notify";
-// import { generateContract } from "services/Contract";
+import * as contract from "../services/contract";
 
 // Value Objects
 import Email from "./Email";
@@ -46,8 +46,17 @@ export default class Affiliate
     {
         if( Date.now() < this.email.getExpiredDate() )
         {
+            const today = new Date();
+            const oneYearFromNow = new Date(new Date().setFullYear(today.getFullYear() + 1))
+
             // Figure out what to do here.
-            this.fileName = "Hey";
+            const contractFile: contract.ContractLocator = await contract.generate<contract.Sharer>("sharer", {
+                VAR_EFFECTIVE_DATE   : (today).toLocaleDateString("en-US", {year: 'numeric', month: 'long', day: 'numeric'}),
+                VAR_TERMINATION_DATE : (oneYearFromNow).toLocaleDateString("en-US", {year: 'numeric', month: 'long', day: 'numeric'}),
+                VAR_PARTNER_NAME     : this.data.name,
+                VAR_SHARED_NAME      : this.data.name,
+                VAR_SHARED_EMAIL     : this.data.email
+            });
 
             let email: EmailMs.Email = EmailMs.makeEmail(this.email.getEmail(), "Please Verify Your Account!");
             // email = EmailMs.addAttachment(email, this.fileName, "Affilaite Contract");
@@ -55,6 +64,7 @@ export default class Affiliate
                 name: this.data.name,
                 link: `${process.env.CLIENT_DOMAIN}/verify/sharer/${this.email.getToken()}` 
             });
+            email = await EmailMs.addAttachment(email, contractFile.path, "Sharer Contract");
 
             await sendEmail(email);
             return true;
