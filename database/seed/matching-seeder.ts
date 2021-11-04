@@ -44,7 +44,7 @@ export default async function exec()
     const cityTreasurer: ObjectId       = await findJobGroup( db, "jobs", "City Treasurers" );
     const rocketEngineer: ObjectId      = await findJobGroup( db, "jobs", "Rocket Engineers" );
 
-
+    
     const employers: Array<Col.Employer> = [ 
         {
             token_id     : token,
@@ -70,7 +70,6 @@ export default async function exec()
             company_name : "Berkshire",
             verified     : true,
             email        : "j.watson@americanlaborcompany.com",
-
 
             industry     : [ graphicDesignerId ],
             place_id     : "ChIJP3Sa8ziYEmsRUKgyFmh9AQM",                 // <= Sydney Australia

@@ -19,9 +19,6 @@ function mapIndustry(db: MongoDb.MDb, employerMatchRow: Collections.Employer): A
     return employerMatchRow.industry.map( async (industryId: ObjectId) => {
         const industry: Collections.JobGroup|null = await db.collection("jobGroups").find<Collections.JobGroup>({ _id: industryId}).next()
 
-        console.log(industry);
-        
-
         if( industry != null && industry._id != undefined)
         {
             return new Industry( industry.name );
