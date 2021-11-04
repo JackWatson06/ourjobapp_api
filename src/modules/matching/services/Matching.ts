@@ -48,9 +48,10 @@ export async function match(batch: Batch, employer: Employer): Promise<BatchMatc
         
         
         const match: Match|undefined = await createMatchIfExists(employer, employee);
-        if (match !== undefined){
+        if (employee.name === "Employee 2 Employer 2"){
 
             console.log("Match found------------------------");
+            // console.log("Employee 2 ------------------------");
             
             console.log(employer);
             console.log(employee);
@@ -82,14 +83,14 @@ async function createMatchIfExists(employer: Employer, employee: Employee): Prom
     // ==== Match the experience ====
     if (!(employer.experience.includes( employee.experience)))
     {
-        // console.log("Failed on Experience!");
+        console.log("Failed on Experience!");
         return undefined;
     } 
     
     // ==== Match the hourly rate ====
-    if ( employee.hourlyRate >= employer.salary) // If they are further under maybe we give a higher score? 
+    if (!( employee.hourlyRate <= employer.salary)) // If they are further under maybe we give a higher score? 
     {
-        // console.log("Failed on Rate! Employee rate is: " + employee.hourlyRate + " Employer rate is: " + employer.salary);
+        console.log("Failed on Rate! Employee rate is: " + employee.hourlyRate + " Employer rate is: " + employer.salary);
         return undefined;    
     }
 
@@ -98,7 +99,7 @@ async function createMatchIfExists(employer: Employer, employee: Employee): Prom
     // Make sure that the employer, and the employee don't want different things.
     if( employer.where === Constants.Commitment.PART_TIME && employee.where === Constants.Commitment.FULL_TIME )
     {
-        // console.log("Failed on Commitment!");
+        console.log("Failed on Commitment!");
         return undefined;
     } 
 
@@ -112,7 +113,7 @@ async function createMatchIfExists(employer: Employer, employee: Employee): Prom
     for(const desiredJob of employee.jobs)
     {
         const industry: Industry = desiredJob.getIndustry();
-        // console.log("Indisde desired jobs:\n");
+        console.log("Indisde desired jobs:\n");
         
         // console.log(employer.industry.find(industry));
 
@@ -135,12 +136,12 @@ async function createMatchIfExists(employer: Employer, employee: Employee): Prom
 
             if( score != 0 )
             {   
-                // console.log("Score isn't 0");
+                console.log("Score isn't 0");
                 return new Match(employee, desiredJob, score);
             }
             else
             {
-                // console.log("Failed on Location!");
+                console.log("Failed on Location!");
                 return undefined;
             }
         }
@@ -178,7 +179,7 @@ async function locationScore(employee: Employee, employer: Employer): Promise<nu
 
     })) )
     {
-        // console.log("Failed on Authorized! Employer authorization is : " + employer.authorized + " Employee authorization is : " + employeeAuthorized + "\n");
+        console.log("Failed on Authorized! Employer authorization is : " + employer.authorized + " Employee authorization is : " + employeeAuthorized + "\n");
         return 0;
     }
 
@@ -188,7 +189,7 @@ async function locationScore(employee: Employee, employer: Employer): Promise<nu
         return checkDistance(employee, employerLocation, employeeLocation);
     }
 
-    // console.log("Failed on no location!");
+    console.log("Failed on no location!");
     return 0;
 }
 
@@ -198,14 +199,42 @@ async function locationScore(employee: Employee, employer: Employer): Promise<nu
 function checkDistance(employee: Employee, employerLocation: Location, employeeLocation: Location|undefined ): number
 {
     const employeeNations: Array<CountryCode>|undefined = employee.national;
+    // console.log("------------- Logging country codes:");
+    // console.log(Constants.Distance.NATIONALLY);
+    // console.log(employee.distance);
+    
+    
+    // console.log(employee.distance === Constants.Distance.NATIONALLY);
+    // console.log(employeeNations != undefined);
+    // console.log(employeeNations != undefined && employeeNations.some(i=>{
 
-    if(employee.distance === Constants.Where.NATIONALLY 
+        //     if (i.getCountryCode() === employerLocation.getCountry().getCountryCode()){
+                
+        //         return true;
+        //     }
+
+        // }));
+    
+    
+    
+    employee.national?.some(i=>{
+
+        console.log(i.getCountryCode());
+
+    });
+    employeeNations?.some(i=>{
+
+        console.log(i.getCountryCode());
+        
+    });
+    console.log("------------- End logging country codes.");
+    if(employee.distance === Constants.Distance.NATIONALLY 
         && employeeNations != undefined
         // && employeeNations.includes( employerLocation.getCountry()) )
         && employeeNations.some(i=>{
 
             if (i.getCountryCode() === employerLocation.getCountry().getCountryCode()){
-
+                
                 return true;
             }
 
@@ -223,7 +252,7 @@ function checkDistance(employee: Employee, employerLocation: Location, employeeL
         }
     }
 
-    //console.log("Failed on Distance!");
+    console.log("Failed on Distance!");
     return 0;
 }
 
