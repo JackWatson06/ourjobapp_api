@@ -7,21 +7,18 @@
     "container": "unijobapp_api_node"
   },
   "scripts": {
-    "start"            : "node dist/bootstrap/server.js",
-    "dev"              : "npx nodemon src/server.ts",
-    "build"            : "tsc",
-    
-    "script"           : "npx ts-node src/script.ts",
-    "docker-script"    : "docker exec unijobapp_api_node npm run script",
-    "match"            : "docker exec unijobapp_api_node npm run script -- ./modules/matching/commands/MatchAllCommand",
-    "email"            : "docker exec unijobapp_api_node npm run script -- ./modules/matching/commands/EmailMatchesCommand",
-    
-    "refresh-database" : "docker exec unijobapp_api_node sh -c \"npm run script -- ../database/database-delete && npm run script -- ../database/database-seed\"",
-    "seed-database"    : "docker exec unijobapp_api_node npm run script -- ../database/seed/matching-seeder",
-    
-    "test:unit"        : "jest --forceExit --verbose -c jest.unit.config.js",
-    "test:int"         : "docker exec unijobapp_api_node npx jest --forceExit --verbose -c jest.integration.config.js",
-    "test"             : "npm run test:unit && npm run test:int && npm run refresh-database"
+    "start": "node dist/bootstrap/server.js",
+    "dev": "npx nodemon src/server.ts",
+    "build": "tsc",
+    "script": "npx ts-node src/script.ts",
+    "docker-script": "docker exec unijobapp_api_node npm run script",
+    "match": "docker exec unijobapp_api_node npm run script -- ./modules/matching/commands/MatchAllCommand",
+    "email": "docker exec unijobapp_api_node npm run script -- ./modules/matching/commands/EmailMatchesCommand",
+    "refresh-database": "docker exec unijobapp_api_node sh -c \"npm run script -- ../database/database-delete && npm run script -- ../database/database-seed\"",
+    "seed-database": "docker exec unijobapp_api_node npm run script -- ../database/seed/matching-seeder",
+    "test:unit": "jest --forceExit --verbose -c jest.unit.config.js",
+    "test:int": "docker exec unijobapp_api_node npx jest --forceExit --verbose -c jest.integration.config.js",
+    "test": "npm run test:unit && npm run test:int && npm run refresh-database"
   },
   "repository": {
     "type": "git",
@@ -35,6 +32,7 @@
   "homepage": "https://github.com/universaljobapplication/unijobapp_api#readme",
   "dependencies": {
     "@types/ajv": "^1.0.0",
+    "@types/paypal-rest-sdk": "^1.7.6",
     "@types/xlsx": "0.0.36",
     "ajv": "^8.6.3",
     "axios": "^0.21.4",
@@ -51,6 +49,7 @@
     "mongodb": "^4.1.2",
     "nodemailer": "^6.7.0",
     "object-hash": "^2.2.0",
+    "paypal-rest-sdk": "^1.8.1",
     "title-case": "^3.0.3"
   },
   "devDependencies": {

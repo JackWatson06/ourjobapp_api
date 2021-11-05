@@ -63,7 +63,7 @@ test("we can can cancel a payment", () => {
     const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef")
     payment.cancel();
     
-    expect(payment.getCanceld()).toBe(true);
+    expect(payment.getCanceled()).toBe(true);
 })
 
 // Affiliates can be added to a payment so they can get access to the payout.

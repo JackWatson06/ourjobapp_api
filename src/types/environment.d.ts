@@ -9,25 +9,27 @@
 declare global {
     namespace NodeJS {
       interface ProcessEnv {
-        MONGO_PORT : number;
-        MONGO_HOST : string;
-        MONGO_DB   : string;
-
-        MONGO_EXPRESS_USERNAME : string;
-        MONGO_EXPRESS_PASSWORD : string;
-
-        MAIL_MAILER       : string;
-        MAIL_HOST         : string;
-        MAIL_PORT         : number;
-        MAIL_USERNAME     : string;
-        MAIL_PASSWORD     : string;
-        MAIL_ENCRYPTION   : string;
-        MAIL_FROM_ADDRESS : string;
-        MAIL_FROM_NAME    : string;
-
-        GOOGLE_API_KEY: string;
-
-        PORT : number;
+        PORT                   : number,
+        NODE_ENV               : string,
+        DOMAIN                 : string,
+        CLIENT_DOMAIN          : string,
+        MONGO_PORT             : number,
+        MONGO_HOST             : string,
+        MONGO_DB               : string,
+        MONGO_EXPRESS_USERNAME : string,
+        MONGO_EXPRESS_PASSWORD : string,
+        MAIL_MAILER            : string,
+        MAIL_HOST              : string,
+        MAIL_PORT              : number,
+        MAIL_USERNAME          : string,
+        MAIL_PASSWORD          : string,
+        MAIL_ENCRYPTION        : string,
+        MAIL_FROM_ADDRESS      : string,
+        MAIL_FROM_NAME         : string,
+        GOOGLE_API_KEY         : string,
+        PAYPAL_EMAIL           : string,
+        PAYPAL_CLIENT_ID       : string,
+        PAYPAL_SECRET          : string
       }
     }
   }
