@@ -10,6 +10,8 @@ dotenv.config();
 import { connect } from "../core/infa/MongoDb";
 import paypal from "paypal-rest-sdk";
 
+import * as env from "environment"; // This just sets the types for the environment variables
+
 /**
  * Bootstrap MongoDB so we can use MongoDB in our application. This represents an infastructure dependency.
  */

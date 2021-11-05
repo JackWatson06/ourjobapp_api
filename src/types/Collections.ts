@@ -123,12 +123,6 @@ export type Payout = {
 /**
  * === Signup ====
  */
-export type Contract = {
-    _id       ?: ObjectId,
-
-    hash       : string,
-    created_at : number
-}
 
 export type Token = {
     _id         ?: ObjectId,
@@ -147,13 +141,13 @@ export type Affiliate = {
     name          : string,
     charity_id    : ObjectId,
     email         : string,
-    verified      : boolean
+    verified      : boolean,
+    contract      : string,
     created_at    : number
 }
 
 export type Employee = {
     _id          ?: ObjectId,
-    contract_id  ?: ObjectId,
     token_id      : ObjectId,
  
     affiliate_id ?: ObjectId,
@@ -175,7 +169,7 @@ export type Employee = {
     experience    : number,
     information   : string,
     email         : string,
-    phone         : string
+    phone         : string,
     verified      : boolean
 }
 
@@ -189,8 +183,8 @@ export type Employer = {
     website      ?: string,
 
     industry     : ObjectId[],
-    fname        : string
-    lname        : string
+    fname        : string,
+    lname        : string,
     position     : string,
     company_name : string,
     place_id     : string,   // <= Select multiple of the job group
@@ -200,5 +194,6 @@ export type Employer = {
     where        : number,
     authorized   : boolean,
     verified     : boolean,
+    contract     : string,
     email        : string,
 }

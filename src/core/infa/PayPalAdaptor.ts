@@ -48,8 +48,8 @@ export default class PayPalAdaptor implements PaymentAdaptor
                 "payment_method": "paypal"
             },
             "redirect_urls": {
-                "return_url": `${process.env.DOMAIN}/payment/success`,
-                "cancel_url": `${process.env.DOMAIN}/payment/cancel`
+                "return_url": `${process.env.DOMAIN}/api/v1/payment/success`,
+                "cancel_url": `${process.env.DOMAIN}/api/v1/payment/cancel`
             },
             "transactions": [{
                 "item_list": {

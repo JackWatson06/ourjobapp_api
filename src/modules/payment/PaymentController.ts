@@ -73,6 +73,8 @@ export async function success(req: express.Request, res: express.Response)
     
     if(payment === null)
     {
+        console.log("Null Payment");
+        
         return res.status(400).send();
     }
 

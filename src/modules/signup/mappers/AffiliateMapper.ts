@@ -80,15 +80,14 @@ export async function create(affiliate: Affiliate): Promise<boolean> {
 
     const data: NewAffiliate = affiliate.getData();
     const affiliateRow: Collections.Affiliate = {
-        name: data.name,
-        charity_id: toObjectId(data.charity_id),
-        affiliate_id: data.affiliate_id
-            ? new ObjectId(data.affiliate_id)
-            : undefined,
-        email: email.getEmail(),
-        verified: false,
-        token_id: newToken.insertedId,
-        created_at: now(),
+        name         : data.name,
+        charity_id   : toObjectId(data.charity_id),
+        affiliate_id : data.affiliate_id ? new ObjectId(data.affiliate_id): undefined,
+        email        : email.getEmail(),
+        verified     : false,
+        token_id     : newToken.insertedId,
+        contract     : affiliate.getContract(),
+        created_at   : now(),
     };
 
     return (await mdb.collection("affiliates").insertOne(affiliateRow))

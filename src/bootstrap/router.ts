@@ -9,11 +9,16 @@
 import express from 'express'
 import searchRouter from '../modules/search/searchRouter';
 import signupRouter from '../modules/signup/signupRouter';
-import paymentRouter from '../modules/payment/paymentRouter';
 import trackingRouter from '../modules/tracking/trackingRouter';
+import paymentRouter from '../modules/payment/paymentRouter';
 
 let router: express.Router = express.Router();
 
+router.use('/fatas',   (req: express.Request, res: express.Response) => {
+    console.log('Testing');
+    
+    res.status(200).send();
+});
 router.use('/search',   searchRouter);
 router.use('/signup',   signupRouter);
 router.use('/tracking', trackingRouter);

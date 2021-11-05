@@ -25,8 +25,8 @@ export default class Affiliate
     // Email of the affiliate.
     private email: Email;
 
-    // Contract of the affiliate.
-    private fileName: string;
+    // File path for the contract in the system.
+    private contract: string;
 
     // Link to the contract that they have signed internally.
     private verified_on: number;
@@ -46,10 +46,13 @@ export default class Affiliate
     {
         if( Date.now() < this.email.getExpiredDate() )
         {
+
+            // === CONTRACT ===
             const today = new Date();
             const oneYearFromNow = new Date(new Date().setFullYear(today.getFullYear() + 1))
 
             // Figure out what to do here.
+            // This can be abstracted out into a different entity.
             const contractFile: contract.ContractLocator = await contract.generate<contract.Sharer>("sharer", {
                 VAR_EFFECTIVE_DATE   : (today).toLocaleDateString("en-US", {year: 'numeric', month: 'long', day: 'numeric'}),
                 VAR_TERMINATION_DATE : (oneYearFromNow).toLocaleDateString("en-US", {year: 'numeric', month: 'long', day: 'numeric'}),
@@ -57,7 +60,10 @@ export default class Affiliate
                 VAR_SHARED_NAME      : this.data.name,
                 VAR_SHARED_EMAIL     : this.data.email
             });
+            this.contract = contractFile.name;
 
+
+            // === EMAIL ===
             let email: EmailMs.Email = EmailMs.makeEmail(this.email.getEmail(), "Please Verify Your Account!");
             // email = EmailMs.addAttachment(email, this.fileName, "Affilaite Contract");
             email = await EmailMs.addHtml(email, "verification", {
@@ -106,5 +112,10 @@ export default class Affiliate
     public getEmail() : Email
     {
         return this.email;
+    }
+
+    public getContract() : string
+    {
+        return this.contract;
     }
 }

@@ -9,7 +9,7 @@ import * as nodemailer  from "nodemailer";
 import * as Email from "./Email";
 
 import fs from "infa/FileSystemAdaptor";
-import * as env         from "environment"; // This just sets the types for the environment variables
+import * as env from "environment"; // This just sets the types for the environment variables
 
 const from: string     = process.env.MAIL_FROM_ADDRESS
 const fromName: string = process.env.MAIL_FROM_NAME

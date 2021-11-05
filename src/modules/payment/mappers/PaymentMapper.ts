@@ -67,7 +67,7 @@ export async function read( paymentId: string ): Promise<Payment|null>
     const db: MongoDb.MDb = MongoDb.db();
 
     const paymentRow: Collections.Payment|null = await db.collection("payments").findOne<Collections.Payment>({ payment_id: paymentId });
-
+    
     if(paymentRow === null)
     {
         return null;
@@ -104,6 +104,9 @@ export async function read( paymentId: string ): Promise<Payment|null>
             payment.addAffiliate( affiliate );
         }
     }
+
+    console.log(payment);
+    
 
     return payment;
 }

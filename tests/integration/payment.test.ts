@@ -2,7 +2,6 @@ import request           from "supertest";
 import app               from "bootstrap/app";
 import * as MongoDb      from "infa/MongoDb";
 import * as  Collections from "Collections";
-import { rawListeners } from "process";
 
 const db: MongoDb.MDb = MongoDb.db();
 
@@ -99,15 +98,19 @@ beforeAll(async () => {
 
 afterAll(async () => {
     // Seed the database with fake data for this integration test of the system.
-    await db.collection("payments").deleteMany({});
-    await db.collection("payouts").deleteMany({});
+    // await db.collection("payments").deleteMany({});
+    // await db.collection("payouts").deleteMany({});
     await db.collection("affiliates").deleteMany({});
     await db.collection("employers").deleteMany({});
     await db.collection("employees").deleteMany({});
 });
 
 
-test("an employer can start a payment for an employee", () => {
+test("an employer can start a payment for an employee", async () => {    
+    const response = await request(app).get(`/api/v1/payment/start?epi=${employerId}&emi=${employeeId}`);    
+
+    console.log(response);
+
 });
 
 test("an employer successfully pay for an employee", () => {

@@ -10,7 +10,7 @@
 
 import * as EmailMs from "notify/Email";
 import { sendEmail } from "notify/Notify";
-// import { generateContract } from "services/Contract";
+import * as contract from "../services/contract";
 
 import Email from "./Email";
 
@@ -24,8 +24,8 @@ export default class Employer
     // Email verification data.
     private email: Email;
 
-    // Name of the contract file.
-    private fileName: string;
+    // File path for the contract in the system.
+    private contract: string;
 
     // Email verification data.
     private verified_at: number;
@@ -46,9 +46,22 @@ export default class Employer
 
         if( Date.now() < this.email.getExpiredDate() )
         {
-            // Figure out what to do here.
-            this.fileName = "";
 
+            // === CONTRACT ===
+            const today = new Date();
+
+            // Figure out what to do here.
+            // This can be abstracted out into a different entity.
+            const contractFile: contract.ContractLocator = await contract.generate<contract.Placement>("placement", {
+                VAR_DATE_OF_AGREEMENT      : (today).toLocaleDateString("en-US", {year: 'numeric', month: 'long', day: 'numeric'}),
+                VAR_PARTNER_COMPANY_NAME   : this.data.company_name,
+                VAR_PARTNER_OFFICE_ADDRESS : "Nothing for Now",
+                VAR_DESIGNATED_PARTY_NAME  : `${this.data.fname} ${this.data.lname}`,
+                VAR_DESIGNATED_PARTY_EMAIL : this.data.email
+            });
+            this.contract = contractFile.name;
+
+            // === EMAIL ===
             let email: EmailMs.Email = EmailMs.makeEmail(this.email.getEmail(), "Please Verify Your Account!");
             // email = EmailMs.addAttachment(email, this.fileName, "Employer Contract");
             email = await EmailMs.addHtml(email, "verification", {
@@ -96,5 +109,13 @@ export default class Employer
     public getData(): NewEmployer
     {
         return this.data;
+    }
+
+    /**
+     * Get the employers contract when the sign it.
+     */
+    public getContract() : string
+    {
+        return this.contract;
     }
 }

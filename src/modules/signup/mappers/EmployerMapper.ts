@@ -48,6 +48,7 @@ export async function create(employer: Employer): Promise<boolean>
     const data: NewEmployer = employer.getData();
     const employerRow: Collections.Employer = { 
         ...data,
+        contract     : employer.getContract(),
         industry     : data.industry.map((industry: string) => new ObjectId(industry)),
         affiliate_id : data.affiliate_id ? new ObjectId(data.affiliate_id): undefined,
         token_id     : newToken.insertedId,
