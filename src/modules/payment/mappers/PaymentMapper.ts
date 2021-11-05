@@ -140,6 +140,7 @@ export async function update( payment: Payment ): Promise<boolean>
                 affiliate_id     : MongoDb.toObjectId( payout.getReward().getAffiliateId() ),
                 payment_id       : paymentId,
                 charity_id       : MongoDb.toObjectId( payout.getDonation().getCharity().getId() ),
+                batch_id         : payout.getBatchId(),
                 
                 amount           : payout.getReward().getAmount(),
                 donation         : payout.getDonation().getAmount(),

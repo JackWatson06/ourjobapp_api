@@ -112,6 +112,7 @@ export type Payout = {
     affiliate_id     : ObjectId,
     payment_id       : ObjectId,
     charity_id       : ObjectId,
+    batch_id         : string, // <= From paypal
     amount           : number,
     donation         : number,
     currency         : string,

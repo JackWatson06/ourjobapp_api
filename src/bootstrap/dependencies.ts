@@ -8,11 +8,12 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 import { connect } from "../core/infa/MongoDb";
+import paypal from "paypal-rest-sdk";
 
 /**
  * Bootstrap MongoDB so we can use MongoDB in our application. This represents an infastructure dependency.
  */
-async function mongoDb()
+async function mongoDb(): Promise<void>
 {
     try
     {
@@ -29,12 +30,14 @@ async function mongoDb()
 /**
  * Bootstrap the paypal API so we can use it in our application.
  */
-function payment()
+function payment(): void
 {
-    // TODO Implement Paypal API process
+    paypal.configure({
+        'mode'          : process.env.PAYPAL_MODE,
+        'client_id'     : process.env.PAYPAL_CLIENT_ID,
+        'client_secret' : process.env.PAYPAL_SECRET
+    });
 }
-
-
 
 /**
  * Bootstrap the application

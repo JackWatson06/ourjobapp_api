@@ -28,6 +28,7 @@ declare global {
         MAIL_FROM_NAME         : string,
         GOOGLE_API_KEY         : string,
         PAYPAL_EMAIL           : string,
+        PAYPAL_MODE            : string,
         PAYPAL_CLIENT_ID       : string,
         PAYPAL_SECRET          : string
       }

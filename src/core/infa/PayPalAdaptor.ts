@@ -1,28 +1,56 @@
+/**
+ * Original Author: Jack Watson
+ * Created Date: 11/5/2021
+ * Purpose: This class serves to handle interactions with the paypal API infastrucutre. We dependo on a interface just
+ * in case we will want to change this in the future. This acts as an Adaptor pattern.
+ * 
+ * PayPal Hanldes Payments the following way:
+ * 
+ * 1. Create PayPal Payment (create method)
+ * 2. Get Payment Approval (create method returning approval url)
+ * 3. Execute approved payment (finalize)
+ * 
+ */
 
-import {PaymentAdaptor, PaymentCreateResponse} from "./PaymentAdaptor";
+import {PaymentAdaptor, PaymentCreateResponse, PayoutCreateRequest} from "./PaymentAdaptor";
 import paypal from "paypal-rest-sdk";
+
+function getApprovalUrlFromPaypalPaymentResponse(payment: paypal.PaymentResponse): string|undefined
+{
+    if(payment.links === undefined)
+    {
+        return undefined;
+    }
+
+    for(let i = 0;i < payment.links.length;i++){
+      if(payment.links[i].rel === 'approval_url'){
+        return payment.links[i].href;
+      }
+    }
+
+    return undefined;
+}
 
 export default class PayPalAdaptor implements PaymentAdaptor
 {
     /**
-     * Execute a payment using the paypayl API. We will also need a execute payment once we get paypals proper terminology.
+     * Execute a payment using the paypal API. We will also need a execute payment once we get paypals proper terminology.
      */
     public async create(amount: number): Promise<PaymentCreateResponse>
     {
-        const create_payment_json: paypal.Payment = {
+        const createPaymentJson: paypal.Payment = {
             "intent": "sale",
             "payer": {
                 "payment_method": "paypal"
             },
             "redirect_urls": {
-                "return_url": `${process.env.DOMAIN}/success`,
-                "cancel_url": `${process.env.DOMAIN}/cancel`
+                "return_url": `${process.env.DOMAIN}/payment/success`,
+                "cancel_url": `${process.env.DOMAIN}/payment/cancel`
             },
             "transactions": [{
                 "item_list": {
                     "items": [{
-                        "name": "Hire Candidate",
-                        "sku": "001",
+                        "name": "Hire Candidate",   // Get the candidate name
                         "price": `${amount}`,
                         "currency": "USD",
                         "quantity": 1
@@ -30,40 +58,100 @@ export default class PayPalAdaptor implements PaymentAdaptor
                 },
                 "amount": {
                     "currency": "USD",
-                    "total": amount
+                    "total": `${amount}`
                 },
                 "description": "Hire your candidate through ourjob.app"
             }]
         };
 
         return new Promise( (resolve, reject) => {
-            paypal.payment.create(create_payment_json, function (error, payment) {
+            paypal.payment.create(createPaymentJson, function (error, payment) {
                 if (error) {
                     reject(error);
                 } else {
 
+                    // This approval URL 
+                    const url: string|undefined = getApprovalUrlFromPaypalPaymentResponse(payment);
+                    const id: string|undefined  = payment.id;
 
-                    console.log(payment);
-                    
+                    if(url != undefined && id != undefined)
+                    {
+                        resolve({
+                            id: id,
+                            redirect: url
+                        });
+                    }
 
-                    // for(let i = 0;i < payment.links.length;i++){
-                    //   if(payment.links[i].rel === 'approval_url'){
-                    //     res.redirect(payment.links[i].href);
-                    //   }
-                    // }
-
+                    reject("Could not parse necessary paramters from the payment.");
                 }
-              });
+            });
         } )
     }
 
-    public async finalize(): Promise<boolean>
-    {
-        return true;
+    /**
+     * Finalize the paypal order.
+     * @param paymentId The payment ID of the Paypal order
+     * @param payerId The payer id for the order.... store that in the database.
+     */
+    public async finalize(paymentId: string, payerId: string): Promise<boolean>
+    { 
+        const executePaymentJson: paypal.payment.ExecuteRequest = {
+          "payer_id": payerId
+        };
+      
+        return new Promise((resolve, reject) => {
+            paypal.payment.execute(paymentId, executePaymentJson, function (error, payment) {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(true);
+                }
+            });
+        });
     }
 
-    public async payout(amount: number, email: string): Promise<boolean>
+    /**
+     * Payout all the people in the list who are included in the batch. Currently based off of our business logic their
+     * are a total of 4 individuals who can be notified of a payout at a single time.
+     * @param payouts Batch of payout create requests that we will send to all the people in the list.
+     */
+    public async payout(payouts: Array<PayoutCreateRequest>): Promise<string>
     {
-        return true;
+        const createPayoutJson = {
+            "sender_batch_header": {
+                "sender_batch_id": `PAYOUT_${Date.now()}`,
+                "email_subject": "Claim Your Affiliate Reward!"
+            },
+            "items": [
+                ...payouts.map((payout) => {
+                    return {
+                        "recipient_type": "EMAIL",
+                        "amount": {
+                            "value": payout.amount,
+                            "currency": "USD"
+                        },
+                        "receiver": payout.email,
+                        "note": "Thank you for helping someone find a job!",
+                    }
+                })
+            ]
+        };
+        
+        return new Promise((resolve, reject) => {
+            paypal.payout.create(createPayoutJson, function (error: string, payout: any) {
+
+                if (error) 
+                {
+                    reject(error);
+                }
+
+                if(payout.batch_header.payout_batch_id === undefined)
+                {
+                    reject("Could not get the payout batch id from the response.");
+                }
+
+                resolve(payout.batch_header.payout_batch_id);
+            });
+        });
     }
 }

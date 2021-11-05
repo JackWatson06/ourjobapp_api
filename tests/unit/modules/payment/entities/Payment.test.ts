@@ -46,7 +46,7 @@ test("can add affiliates", () => {
 test("you can only add two affiliates to a payment", () => {
     
     const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef")
-    payment.execute(new PayPalAdaptor);
+    payment.execute(new PayPalAdaptor, "123456");
     
     const affiliate: Affiliate = new Affiliate(
         new Identification("watson.jack.p@gmail.com", "EFEFefefEFEFefefEFEFefef"), 
@@ -74,7 +74,7 @@ test("payment is invalid after we execute the payment", async () => {
     });
 
     const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef")
-    const execute: boolean = await payment.execute(new PayPalAdaptor);
+    const execute: boolean = await payment.execute(new PayPalAdaptor, "123456");
 
     expect( execute ).toBe(false);
     expect( payment.getError() ).toBe(true);
@@ -88,7 +88,7 @@ test("payment is successful after we execute the payment", async () => {
     });    
 
     const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef")
-    const execute: boolean = await payment.execute(new PayPalAdaptor);
+    const execute: boolean = await payment.execute(new PayPalAdaptor, "123456");
 
     expect( execute ).toBe(true);
     expect( payment.getSuccess() ).toBe(true);
@@ -111,7 +111,7 @@ test("list of requested payouts equal the amount of affiliates", async () => {
     });    
 
     const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef")
-    await payment.execute(new PayPalAdaptor);
+    await payment.execute(new PayPalAdaptor, "123456");
     
     const identity: Identification  = new Identification("watson.jack.p@gmail.com", "EFEFefefEFEFefefEFEFefef");
     const charity: Charity          = new Charity("EFEFefefEFEFefefEFEFefef");
@@ -134,7 +134,7 @@ test("payouts to charities and affiliates are as expected from the payment plan"
     });    
 
     const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef")
-    await payment.execute(new PayPalAdaptor);
+    await payment.execute(new PayPalAdaptor, "123456");
     
     const identity: Identification  = new Identification("watson.jack.p@gmail.com", "EFEFefefEFEFefefEFEFefef");
     const charity: Charity          = new Charity("EFEFefefEFEFefefEFEFefef");
@@ -164,13 +164,13 @@ test("can notify recipients of payouts with success", async () => {
     PayPalAdaptor.prototype.finalize = jest.fn().mockImplementation(async (): Promise<boolean> => {
         return true;
     });    
-    PayPalAdaptor.prototype.payout = jest.fn().mockImplementation(async (): Promise<boolean> => {
-        return true;
+    PayPalAdaptor.prototype.payout = jest.fn().mockImplementation(async (): Promise<string> => {
+        return "Irrelevant";
     });    
 
     const payPal: PayPalAdaptor = new PayPalAdaptor();
     const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef")
-    await payment.execute(payPal);
+    await payment.execute(payPal, "123456");
     
     const identity: Identification  = new Identification("watson.jack.p@gmail.com", "EFEFefefEFEFefefEFEFefef");
     const charity: Charity          = new Charity("EFEFefefEFEFefefEFEFefef");
@@ -184,28 +184,28 @@ test("can notify recipients of payouts with success", async () => {
     payment.payout();
 
     // === Execute ===
-    payment.sendPayouts(payPal);
+    await payment.sendPayouts(payPal);
 
     // === Assert ===
     expect(payment.getPayouts()[0].getSuccess()).toBe(true);
     expect(payment.getPayouts()[1].getSuccess()).toBe(true);
+
+    expect(payment.getPayouts()[0].getBatchId()).toBe("Irrelevant");
+    expect(payment.getPayouts()[1].getBatchId()).toBe("Irrelevant");
 });
 
 test("still send payout to some if succesful", async () => {
     // === Setup ===
     PayPalAdaptor.prototype.finalize = jest.fn().mockImplementation(async (): Promise<boolean> => {
-        return true;
+        return false;
     });    
-
-    let errorOut = false;
-    PayPalAdaptor.prototype.payout = jest.fn().mockImplementation(async (): Promise<boolean> => {
-        errorOut = !errorOut; 
-        return errorOut;
+    PayPalAdaptor.prototype.payout = jest.fn().mockImplementation(async (): Promise<string> => {
+        throw "Irrelevant";
     });    
 
     const payPal: PayPalAdaptor = new PayPalAdaptor();
     const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef")
-    await payment.execute(payPal);
+    await payment.execute(payPal, "123456");
     
     const identity: Identification  = new Identification("watson.jack.p@gmail.com", "EFEFefefEFEFefefEFEFefef");
     const charity: Charity          = new Charity("EFEFefefEFEFefefEFEFefef");
@@ -219,9 +219,9 @@ test("still send payout to some if succesful", async () => {
     payment.payout();
 
     // === Execute ===
-    payment.sendPayouts(payPal);
+    await payment.sendPayouts(payPal);
 
-    // === Assert ===
-    expect(payment.getPayouts()[0].getSuccess()).toBe(true);
-    expect(payment.getPayouts()[1].getError()).toBe(false);
+    // === Assert (Notice GetError) ===
+    expect(payment.getPayouts()[0].getError()).toBe(true);
+    expect(payment.getPayouts()[1].getError()).toBe(true);
 });

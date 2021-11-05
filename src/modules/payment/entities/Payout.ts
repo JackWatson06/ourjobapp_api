@@ -3,13 +3,10 @@
  * Created Date: 11/5/2021
  * Purpose: This class is in charge of paying the affiliate their due dilligance based on a successful payment.
  */
-
 import PaymentPlan from "./PaymentPlan";
 
 import Reward from "./Reward";
 import Donation from "./Donation";
-
-import { PaymentAdaptor } from "infa/PaymentAdaptor";
 
 export default class Payout
 {
@@ -18,6 +15,9 @@ export default class Payout
 
     // The donation associated with this payout.
     private donation: Donation;
+
+    // The number associated with the batch of payouts that we sent out to other people.
+    private batchId: string
 
     // Was this payout successfully sent?
     private success: boolean;
@@ -34,52 +34,55 @@ export default class Payout
         this.donation = donation;
         this.success  = false;
         this.error    = false;
+        this.batchId  = "";
     }
 
     /**
-     * Send a payment to an
-     * @param paymentAdaptor Payment infastructure
+     * The state of this object is managed by the payment object we will want to refactor this into a GROUP of 
+     * @param status Set the status that this payout object currently has.
      */
-    public async send(paymentAdaptor: PaymentAdaptor): Promise<boolean>
+    public sent(batchId : string)
     {
-        const amount = this.reward.getAmount();
-        const email  = this.reward.getEmail();   // Thats a doozy
+        this.success = true;
+        this.sentAt  = Date.now();
+        this.batchId = batchId;
+    }
 
-        this.sentAt = Date.now();
-        try{
-            paymentAdaptor.payout(amount, email);
-            this.success = true;
-            return true;
-        }
-        catch(error)
-        {
-            this.error = true;
-            return false;
-        }
+    /**
+     * Faile the sending of the payout object
+     */
+    public failedSending(): void
+    {
+        this.error = true;
     }
 
     // === GETTERS ===
-    public getSuccess()
+    public getSuccess(): boolean
     {
         return this.success;
     }
 
-    public getError()
+    public getError(): boolean
     {
         return this.error;
     }
 
-    public getSentAt()
+    public getSentAt(): number
     {
         return this.sentAt;
     }
 
-    public getReward()
+    public getBatchId(): string
+    {
+        return this.batchId;
+    }
+
+    public getReward(): Reward
     {
         return this.reward;
     }
 
-    public getDonation()
+    public getDonation(): Donation
     {
         return this.donation;
     }

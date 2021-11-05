@@ -7,7 +7,7 @@
  */
 
 import Affiliate from "./Affiliate";
-import { PaymentAdaptor } from "infa/PaymentAdaptor";
+import { PaymentAdaptor, PayoutCreateRequest } from "infa/PaymentAdaptor";
 import Payout from "./Payout";
 
 export default class Payment
@@ -72,12 +72,12 @@ export default class Payment
      * Execute the payment against whatever adaptor we have passed in (right now were using paypal)
      * @param payment Adaptor for the payment
      */
-    public async execute(payment: PaymentAdaptor): Promise<boolean>
+    public async execute(payment: PaymentAdaptor, payerId: string): Promise<boolean>
     {
         try
         {
             this.executed_at = Date.now();
-            await payment.finalize();
+            await payment.finalize(this.id, payerId);
 
             this.success = true;
             return true;
@@ -92,11 +92,20 @@ export default class Payment
     /**
      * Payout this payment to all of the affiliates that are associated with it.
      */
-    public sendPayouts(payment: PaymentAdaptor): void
+    public async sendPayouts(payment: PaymentAdaptor): Promise<void>
     {
-        for(const payout of this.payouts)
+        const payoutRequests: Array<PayoutCreateRequest> = this.payouts.map((payout) => ({
+            amount: payout.getReward().getAmount(),
+            email: payout.getReward().getEmail()
+        }));
+
+        try{
+            const batchId: string = await payment.payout(payoutRequests);
+            this.payouts.forEach((payout) => payout.sent(batchId));
+        }
+        catch(error)
         {
-            payout.send(payment);
+            this.payouts.forEach((payout) => payout.failedSending());
         }
     }
 
