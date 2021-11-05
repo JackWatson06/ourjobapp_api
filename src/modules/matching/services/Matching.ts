@@ -33,35 +33,12 @@ export async function match(batch: Batch, employer: Employer): Promise<BatchMatc
 
     for await (const employee of EmployeeMapper.readBulk()) {
 
-        // console.log(employee?.id);
-        
-
         if( employee === undefined )
         {
             break;
         }
-
-        // We return undefined here if there is no map
-        // console.log(employer);
-        // console.log(employee);
-        
         
         const match: Match|undefined = await createMatchIfExists(employer, employee);
-        if (employee.name === "Employee 2 Employer 2"){
-
-            console.log("Match found------------------------");
-            // console.log("Employee 2 ------------------------");
-            
-            console.log(employer);
-            console.log(employee);
-            console.log(match);
-            console.log("------------------------------\n");
-
-        }
-
-        // break;
-        
-        
 
         // Zero is a no-no we do not want to match the employer with the employee with a zero... most matches will have a zero.
         if( match != undefined )
@@ -104,9 +81,6 @@ async function createMatchIfExists(employer: Employer, employee: Employee): Prom
 
 
     // ==== Match the jobs ====
-
-    // console.log(employer.industry);
-    // console.log(employee.jobs);
     
     // Determine if the job type matches that of the employers group.
     for(const desiredJob of employee.jobs)
@@ -116,17 +90,7 @@ async function createMatchIfExists(employer: Employer, employee: Employee): Prom
         
         // console.log(employer.industry.find(industry));
 
-        if( employer.industry.some(i=>{
-
-            if(i.getName() === industry.getName())
-            {
-                return true;
-            }
-            // else{
-            //     return false;
-            // }
-
-        }) )
+        if( employer.industry.some(i => i.getName() === industry.getName() ))
         {
 
             // console.log("Industry matches.");
@@ -163,15 +127,7 @@ async function locationScore(employee: Employee, employer: Employer): Promise<nu
 
     // Authorized
     // if( (employer.authorized) && !(employeeAuthorized.includes( employerLocation.getCountry() ) ) )
-    if( (employer.authorized) && !(employeeAuthorized.some(i => {
-
-        if (i.getCountryCode() === employerLocation.getCountry().getCountryCode()){
-
-            return true;
-
-        } 
-
-    })) )
+    if( (employer.authorized) && !(employeeAuthorized.some(i => i.getCountryCode() === employerLocation.getCountry().getCountryCode())) )
     {
         console.log("Failed on Authorized! Employer authorization is : " + employer.authorized + " Employee authorization is : " + employeeAuthorized + "\n");
         return 0;
@@ -193,46 +149,11 @@ async function locationScore(employee: Employee, employer: Employer): Promise<nu
 function checkDistance(employee: Employee, employerLocation: Location, employeeLocation: Location|undefined ): number
 {
     const employeeNations: Array<CountryCode>|undefined = employee.national;
-    // console.log("------------- Logging country codes:");
-    // console.log(Constants.Distance.NATIONALLY);
-    // console.log(employee.distance);
-    
-    
-    // console.log(employee.distance === Constants.Distance.NATIONALLY);
-    // console.log(employeeNations != undefined);
-    // console.log(employeeNations != undefined && employeeNations.some(i=>{
 
-        //     if (i.getCountryCode() === employerLocation.getCountry().getCountryCode()){
-                
-        //         return true;
-        //     }
-
-        // }));
-    
-    
-    
-    employee.national?.some(i=>{
-
-        console.log(i.getCountryCode());
-
-    });
-    employeeNations?.some(i=>{
-
-        console.log(i.getCountryCode());
-        
-    });
-    console.log("------------- End logging country codes.");
     if(employee.distance === Constants.Distance.NATIONALLY 
         && employeeNations != undefined
         // && employeeNations.includes( employerLocation.getCountry()) )
-        && employeeNations.some(i=>{
-
-            if (i.getCountryCode() === employerLocation.getCountry().getCountryCode()){
-                
-                return true;
-            }
-
-        }))
+        && employeeNations.some(i => i.getCountryCode() === employerLocation.getCountry().getCountryCode()))
     {
         return 1;
     }
@@ -246,7 +167,6 @@ function checkDistance(employee: Employee, employerLocation: Location, employeeL
         }
     }
 
-    console.log("Failed on Distance!");
     return 0;
 }
 

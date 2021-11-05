@@ -2,6 +2,7 @@ import request           from "supertest";
 import app               from "bootstrap/app";
 import * as MongoDb      from "infa/MongoDb";
 import * as  Collections from "Collections";
+import { rawListeners } from "process";
 
 const db: MongoDb.MDb = MongoDb.db();
 
@@ -96,7 +97,6 @@ beforeAll(async () => {
     await db.collection("employees").insertOne(employee);
 });
 
-
 afterAll(async () => {
     // Seed the database with fake data for this integration test of the system.
     await db.collection("payments").deleteMany({});
@@ -106,7 +106,18 @@ afterAll(async () => {
     await db.collection("employees").deleteMany({});
 });
 
-test("1 = 1", () => {
-    expect(1).toBe(1);
-})
+
+test("an employer can start a payment for an employee", () => {
+});
+
+test("an employer successfully pay for an employee", () => {
+});
+
+test("payouts are created when an employer succesfully pays for an employee", () => {
+});
+
+test("an employer can cancel a payment", () => {
+});
+
+
 

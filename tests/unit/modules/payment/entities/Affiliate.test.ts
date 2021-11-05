@@ -1,36 +1,52 @@
+import Affiliate from "modules/payment/entities/Affiliate";
+import Identification from "modules/payment/entities/Identification";
+import Charity from "modules/payment/entities/Charity";
 
 
-test("affiliates can only have a chain of TWO affiliates", () => {
-    /**
-     * // Affilaites need to check to make sure that you can only nest one. If the affiliates aready have an affiliate don't nest. This allows
-     * // us to store the business rule that affiliates only get paid which are double down the chain.
-     * const affiliateDoubleNested: Affiliate = new Affiliate("EFEFefefEFEFefefEFEFefef", "EFEFefefEFEFefefEFEFefef");
-     * const affiliateOneNested: Affiliate = new Affiliate("EFEFefefEFEFefefEFEFefef", "EFEFefefEFEFefefEFEFefef", affiliateDoubleNested);
-     *
-     * expect(new Affiliate("EFEFefefEFEFefefEFEFefef", "EFEFefefEFEFefefEFEFefef", affiliateOneNested)).toThrow(Error);
-     */
+// Were only able to link
+test("test you can only set an affiliate on time", () => {
+
+    const identity: Identification = new Identification("watson.jack.p@gmail.com", "EFEFefefEFEFefefEFEFefef");
+    const charity: Charity = new Charity("EFEFefefEFEFefefEFEFefef")
+
+    // Affilaites need to check to make sure that you can only nest one. If the affiliates aready have an affiliate don't nest. This allows
+    // us to store the business rule that affiliates only get paid which are double down the chain.
+    const affiliateOne: Affiliate   = new Affiliate(identity, charity);
+    const affiliateTwo: Affiliate   = new Affiliate(identity, charity);
+    const affiliateThree: Affiliate = new Affiliate(identity, charity)
+
+    affiliateOne.linkAffiliate(affiliateTwo);
+    affiliateTwo.linkAffiliate(affiliateThree);
+    
+    expect(affiliateTwo.getAffiliate()).toEqual(undefined);
 });
 
 
 test("single affiliate generates a payout", () => {
-    /**
-     * // Affilaites need to check to make sure that you can only nest one. If the affiliates aready have an affiliate don't nest. This allows
-     * // us to store the business rule that affiliates only get paid which are double down the chain.
-     * const affiliateOne: Affiliate = new Affiliate("EFEFefefEFEFefefEFEFefef", "EFEFefefEFEFefefEFEFefef");
-     * const paymentPlan: PaymentPlan = new PaymentPlan();
-     * 
-     * expect(affiliateOne.pay(PaymentPLan).length).toBe(1);
-     */
+    
+    const identity: Identification = new Identification("watson.jack.p@gmail.com", "EFEFefefEFEFefefEFEFefef");
+    const charity: Charity = new Charity("EFEFefefEFEFefefEFEFefef");
+
+    // Affilaites need to check to make sure that you can only nest one. If the affiliates aready have an affiliate don't nest. This allows
+    // us to store the business rule that affiliates only get paid which are double down the chain.
+    const affiliateOne: Affiliate = new Affiliate(identity, charity);
+
+    expect(affiliateOne.pay().length).toBe(1);
+    
 });
 
 test("nested affiliates generate two payouts", () => {
-    /**
-     * // Affilaites need to check to make sure that you can only nest one. If the affiliates aready have an affiliate don't nest. This allows
-     * // us to store the business rule that affiliates only get paid which are double down the chain.
-     * const affiliateOne: Affiliate = new Affiliate("EFEFefefEFEFefefEFEFefef", "EFEFefefEFEFefefEFEFefef");
-     * const paymentPlan: PaymentPlan = new PaymentPlan();
-     * 
-     * expect(affiliateOne.pay(PaymentPLan).length).toBe(2);
-     */
+
+    const identity: Identification = new Identification("watson.jack.p@gmail.com", "EFEFefefEFEFefefEFEFefef");
+    const charity: Charity = new Charity("EFEFefefEFEFefefEFEFefef");
+
+    // Affilaites need to check to make sure that you can only nest one. If the affiliates aready have an affiliate don't nest. This allows
+    // us to store the business rule that affiliates only get paid which are double down the chain.
+    const affiliateOne: Affiliate = new Affiliate(identity, charity);
+    const affiliateTwo: Affiliate = new Affiliate(identity, charity);
+
+    affiliateOne.linkAffiliate(affiliateTwo);
+    
+    expect(affiliateOne.pay().length).toBe(2);
 });
 

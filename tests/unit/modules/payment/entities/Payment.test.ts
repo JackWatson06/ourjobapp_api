@@ -17,155 +17,211 @@
  * If error and success are both false than that means the payout has yet to be sent.
  * 
  */
+import Payment from "modules/payment/entities/Payment";
+import Affiliate from "modules/payment/entities/Affiliate";
+import Identification from "modules/payment/entities/Identification";
+import Charity from "modules/payment/entities/Charity";
+import PaymentPlan from "modules/payment/entities/PaymentPlan";
 
-/**
- * Error mock and non-error mock.
- * 
- * 
- * 
- */
+import PayPalAdaptor from "infa/PayPalAdaptor";
 
+jest.mock("infa/PayPalAdaptor");
 
 // Affiliates can be added to a payment so they can get access to the payout.
 test("can add affiliates", () => {
-    /**
-     * const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef")
-     * 
-     * const affiliate: Affilaite = new Affiliate("EFEFefefEFEFefefEFEFefef", "EFEFefefEFEFefefEFEFefef", 1);
-     * payment.addAffiliate(affiliate);
-     * 
-     * expect(payment.getAffiliates()).toBe([ affiliate ]);
-     */
-});
+    
+    const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef")
+    
+    const affiliate: Affiliate = new Affiliate(
+        new Identification("watson.jack.p@gmail.com", "EFEFefefEFEFefefEFEFefef"), 
+        new Charity("EFEFefefEFEFefefEFEFefef")
+    );
 
-// Affiliates can be added to a payment so they can get access to the payout.
-test("execute fails when payment fails.", () => {
-    /**
-     * const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef")
-     * 
-     * expect(payment.execute(PayPalApiError)).toBe(false);
-     * expect(payment.getError()).toBe(true);
-     */
-});
-
-// Affiliates can be added to a payment so they can get access to the payout.
-test("execute succeeds when payment succeeds.", () => {
-    /**
-     * const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef")
-     * 
-     * expect(payment.execute(PayPalApiSuccess)).toBe(true);
-     * expect(payment.getSuccess()).toBe(true);
-     */
+    payment.addAffiliate(affiliate);
+    
+    expect(payment.getAffiliates()).toEqual([ affiliate ]);
+    
 });
 
 test("you can only add two affiliates to a payment", () => {
-    /**
-     * const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef")
-     * payment.execute(PayPalApiSuccess);
-     * 
-     * const affiliate: Affilaite = new Affiliate("EFEFefefEFEFefefEFEFefef", "EFEFefefEFEFefefEFEFefef", 1);
-     * payment.addAffiliate(affiliate);
-     * payment.addAffiliate(affiliate);
-     * 
-     * expect(payment.addAffiliate(affiliate)).toThrow(Error);
-     */
+    
+    const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef")
+    payment.execute(new PayPalAdaptor);
+    
+    const affiliate: Affiliate = new Affiliate(
+        new Identification("watson.jack.p@gmail.com", "EFEFefefEFEFefefEFEFefef"), 
+        new Charity("EFEFefefEFEFefefEFEFefef")
+    );    
+    
+    payment.addAffiliate(affiliate);
+    payment.addAffiliate(affiliate);
+    
+    expect(() => payment.addAffiliate(affiliate)).toThrow("You can only add two affiliates.");
+});
+
+test("we can can cancel a payment", () => {
+    const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef")
+    payment.cancel();
+    
+    expect(payment.getCanceld()).toBe(true);
+})
+
+// Affiliates can be added to a payment so they can get access to the payout.
+test("payment is invalid after we execute the payment", async () => {
+    
+    PayPalAdaptor.prototype.finalize = jest.fn().mockImplementation(async (): Promise<boolean> => {
+        throw "Error";
+    });
+
+    const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef")
+    const execute: boolean = await payment.execute(new PayPalAdaptor);
+
+    expect( execute ).toBe(false);
+    expect( payment.getError() ).toBe(true);
+});
+
+// Affiliates can be added to a payment so they can get access to the payout.
+test("payment is successful after we execute the payment", async () => {
+
+    PayPalAdaptor.prototype.finalize = jest.fn().mockImplementation(async (): Promise<boolean> => {
+        return true;
+    });    
+
+    const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef")
+    const execute: boolean = await payment.execute(new PayPalAdaptor);
+
+    expect( execute ).toBe(true);
+    expect( payment.getSuccess() ).toBe(true);
+
 });
 
 test("you can only request payout if payment is successful", () => {
-    /**
-     * const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef");
-     * 
-     * expect(payment.payouts).toThrow(Error);
-     */
+
+    const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef");
+    
+    expect(() => payment.payout()).toThrow("You can not payout affiliates if the payment was unsuccessful");
 });
 
 // Test we can generate a list of payouts which will have the same amount as the affilaites.
-test("list of requested payouts equal the amount of affiliates", () => {
-    /**
-     * const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef")
-     * payment.execute(PayPalApiSuccess);
-     * 
-     * const affiliate: Affilaite = new Affiliate("EFEFefefEFEFefefEFEFefef", "EFEFefefEFEFefefEFEFefef", 1);
-     * payment.addAffiliate(affiliate);
-     * 
-     * payment.payout();
-     * expect(payment.getRequestedPayouts().length).toBe(1);
-     */
+test("list of requested payouts equal the amount of affiliates", async () => {
+    
+    // === Setup ===
+    PayPalAdaptor.prototype.finalize = jest.fn().mockImplementation(async (): Promise<boolean> => {
+        return true;
+    });    
+
+    const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef")
+    await payment.execute(new PayPalAdaptor);
+    
+    const identity: Identification  = new Identification("watson.jack.p@gmail.com", "EFEFefefEFEFefefEFEFefef");
+    const charity: Charity          = new Charity("EFEFefefEFEFefefEFEFefef");
+    const affiliate: Affiliate      = new Affiliate(identity, charity);
+    payment.addAffiliate(affiliate);
+    
+    // === Execute ===
+    payment.payout();
+
+    // === Assert ===
+    expect(payment.getPayouts().length).toBe(1);
+    
 });
 
-test("affiliate payments are as expected from the payment plan", () => {
-    /**
-     * const payment: Payment         = new Payment("EFEFefefEFEFefefEFEFefef")
-     * const paymentPlan: PaymentPlan = payment.getPaymentPlan();
-     * payment.execute(PayPalApiSuccess);
-     * 
-     * // Affilaites need to check to make sure that you can only nest one. If the affiliates aready have an affiliate don't nest. This allows
-     * // us to store the business rule that affiliates only get paid which are double down the chain.
-     * const affiliateOneNested: Affiliate = new Affiliate("EFEFefefEFEFefefEFEFefef", "EFEFefefEFEFefefEFEFefef");
-     * const affiliateOne: Affiliate   = new Affiliate("EFEFefefEFEFefefEFEFefef", "EFEFefefEFEFefefEFEFefef", affiliateOneNested);
-     * 
-     * payment.addAffiliate(affiliateOne);
-     * 
-     * payment.payout();
-     * const payout: Array<RequestedPayout> = payment.getRequestedPayouts();
-     * 
-     * expect(payout[0].getAffiliateAmount()).toBe(15.97);
-     * expect(payout[1].getAffiliateAmount()).toBe(6.97);
-     */
+test("payouts to charities and affiliates are as expected from the payment plan", async () => {
+
+    // === Setup ===
+    PayPalAdaptor.prototype.finalize = jest.fn().mockImplementation(async (): Promise<boolean> => {
+        return true;
+    });    
+
+    const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef")
+    await payment.execute(new PayPalAdaptor);
+    
+    const identity: Identification  = new Identification("watson.jack.p@gmail.com", "EFEFefefEFEFefefEFEFefef");
+    const charity: Charity          = new Charity("EFEFefefEFEFefefEFEFefef");
+
+    const affiliateOne: Affiliate      = new Affiliate(identity, charity);
+    const affiliateTwo: Affiliate      = new Affiliate(identity, charity);
+    
+    affiliateOne.linkAffiliate(affiliateTwo);
+    
+    payment.addAffiliate(affiliateOne);
+
+    // === Execute ===
+    payment.payout();
+    
+    // === Assert ===
+    expect(payment.getPayouts()[0].getReward().getAmount()).toBe(PaymentPlan.AFFILIATE_PAYOUTS[0]);
+    expect(payment.getPayouts()[1].getReward().getAmount()).toBe(PaymentPlan.AFFILIATE_PAYOUTS[1]);
+
+    expect(payment.getPayouts()[0].getDonation().getAmount()).toBe(PaymentPlan.CHARITY_PAYOUTS[0]);
+    expect(payment.getPayouts()[1].getDonation().getAmount()).toBe(PaymentPlan.CHARITY_PAYOUTS[1]);
+    
 });
 
-test("donation payments are as expected from the payment plan", () => {
-    /**
-     * const payment: Payment         = new Payment("EFEFefefEFEFefefEFEFefef")
-     * const paymentPlan: PaymentPlan = payment.getPaymentPlan();
-     * payment.execute(PayPalApiSuccess);
-     * 
-     * // Affilaites need to check to make sure that you can only nest one. If the affiliates aready have an affiliate don't nest. This allows
-     * // us to store the business rule that affiliates only get paid which are double down the chain.
-     * const affiliateOneNested: Affiliate = new Affiliate("EFEFefefEFEFefefEFEFefef", "EFEFefefEFEFefefEFEFefef");
-     * const affiliateOne: Affiliate       = new Affiliate("EFEFefefEFEFefefEFEFefef", "EFEFefefEFEFefefEFEFefef", affiliateOneNested);
-     * 
-     * payment.addAffiliate(affiliateOne);
-     * 
-     * payment.payout();
-     * const payout: Array<Payout> = payment.getPayouts();
-     * 
-     * expect(payout[0].getDonationPayout()).toBe(1.00);
-     * expect(payout[1].getDonationPayout()).toBe(0.67);
-     */
+test("can notify recipients of payouts with success", async () => {
+
+    // === Setup ===
+    PayPalAdaptor.prototype.finalize = jest.fn().mockImplementation(async (): Promise<boolean> => {
+        return true;
+    });    
+    PayPalAdaptor.prototype.payout = jest.fn().mockImplementation(async (): Promise<boolean> => {
+        return true;
+    });    
+
+    const payPal: PayPalAdaptor = new PayPalAdaptor();
+    const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef")
+    await payment.execute(payPal);
+    
+    const identity: Identification  = new Identification("watson.jack.p@gmail.com", "EFEFefefEFEFefefEFEFefef");
+    const charity: Charity          = new Charity("EFEFefefEFEFefefEFEFefef");
+
+    const affiliateOne: Affiliate      = new Affiliate(identity, charity);
+    const affiliateTwo: Affiliate      = new Affiliate(identity, charity);
+    
+    affiliateOne.linkAffiliate(affiliateTwo);
+    
+    payment.addAffiliate(affiliateOne);
+    payment.payout();
+
+    // === Execute ===
+    payment.sendPayouts(payPal);
+
+    // === Assert ===
+    expect(payment.getPayouts()[0].getSuccess()).toBe(true);
+    expect(payment.getPayouts()[1].getSuccess()).toBe(true);
 });
 
-test("can notify recipients of payouts with success", () => {
-    /**
-     * const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef")
-     * payment.execute(PayPalApiSuccess);
-     * 
-     * // Affilaites need to check to make sure that you can only nest one. If the affiliates aready have an affiliate don't nest. This allows
-     * // us to store the business rule that affiliates only get paid which are double down the chain.
-     * const affiliateOneNested: Affiliate = new Affiliate("EFEFefefEFEFefefEFEFefef", "EFEFefefEFEFefefEFEFefef");
-     * const affiliateOne: Affiliate       = new Affiliate("EFEFefefEFEFefefEFEFefef", "EFEFefefEFEFefefEFEFefef", affiliateOneNested);
-     * 
-     * payment.payout();
-     * payment.notifyPayouts(PayPalApiSuccess);
-     * expect(payment.getPayouts()[1].getSuccess()).toBe(true);
-     * expect(payment.getPayouts()[2].getSuccess()).toBe(true);
-     */
-});
+test("still send payout to some if succesful", async () => {
+    // === Setup ===
+    PayPalAdaptor.prototype.finalize = jest.fn().mockImplementation(async (): Promise<boolean> => {
+        return true;
+    });    
 
-test("still send payout to some if succesful", () => {
-    /**
-     * const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef")
-     * payment.execute(PayPalApiSuccess);
-     * 
-     * // Affilaites need to check to make sure that you can only nest one. If the affiliates aready have an affiliate don't nest. This allows
-     * // us to store the business rule that affiliates only get paid which are double down the chain.
-     * const affiliateOneNested: Affiliate = new Affiliate("EFEFefefEFEFefefEFEFefef", "EFEFefefEFEFefefEFEFefef");
-     * const affiliateOne: Affiliate       = new Affiliate("EFEFefefEFEFefefEFEFefef", "EFEFefefEFEFefefEFEFefef", affiliateOneNested);
-     * 
-     * payment.payout();
-     * 
-     * payment.notifyPayouts(PayPalApiError);
-     * expect(payment.getPayouts()[1].getSuccess()).toBe(true);
-     * expect(payment.getPayouts()[2].getError()).toBe(false);
-     */
+    let errorOut = false;
+    PayPalAdaptor.prototype.payout = jest.fn().mockImplementation(async (): Promise<boolean> => {
+        errorOut = !errorOut; 
+        return errorOut;
+    });    
+
+    const payPal: PayPalAdaptor = new PayPalAdaptor();
+    const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef")
+    await payment.execute(payPal);
+    
+    const identity: Identification  = new Identification("watson.jack.p@gmail.com", "EFEFefefEFEFefefEFEFefef");
+    const charity: Charity          = new Charity("EFEFefefEFEFefefEFEFefef");
+
+    const affiliateOne: Affiliate      = new Affiliate(identity, charity);
+    const affiliateTwo: Affiliate      = new Affiliate(identity, charity);
+    
+    affiliateOne.linkAffiliate(affiliateTwo);
+    
+    payment.addAffiliate(affiliateOne);
+    payment.payout();
+
+    // === Execute ===
+    payment.sendPayouts(payPal);
+
+    // === Assert ===
+    expect(payment.getPayouts()[0].getSuccess()).toBe(true);
+    expect(payment.getPayouts()[1].getError()).toBe(false);
 });

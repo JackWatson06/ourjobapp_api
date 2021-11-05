@@ -88,6 +88,38 @@ export type Location = {
 }
 
 /**
+ * === Payment ===
+ */
+
+export type Payment = {
+    _id         ?: ObjectId,
+    executed_at ?: number, // When the payment actual was finalized.
+    canceled_at ?: number, // When the payment was canceled.
+    employer_id  : ObjectId,
+    employee_id  : ObjectId,
+    paypal_id    : string, // Information amount the actual payment.
+    currency     : string,
+    amount       : number,
+    success      : boolean, // State the payment is in.
+    error        : boolean, // State the payment is in.
+    started_at   : number, // Time the payment was started from the paypal redirect
+}
+
+export type Payout = {
+    _id             ?: ObjectId,
+    sent_at         ?: number
+
+    affiliate_id     : ObjectId,
+    payment_id       : ObjectId,
+    charity_id       : ObjectId,
+    amount           : number,
+    donation         : number,
+    currency         : string,
+    success          : boolean,
+    error            : boolean,
+}
+
+/**
  * === Signup ====
  */
 export type Contract = {
