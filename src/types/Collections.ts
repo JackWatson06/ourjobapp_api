@@ -112,7 +112,7 @@ export type Affiliate = {
 
     token_id      : ObjectId,
     name          : string,
-    charity_id    : string,
+    charity_id    : ObjectId,
     email         : string,
     verified      : boolean
     created_at    : number

@@ -4,7 +4,7 @@
  * Purpose: This file serves to persiste the affilaite domain model to our mongodb database.
  */
 
-import { db, now, MDb } from "infa/MongoDb";
+import { db, now, MDb, toObjectId } from "infa/MongoDb";
 import * as Collections from "Collections";
 
 import { NewAffiliate } from "../validators/NewAffiliateValidator";
@@ -52,7 +52,11 @@ export async function read(query: Query): Promise<Affiliate | null> {
 
     const token = new Token(tokenRow.token, tokenRow.expired_at);
     const email = new Email(affiliateRow.email, token);
-    return new Affiliate(affiliateRow as NewAffiliate, email);
+    return new Affiliate({
+        ...affiliateRow,
+        affiliate_id : affiliateRow.affiliate_id?.toString(),
+        charity_id   : affiliateRow.charity_id.toString()
+    }, email);
 }
 
 /**
@@ -77,7 +81,7 @@ export async function create(affiliate: Affiliate): Promise<boolean> {
     const data: NewAffiliate = affiliate.getData();
     const affiliateRow: Collections.Affiliate = {
         name: data.name,
-        charity_id: data.charity_id,
+        charity_id: toObjectId(data.charity_id),
         affiliate_id: data.affiliate_id
             ? new ObjectId(data.affiliate_id)
             : undefined,

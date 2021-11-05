@@ -45,7 +45,7 @@ This command allows you to run a script on the actual docker container. You need
 ## Aliases
 
 We alias our libraries so that the import statement does not go to long. In order to edit or change these aliases use the tsconfig.json file in the root directory. Additionaly if you are
-going to be using this directory during your tests you will want to add it to the jest.config.js as well.
+going to be using this directory during your tests you will want to add it to the jest.config.js as well!
 
 ## Directory Structure
 

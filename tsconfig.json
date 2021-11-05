@@ -11,9 +11,10 @@
         "outDir": "dist",
         "baseUrl": ".",
         "paths": {
-            "infa/*" : [ "src/core/infa/*" ],
-            "modules/*" : [ "src/modules/*" ],
-            "notify/*" : [ "src/core/notify/*" ],
+            "bootstrap/*" : [ "src/bootstrap/*" ],
+            "modules/*"   : [ "src/modules/*" ],
+            "infa/*"      : [ "src/core/infa/*" ],
+            "notify/*"    : [ "src/core/notify/*" ],
             "*": [
                 "src/types/*",
                 "node_modules/*"

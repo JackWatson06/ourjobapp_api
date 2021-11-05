@@ -20,7 +20,6 @@ import * as EmployeeMapper from "../mappers/EmployeeMapper";
 
 // Constants imports
 import * as Constants from "infa/Constants";
-import Job from "../entities/Job";
 
 
 /**
@@ -171,11 +170,6 @@ async function locationScore(employee: Employee, employer: Employer): Promise<nu
             return true;
 
         } 
-        // else {
-
-        //     return false;
-
-        // }
 
     })) )
     {

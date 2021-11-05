@@ -1,6 +1,5 @@
 FROM node:14.17.6-alpine
 
-
 ## NEED This for PhantomJS. This was a pain in the ass. Also note that if we change this it WILL break the 
 ## contract service under the signup module. Modules/signup/services
 ## https://gist.github.com/vovimayhem/6437c2f03b654e392ccf3e9903eba6af
