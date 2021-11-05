@@ -15,6 +15,10 @@
 import {PaymentAdaptor, PaymentCreateResponse, PayoutCreateRequest} from "./PaymentAdaptor";
 import paypal from "paypal-rest-sdk";
 
+/**
+ * Get the approvial URL from the payment process API.
+ * @param payment Payment response coming from the paypal API.
+ */
 function getApprovalUrlFromPaypalPaymentResponse(payment: paypal.PaymentResponse): string|undefined
 {
     if(payment.links === undefined)

@@ -21,7 +21,6 @@ import Payment from "modules/payment/entities/Payment";
 import Affiliate from "modules/payment/entities/Affiliate";
 import Identification from "modules/payment/entities/Identification";
 import Charity from "modules/payment/entities/Charity";
-import PaymentPlan from "modules/payment/entities/PaymentPlan";
 
 import PayPalAdaptor from "infa/PayPalAdaptor";
 
@@ -150,11 +149,11 @@ test("payouts to charities and affiliates are as expected from the payment plan"
     payment.payout();
     
     // === Assert ===
-    expect(payment.getPayouts()[0].getReward().getAmount()).toBe(PaymentPlan.AFFILIATE_PAYOUTS[0]);
-    expect(payment.getPayouts()[1].getReward().getAmount()).toBe(PaymentPlan.AFFILIATE_PAYOUTS[1]);
+    expect(payment.getPayouts()[0].getReward().getAmount()).toBe(15.91);
+    expect(payment.getPayouts()[1].getReward().getAmount()).toBe(6.91);
 
-    expect(payment.getPayouts()[0].getDonation().getAmount()).toBe(PaymentPlan.CHARITY_PAYOUTS[0]);
-    expect(payment.getPayouts()[1].getDonation().getAmount()).toBe(PaymentPlan.CHARITY_PAYOUTS[1]);
+    expect(payment.getPayouts()[0].getDonation().getAmount()).toBe(1);
+    expect(payment.getPayouts()[1].getDonation().getAmount()).toBe(0.4);
     
 });
 

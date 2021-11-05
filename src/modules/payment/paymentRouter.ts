@@ -9,13 +9,13 @@
 import express from "express"; 
 
 // We could put index in the controllers directory.
-// import { index as indexProperty }  from "./controllers/PlaceController";
+import { start, success, cancel }  from "./PaymentController";
 
 const paymentRouter: express.Router = express.Router();
 
 // Entites we can search through to find the one that matches closely.
-// paymentRouter.get("/places",     indexProperty);
-// paymentRouter.get("/charities",  indexCharity);
-// paymentRouter.get("/jobs",       indexJob);
+paymentRouter.get("/start",   start);
+paymentRouter.get("/success", success);
+paymentRouter.get("/cancel",  cancel);
 
 export default paymentRouter;

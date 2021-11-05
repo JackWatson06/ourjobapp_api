@@ -1,5 +1,4 @@
 import PaymentRequest from "modules/payment/entities/PaymentRequest";
-import PaymentPlan from "modules/payment/entities/PaymentPlan";
 
 import { PaymentCreateResponse } from "infa/PaymentAdaptor";
 import PayPalAdaptor from "infa/PayPalAdaptor";
@@ -18,7 +17,7 @@ test("payment equal payment plans amount", () => {
 
     const paymentRequest: PaymentRequest = new PaymentRequest("EFEFefefEFEFefefEFEFefef", "EFEFefefEFEFefefEFEFefef"); 
     
-    expect(paymentRequest.getAmount()).toEqual(PaymentPlan.AMOUNT);
+    expect(paymentRequest.getAmount()).toEqual(100);
 });
 
     
