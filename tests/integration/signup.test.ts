@@ -6,7 +6,6 @@ import * as  Collections from "Collections";
 
 const db: MongoDb.MDb = MongoDb.db();
 
-
 type AffiliateUpload = {
     name          : string,
     email         : string,
@@ -33,11 +32,20 @@ type EmployeeUpload = {
     phone         : string
 };
 
-
-// Before we run all of the tests we will want to seed the database with expected values that would already exists.... i.e. seed with an affiliate, employee, and employer.
-beforeAll(async () => {
-    request(app);
-});
+type EmployerUpload = {
+    fname        : string
+    lname        : string
+    position     : string,
+    company_name : string,
+    place_id     : string,
+    industry     : string[],
+    experience   : number[],
+    salary       : number,
+    commitment   : number,
+    where        : number,
+    authorized   : boolean,
+    email        : string
+};
 
 afterAll(async () => {
     // Seed the database with fake data for this integration test of the system.
@@ -48,7 +56,7 @@ afterAll(async () => {
 });
 
 
-test("you can signup as an affiliate without a resume", async () => {
+test("you can signup as an affiliate", async () => {
     
     // === Setup ===
     const affiliateUpload: AffiliateUpload = {
@@ -65,9 +73,8 @@ test("you can signup as an affiliate without a resume", async () => {
     
     // === Assert ===
     expect(response.status).toBe(200);
-    expect( await db.collection("affiliates").findOne({ email: "testing@gmail.com" }) ).not.toBe(null);
+    expect( async () => await db.collection("affiliates").findOne({ email: "testing@gmail.com" }) ).not.toBe(null);
 });
-
 
 test("you can sign up as employee", async () => {
 
@@ -97,9 +104,8 @@ test("you can sign up as employee", async () => {
                             .send(employeeUpload);    
     
     // === Assert ===
-
     expect(response.status).toBe(200);
-    expect( await db.collection("employees").findOne({ email: "testing@gmail.com" }) ).not.toBe(null);
+    expect( async () => await db.collection("employees").findOne({ email: "testing@gmail.com" }) ).not.toBe(null);
 });
 
 test("we can upload a resume to the server", async () => {
@@ -113,15 +119,44 @@ test("we can upload a resume to the server", async () => {
                             .attach('resume', filePath);  
     
     // === Assert ===
-    const resume: Collections.Resume|null = await db.collection("resumes").findOne<Collections.Resume>({ name: "Jack_Watson_Resume" });
-
+    const resume: Collections.Resume|null = await db.collection("resumes").findOne<Collections.Resume>({ name: "Jack_Watson_Resume.pdf" });
+    
     // Check we return correct response here as well with the identifier.
-    expect(response.status).toBe(200);
+    expect( response.status ).toBe(200);
     expect( resume ).not.toBe(null);
+    expect( response.body.id ).not.toBe(undefined);
 
     if(resume != null)
     {
         const expectedPath = `${__dirname}/../../documents/resumes/${resume.token}`
         expect( fs.existsSync(expectedPath) ).toBe(true);
     }
+});
+
+test("you can sign up as employer", async () => {
+
+    // === Setup ===
+    const employeeUpload: EmployerUpload = {
+        fname        : "Frodo",
+        lname        : "Baggans",
+        position     : "Manager",
+        company_name : "Bagend",
+        place_id     : "HILL12345332",
+        industry     : ["EFEFefefEFEFefefEFEFefef"],
+        experience   : [1],
+        salary       : 56,
+        commitment   : 1,
+        where        : 2,
+        authorized   : true,
+        email        : "frodo@thering.com"
+    }
+    
+    // === Execute ===
+    const response = await request(app)
+                            .post(`/api/v1/signup/employers`)
+                            .send(employeeUpload);    
+    
+    // === Assert ===
+    expect(response.status).toBe(200);
+    expect( async () => await db.collection("employers").findOne({ email: "frodo@thering.com" }) ).not.toBe(null);
 });

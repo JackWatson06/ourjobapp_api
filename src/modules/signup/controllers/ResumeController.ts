@@ -1,27 +1,19 @@
 // Data Mappers
 import * as ResumeMapper from "../mappers/ResumeMapper";
-import fs from "infa/FileSystemAdaptor";
 
 // Entities
 import Resume from "../entities/Resume";
 
+// Validators
+import validate from "../validators/ResumeValidator";
+
+// View
+import transform from "../views/ResumeView";
+
 // External dependencies
 import * as express from "express";
 import * as fileUpload from "express-fileupload";
-
-/**
- * Confirm that the file we are uploading matches the correct criteria.
- * @param file File we are uploading
- */
-function valid(file: fileUpload.UploadedFile): boolean
-{
-    if(file.size > 2097152 && !["test"].includes( file.mimetype ) )
-    {
-        return false;
-    }
-
-    return true;
-}
+import fs from "infa/FileSystemAdaptor";
 
 /**
  * Upload the file to the resumes directory.
@@ -31,16 +23,17 @@ function valid(file: fileUpload.UploadedFile): boolean
 export async function store(req: express.Request, res: express.Response)
 {
     // Validate that the input coming on the request would be able to create a affiliate. File must be called resume
-    console.log(req.files);
     const file: fileUpload.UploadedFile|undefined = req.files?.resume as fileUpload.UploadedFile|undefined;
 
-    if(file != undefined && valid(file))
+    if(file != undefined && validate(file))
     {
         const id: string = ResumeMapper.generate();
-        const resume: Resume = new Resume(id, file.md5, file.name, file.mimetype, file.size);
+        const resume: Resume = new Resume(id, file.name, file.md5, file.mimetype, file.size);
 
-        fs.write(fs.DOCUMENT, file.data, `resume/${resume.getNameToken()}`);
+        fs.write(fs.DOCUMENT, file.data, `resumes/${resume.getNameToken()}`);
         ResumeMapper.create(resume);
+
+        return res.status(200).send( transform(resume) );
     }
 
     // Error code did not work./

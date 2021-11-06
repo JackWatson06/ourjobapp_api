@@ -3,6 +3,7 @@
  * Created Date: 11/5/2021
  * Purpose: This class serves to hold the idea of a resume in the system. 
  */
+import crypto from "crypto";
 
 export default class Resume
 {
@@ -34,7 +35,7 @@ export default class Resume
         this.size  = size;
         this.nameToken = nameToken;
 
-        this.webSafeToken = ;
+        this.webSafeToken = crypto.randomUUID();
     }
 
     // === GETTERS ===
