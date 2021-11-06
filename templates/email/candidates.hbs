@@ -1,45 +1,53 @@
+<div style="font-family: Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;">
+    <p>
+        Hi, {{name}}!
+    </p>
+    <p style="text-align: center; margin-bottom: 3rem;">
+        Please find your updated candidate pool below. Happy hiring!
+    </p>
 
-<p>Good morning, {{ name }}. Here is your candidate list. These candidates are sorted from the ones that recieved the highest
-    score to matched with you. If you have any issues seeing candidates then please reach out to info@ourjob.app so we promptly
-    addres the issue. Remember as well to that as soon as you are set to hire. Hit the blue hire now button!</p>
-
-
-<table>
-    <thead>
-        <tr>
-        <th>Name</th>
-        <th>Job</th>
-        <th>Rate</th>
-        <th>Location</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th>Authorized</th>
-        <th>Remote</th>
-        <th>Commitment</th>
-        <th>Resume</th>
-        <th>Hire</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        {{#each matches}}
+    <table style="border-collapse: collapse; width: 1200px;">
+        <thead>
             <tr>
-                <th>{{this.name}}</th>      {{!-- Can come from the employee --}}
-                <th>{{this.job}}</th>       {{!-- Can come from the match --}}
-                <th>{{this.rate}}</th>      {{!-- Can come from the employee --}}
-                <th>{{this.location}}</th>  {{!-- Can come from the employee --}}
-                <th>{{this.email}}</th>     {{!-- Can come from the employee --}}
-                <th>{{this.phone}}</th>     {{!-- Can come from the employee --}}
-                <th>{{this.authorized}}</th> {{!-- Can come from the match --}}
-                <th>{{this.remote}}</th>    {{!-- Can come from the employee --}}
-                <th>{{this.commitment}}</th> {{!-- Can come from the employee --}} 
-                <th>{{this.resume}}</th> {{!-- Can come from the employee --}}
-                <th>{{this.paymentLink}}</th> {{!-- Can come from the employee --}}
+              <th></th>
+              <th style="border-bottom: 1px solid black">Name</th>
+              <th style="border-bottom: 1px solid black">Location</th>
+              <th style="border-bottom: 1px solid black">Email</th>
+              <th style="border-bottom: 1px solid black">Phone</th>
+              <th style="border-bottom: 1px solid black">Education</th>
+              <th style="border-bottom: 1px solid black">Job</th>
+              <th style="border-bottom: 1px solid black">Experience</th>
+              <th style="border-bottom: 1px solid black">Resume</th>
+              <th style="border-bottom: 1px solid black">Other</th>
             </tr>
-        {{/each}}
-    </tbody>
+        </thead>
 
-<table>
+        <tbody>
+            {{#each matches}}
+                <tr>
+                    <td><a style="color: white; background: linear-gradient(135deg,  #2B4F7B, #9E005D); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; text-decoration: none; border-radius: 10px; margin-right:5px margin-top:5px margin-bottom:5px" href="{{this.paymentLink}}">Hire</a></td>
+                    <td style="border-right: 1px solid black">{{this.name}}</td>
+                    <td style="border-right: 1px solid black">{{this.location}}</td>
+                    <td style="border-right: 1px solid black">{{this.email}}</td> 
+                    <td style="border-right: 1px solid black">{{this.phone}}</td>
+                    <td style="border-right: 1px solid black">{{this.education}}</td>
+                    <td style="border-right: 1px solid black">{{this.job}}</td> 
+                    <td style="border-right: 1px solid black">{{this.experience}}</td> 
+                    <td style="border-right: 1px solid black"><span>Resume</span></td>
+                    <td style="border-right: 1px solid black">{{this.info}}</td>          
+                </tr>
+            {{/matches}}
+        </tbody>
+
+  </table>
+  
+  <p style="margin-top: 3rem;">
+    Our best,
+    <br>
+    Ourjob.app
+  </p>
+</div>
+
 
 
 

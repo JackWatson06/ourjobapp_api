@@ -47,8 +47,8 @@ export default class Employee
 
         if( Date.now() < this.email.getExpiredDate() )
         {
-            let email: EmailMs.Email = EmailMs.makeEmail(this.email.getEmail(), "Please Verify Your Account!");
-            email = await EmailMs.addHtml(email, "verification", {
+            let email: EmailMs.Email = EmailMs.makeEmail(this.email.getEmail(), "Submit Your Application!");
+            email = await EmailMs.addHtml(email, "employee-verification", {
                 name: this.data.fname + " " + this.data.lname,
                 link: `${process.env.CLIENT_DOMAIN}/verify/employee/${this.email.getToken()}`
             });

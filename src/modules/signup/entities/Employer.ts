@@ -62,9 +62,9 @@ export default class Employer
             this.contract = contractFile.name;
 
             // === EMAIL ===
-            let email: EmailMs.Email = EmailMs.makeEmail(this.email.getEmail(), "Please Verify Your Account!");
+            let email: EmailMs.Email = EmailMs.makeEmail(this.email.getEmail(), "Start Receiving Candidates!");
             // email = EmailMs.addAttachment(email, this.fileName, "Employer Contract");
-            email = await EmailMs.addHtml(email, "verification", {
+            email = await EmailMs.addHtml(email, "employer-verification", {
                 name: this.data.fname + " " + this.data.lname,
                 link: `${process.env.CLIENT_DOMAIN}/verify/employer/${this.email.getToken()}`
             });

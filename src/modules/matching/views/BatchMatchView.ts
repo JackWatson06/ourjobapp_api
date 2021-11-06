@@ -84,14 +84,13 @@ export function transform(batchMatch: BatchMatch): BatchMatchView
                 rate        : `$${match.getEmployee().hourlyRate}/hr`,
                 email       : match.getEmployee().email,
                 phone       : match.getEmployee().phone,
-
                 location    : distanceMapping[match.getEmployee().distance],
                 education   : educationMapping[match.getEmployee().education],
                 experience  : experienceMapping[match.getEmployee().experience],
                 where       : whereMapping[match.getEmployee().experience],
                 commitment  : commitmentMapping[match.getEmployee().experience],
 
-                authorized  : "True",
+                // Links also need the employees additional information
                 resume      : "",
                 paymentLink : ""
             }

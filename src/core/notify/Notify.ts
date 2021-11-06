@@ -30,7 +30,7 @@ const transporter = nodemailer.createTransport({
  * @param email Email we are sending (create thee email form the Notify folder)
  */
 export async function sendEmail(email: Email.Email)
-{
+{   
   // send mail with defined transport object
   return await transporter.sendMail({
     from        : `"${fromName}" <${from}>`,

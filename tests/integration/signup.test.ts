@@ -4,6 +4,8 @@ import app               from "bootstrap/app";
 import * as MongoDb      from "infa/MongoDb";
 import * as  Collections from "Collections";
 
+jest.setTimeout(60000)
+
 const db: MongoDb.MDb = MongoDb.db();
 
 type AffiliateUpload = {
@@ -49,9 +51,9 @@ type EmployerUpload = {
 
 afterAll(async () => {
     // Seed the database with fake data for this integration test of the system.
-    await db.collection("affiliates").deleteMany({});
-    await db.collection("employees").deleteMany({});
-    await db.collection("resumes").deleteMany({});
+    // await db.collection("affiliates").deleteMany({});
+    // await db.collection("employees").deleteMany({});
+    // await db.collection("resumes").deleteMany({});
     MongoDb.close();
 });
 

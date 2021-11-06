@@ -61,9 +61,9 @@ export async function generate<T extends ContractTypes>(contract: T, binds: Cont
 
     const templateFile: string                      = await fs.read( fs.TEMPLATE, `contracts/${contract}.hbs`);
     const compiled: HandlebarsTemplateDelegate<any> = await Handlebars.compile(templateFile);
-    const html = compiled(binds);
+    const html = await compiled(binds);
 
-    htmlPdf.create(html, options).toBuffer(async function(err, buffer){
+    await htmlPdf.create(html, options).toBuffer(async function(err, buffer){
         if(err)
         {
             throw "Could not generate contract.";

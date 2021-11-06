@@ -63,9 +63,9 @@ export default class Affiliate
             this.contract = contractFile.name;
 
             // === EMAIL ===
-            let email: EmailMs.Email = EmailMs.makeEmail(this.email.getEmail(), "Please Verify Your Account!");
+            let email: EmailMs.Email = EmailMs.makeEmail(this.email.getEmail(), "Get Your Link!");
             // email = EmailMs.addAttachment(email, this.fileName, "Affilaite Contract");
-            email = await EmailMs.addHtml(email, "verification", {
+            email = await EmailMs.addHtml(email, "affiliate-verification", {
                 name: this.data.name,
                 link: `${process.env.CLIENT_DOMAIN}/verify/sharer/${this.email.getToken()}` 
             });
