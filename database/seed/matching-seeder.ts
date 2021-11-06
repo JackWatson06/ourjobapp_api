@@ -60,6 +60,7 @@ export default async function exec()
             salary       : 50, // Less than 50
             commitment   : C.Commitment.FULL_TIME,
             where        : C.Where.IN_PERSON,
+            contract     : "Null",
             authorized   : true,
         },
         {
@@ -77,6 +78,7 @@ export default async function exec()
             salary       : 25, // Less than 25 
             commitment   : C.Commitment.PART_TIME,
             where        : C.Where.REMOTE,
+            contract     : "Null",
             authorized   : false
         }// },
         // {

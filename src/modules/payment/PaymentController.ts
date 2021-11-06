@@ -73,12 +73,11 @@ export async function success(req: express.Request, res: express.Response)
     
     if(payment === null)
     {
-        console.log("Null Payment");
-        
         return res.status(400).send();
     }
-
+    
     const execute: boolean = await payment.execute(payPal, payerId);
+    
 
     // If we could not get the funds then DO NOT authroize a payment. This should be theoretically impossible given our
     // domain models.... so be careful changing those.
@@ -93,7 +92,7 @@ export async function success(req: express.Request, res: express.Response)
 
     // If we can actually process payment then persist
     await PaymentMapper.update(payment);
-
+    
     // Redirect the user to wherever the paypal API wants us.
     return res.redirect(process.env.CLIENT_DOMAIN);
 }

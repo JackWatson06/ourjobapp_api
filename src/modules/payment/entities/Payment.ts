@@ -78,12 +78,12 @@ export default class Payment
         {
             this.executed_at = Date.now();
             await payment.finalize(this.id, payerId);
-
+    
             this.success = true;
             return true;
         }
         catch(error)
-        {
+        {   
             this.error = true;
             return false;
         }
@@ -92,8 +92,13 @@ export default class Payment
     /**
      * Payout this payment to all of the affiliates that are associated with it.
      */
-    public async sendPayouts(payment: PaymentAdaptor): Promise<void>
+    public async sendPayouts(payment: PaymentAdaptor): Promise<boolean>
     {
+        if(this.payouts.length === 0)
+        {
+            return false;
+        }
+
         const payoutRequests: Array<PayoutCreateRequest> = this.payouts.map((payout) => ({
             amount: payout.getReward().getAmount(),
             email: payout.getReward().getEmail()
@@ -107,6 +112,8 @@ export default class Payment
         {
             this.payouts.forEach((payout) => payout.failedSending());
         }
+
+        return true;
     }
 
     /**

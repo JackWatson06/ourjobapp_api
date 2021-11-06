@@ -106,7 +106,7 @@ export default class PayPalAdaptor implements PaymentAdaptor
         return new Promise((resolve, reject) => {
             paypal.payment.execute(paymentId, executePaymentJson, function (error, payment) {
                 if (error) {
-                    reject(error);
+                    reject(false);
                 } else {
                     resolve(true);
                 }
@@ -120,7 +120,7 @@ export default class PayPalAdaptor implements PaymentAdaptor
      * @param payouts Batch of payout create requests that we will send to all the people in the list.
      */
     public async payout(payouts: Array<PayoutCreateRequest>): Promise<string>
-    {
+    {   
         const createPayoutJson = {
             "sender_batch_header": {
                 "sender_batch_id": `PAYOUT_${Date.now()}`,
@@ -140,7 +140,7 @@ export default class PayPalAdaptor implements PaymentAdaptor
                 })
             ]
         };
-        
+
         return new Promise((resolve, reject) => {
             paypal.payout.create(createPayoutJson, function (error: string, payout: any) {
 

@@ -66,26 +66,25 @@ export async function read( paymentId: string ): Promise<Payment|null>
 {
     const db: MongoDb.MDb = MongoDb.db();
 
-    const paymentRow: Collections.Payment|null = await db.collection("payments").findOne<Collections.Payment>({ payment_id: paymentId });
+    const paymentRow: Collections.Payment|null = await db.collection("payments").findOne<Collections.Payment>({ paypal_id: paymentId });
     
     if(paymentRow === null)
     {
         return null;
     }
 
-    const employerQuery = { _id: paymentRow.employer_id, affiliate_id: {$ne:null} };
-    const employeeQuery = { _id: paymentRow.employee_id, affiliate_id: {$ne:null} };
-
+    const employerQuery = { _id: paymentRow.employer_id };
+    const employeeQuery = { _id: paymentRow.employee_id };
+    
     // Get all the affiliates of affiliates if we have them.
-    const employerRow: Collections.Employer|null   = await db.collection("employers").findOne<Collections.Employer>(employerQuery);
-    const employeeRow: Collections.Employee|null   = await db.collection("employees").findOne<Collections.Employee>(employeeQuery);
-
-
+    const employerRow: Collections.Employer|null = await db.collection("employers").findOne<Collections.Employer>(employerQuery);
+    const employeeRow: Collections.Employee|null = await db.collection("employees").findOne<Collections.Employee>(employeeQuery);
+    
     const payment: Payment = new Payment(paymentRow.paypal_id);
 
     // Add the employers affiliates if we have any of them.
     if(employerRow != null && employerRow.affiliate_id != undefined)
-    {
+    {   
         const affiliate: Affiliate|undefined = await mapAffiliates(db, employerRow.affiliate_id);
 
         if(affiliate != undefined)
@@ -104,9 +103,6 @@ export async function read( paymentId: string ): Promise<Payment|null>
             payment.addAffiliate( affiliate );
         }
     }
-
-    console.log(payment);
-    
 
     return payment;
 }
@@ -129,11 +125,12 @@ export async function update( payment: Payment ): Promise<boolean>
         canceled_at  : payment.getCanceledAt()
     }
 
-    const paymentQuery = { payment_id: MongoDb.toObjectId( payment.getId()) };
+    const paymentQuery = { paypal_id: payment.getId() };
 
     // Update and return the identifier for the paymentId;
-    const paymentId: ObjectId|undefined = ( await db.collection("playments")
-        .findOneAndUpdate(paymentQuery, { $set: updatePayment, }) ).value?._id;
+    const paymentId: ObjectId|undefined = ( await db.collection("payments")
+        .findOneAndUpdate(paymentQuery, { $set: updatePayment }) ).value?._id;
+
 
     if(paymentId != undefined)
     {

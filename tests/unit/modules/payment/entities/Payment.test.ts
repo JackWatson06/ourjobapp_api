@@ -157,6 +157,24 @@ test("payouts to charities and affiliates are as expected from the payment plan"
     
 });
 
+test("nothing happens when you try to payout when there are no affilaites", async () => {
+    // === Setup ===
+    PayPalAdaptor.prototype.finalize = jest.fn().mockImplementation(async (): Promise<boolean> => {
+        return true;
+    });    
+    
+    const payPal: PayPalAdaptor = new PayPalAdaptor();
+    const payment: Payment = new Payment("EFEFefefEFEFefefEFEFefef")
+    await payment.execute(new PayPalAdaptor, "123456");
+
+    // === Execute ===
+    const payoutResponse: boolean = await payment.sendPayouts(payPal);
+
+    // === Assert ===
+    expect(payoutResponse).toBe(false);
+});
+
+
 test("can notify recipients of payouts with success", async () => {
 
     // === Setup ===
