@@ -11,6 +11,8 @@ import lusca from "lusca";
 import compression from "compression";
 import cors from "cors";
 import bodyParser from "body-parser";
+import fileupload from "express-fileupload";
+
 
 /**
  * Apply middleware to the passed in application.
@@ -18,12 +20,13 @@ import bodyParser from "body-parser";
  */
 export default function(app: app.Express) : void
 {
-    // app.use(compression());
-    // app.use(lusca.xframe("SAMEORIGIN"));
-    // app.use(lusca.xssProtection(true));
-    // app.use(cors());
-    // app.use(bodyParser.json());
-    // app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(compression());
+    app.use(lusca.xframe("SAMEORIGIN"));
+    app.use(lusca.xssProtection(true));
+    app.use(cors());
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(fileupload());
 }
 
 

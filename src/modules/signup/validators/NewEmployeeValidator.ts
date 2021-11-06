@@ -6,6 +6,7 @@ export interface NewEmployee {
     place_id      ?: string,
     major         ?: string[],
     affiliate_id  ?: string
+    resume_id     ?: string
 
     fname         : string
     lname         : string
@@ -94,6 +95,10 @@ export const schema: JSONSchemaType<NewEmployee> = {
             type: "string" 
         },
         affiliate_id: {
+            type: "string",
+            nullable: true 
+        },
+        resume_id: {
             type: "string",
             nullable: true 
         }

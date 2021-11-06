@@ -6,10 +6,11 @@
 import Employee from "../entities/Employee";
 import Email from "../entities/Email";
 import Token from "../entities/Token";
+import Resume from "../entities/Resume";
 
 import { NewEmployee } from "../validators/NewEmployeeValidator";
 
-import { InsertOneResult, ObjectId } from "mongodb";
+import { Collection, InsertOneResult, ObjectId } from "mongodb";
 
 import { db, now, MDb } from "infa/MongoDb";
 import * as Collections from "Collections";
@@ -34,6 +35,7 @@ export async function create(employee: Employee): Promise<boolean>
 {
     const mdb: MDb = db();
 
+    // === Token ===
     const email: Email = employee.getEmail();
     const tokenRow: Collections.Token = {
         token       : email.getToken(),
@@ -43,6 +45,7 @@ export async function create(employee: Employee): Promise<boolean>
 
     const newToken: InsertOneResult<Document> = await mdb.collection("tokens").insertOne(tokenRow)
 
+    // === Employee ===
     const data: NewEmployee = employee.getData();
     const employeeRow: Collections.Employee = { 
         ...data,
@@ -51,6 +54,7 @@ export async function create(employee: Employee): Promise<boolean>
         nations      : data.nations      ? data.nations.map((nation: string) => new ObjectId(nation)) : undefined,
         major        : data.major        ? data.major.map((major: string) => new ObjectId(major)) : undefined,
         affiliate_id : data.affiliate_id ? new ObjectId(data.affiliate_id) : undefined, 
+        resume_id    : data.resume_id    ? new ObjectId(data.resume_id) : undefined, 
         token_id     : newToken.insertedId,
         verified     : false 
     };

@@ -14,6 +14,7 @@ import express from "express";
 import * as affiliate from "./controllers/AffiliateController";
 import * as employee from "./controllers/EmployeeController";
 import * as employer from "./controllers/EmployerController";
+import * as resume from "./controllers/ResumeController";
 
 let signupRouter: express.Router = express.Router();
 
@@ -21,6 +22,7 @@ let signupRouter: express.Router = express.Router();
 signupRouter.post("/employees",         employee.store);
 signupRouter.post("/employees/resend",  employee.resend);
 signupRouter.post("/employees/verify",  employee.verify);
+signupRouter.post("/resumes",           resume.store);
 
 // Routes we use to interact with the employers signup REST endpoints
 signupRouter.post("/employers",         employer.store);

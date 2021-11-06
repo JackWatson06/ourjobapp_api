@@ -62,7 +62,6 @@ export default class Affiliate
             });
             this.contract = contractFile.name;
 
-
             // === EMAIL ===
             let email: EmailMs.Email = EmailMs.makeEmail(this.email.getEmail(), "Please Verify Your Account!");
             // email = EmailMs.addAttachment(email, this.fileName, "Affilaite Contract");
@@ -71,7 +70,7 @@ export default class Affiliate
                 link: `${process.env.CLIENT_DOMAIN}/verify/sharer/${this.email.getToken()}` 
             });
             email = await EmailMs.addAttachment(email, contractFile.path, "Sharer Contract");
-
+            
             await sendEmail(email);
             return true;
         }

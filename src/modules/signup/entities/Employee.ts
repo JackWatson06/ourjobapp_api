@@ -12,6 +12,7 @@ import * as EmailMs from "notify/Email";
 import { sendEmail } from "notify/Notify";
 
 import Email from "./Email";
+import Resume from "./Resume";
 
 import { NewEmployee } from "../validators/NewEmployeeValidator";
 
@@ -23,13 +24,17 @@ export default class Employee
     // Email verification data.
     private email: Email;
 
+    // Get the resume if we have one.
+    private resume: Resume|undefined;
+
     // Date verified
     private verified_on: number;
 
-    constructor(data: NewEmployee, email: Email)
+    constructor(data: NewEmployee, email: Email, resume?: Resume)
     {
-        this.data  = data;
-        this.email = email;
+        this.data   = data;
+        this.email  = email;
+        this.resume = resume;
     }
 
     /**
@@ -66,6 +71,12 @@ export default class Employee
         return false;
     }
 
+    // === GETTERS ===
+    public getResume(): Resume|undefined
+    {
+        return this.resume;
+    }
+    
     /**
      * Return verified at number which represents when the email for a employee was verified at.
      */

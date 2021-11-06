@@ -11,7 +11,6 @@ const affiliateIdOne   = MongoDb.toObjectId("6185b8addcc00ea23a35b997");
 const affiliateIdTwo   = MongoDb.toObjectId("6185b8addcc00ea23a35b998");
 const affiliateIdThree = MongoDb.toObjectId("6185b8addcc00ea23a35b999");
 
-
 // Before we run all of the tests we will want to seed the database with expected values that would already exists.... i.e. seed with an affiliate, employee, and employer.
 beforeAll(async () => {
 
@@ -104,11 +103,12 @@ beforeAll(async () => {
 
 afterAll(async () => {
     // Seed the database with fake data for this integration test of the system.
-    // await db.collection("payments").deleteMany({});
-    // await db.collection("payouts").deleteMany({});
-    // await db.collection("affiliates").deleteMany({});
-    // await db.collection("employers").deleteMany({});
-    // await db.collection("employees").deleteMany({});
+    await db.collection("payments").deleteMany({});
+    await db.collection("payouts").deleteMany({});
+    await db.collection("affiliates").deleteMany({});
+    await db.collection("employers").deleteMany({});
+    await db.collection("employees").deleteMany({});
+    MongoDb.close();
 });
 
 

@@ -124,6 +124,15 @@ export type Payout = {
  * === Signup ====
  */
 
+export type Resume = {
+    _id ?     : ObjectId,
+    name      : string,
+    token     : string,
+    web_token : string,
+    type      : string,
+    size      : number
+}
+
 export type Token = {
     _id         ?: ObjectId,
 
@@ -151,6 +160,7 @@ export type Employee = {
     token_id      : ObjectId,
  
     affiliate_id ?: ObjectId,
+    resume_id    ?: ObjectId,
     major        ?: ObjectId[],
     nations      ?: ObjectId[],
     place_id     ?: string,
