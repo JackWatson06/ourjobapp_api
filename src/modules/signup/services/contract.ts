@@ -63,7 +63,7 @@ export async function generate<T extends ContractTypes>(contract: T, binds: Cont
     const compiled: HandlebarsTemplateDelegate<any> = Handlebars.compile(templateFile);
     const html                                      = compiled(binds);
 
-
+    // Generate the contract from the buffer.
     const buffer: Buffer = await new Promise((resolve, reject) => {
         htmlPdf.create(html, options).toBuffer(function(err, buffer){
             if(err)
@@ -75,6 +75,7 @@ export async function generate<T extends ContractTypes>(contract: T, binds: Cont
         });
     });
 
+    // Write the contract in the file system.
     await fs.write(fs.DOCUMENT, buffer, `contracts/${contractName}`);
     
     return {

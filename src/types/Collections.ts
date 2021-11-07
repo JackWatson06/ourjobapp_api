@@ -81,6 +81,7 @@ export type Email = {
 export type Location = {
     _id         ?: ObjectId,
     place_id     : string,
+    address      : string,
     country_code : string,
     latitutde    : number,
     longitude    : number,
@@ -164,6 +165,7 @@ export type Employee = {
     major        ?: ObjectId[],
     nations      ?: ObjectId[],
     place_id     ?: string,
+    information  ?: string,
     verified_on  ?: number,
 
     job_id        : ObjectId[],
@@ -177,7 +179,6 @@ export type Employee = {
   
     education     : number,
     experience    : number,
-    information   : string,
     email         : string,
     phone         : string,
     verified      : boolean

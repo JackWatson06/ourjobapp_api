@@ -7,14 +7,16 @@
  */
 
 // Data Mappers
-import { create, read, update } from "../mappers/EmployerMapper";
-import { read as readProof } from "../mappers/ProofMapper";
+import * as EmployerMapper from "../mappers/EmployerMapper";
+import * as ProofManager   from "../mappers/ProofMapper";
+import * as AddressMapper  from "../mappers/AddressMapper";
 import { ObjectId } from "mongodb";
 
 // Entities
 import Employer  from "../entities/Employer";
 import Email     from "../entities/Email";
 import Token     from "../entities/Token";
+import Address   from "../entities/Address";
 import Proof     from "../entities/Proof";
 
  // Validator
@@ -43,19 +45,20 @@ export async function store(req: express.Request<any>, res: express.Response)
     // Create the affilaite domain entity.
     if( valid(data) )
     {
+        const address: Address   = await AddressMapper.read(data.place_id);
         const email: Email       = new Email(data.email, Token.generate());
-        const employer: Employer = new Employer(data, email);
+        const employer: Employer = new Employer(data, email, address);
 
         // Verify the employer is who they say they are.
         await employer.verify();
 
-        return create(employer).then( () => {
+        return EmployerMapper.create(employer).then( () => {
             res.send( { "success": true } )
         }).catch( () => {
             res.send( { "error" : true } )
         });
     }
-
+    
     // Error code did not work
     return res.send( { "error" : true } );
 }
@@ -70,7 +73,7 @@ export async function resend(req: express.Request<any>, res: express.Response)
     const id: string = req.body.id;
     
     // Pull the employer from the database.
-    const employer: Employer|null = await read({ _id: new ObjectId( id ) });
+    const employer: Employer|null = await EmployerMapper.read({ _id: new ObjectId( id ) });
     if(employer === null)
     {
         return res.status(400).send( { "error": "No employer found" } )
@@ -96,7 +99,7 @@ export async function verify(req: express.Request<any>, res: express.Response)
     
     const token: string = req.body.token;
 
-    const proof: Proof|null = await readProof(token);
+    const proof: Proof|null = await ProofManager.read(token);
 
     // Make sure that we can find the token
     if(proof === null)
@@ -105,7 +108,7 @@ export async function verify(req: express.Request<any>, res: express.Response)
     }
 
     // Pull the affiliate from the database.,
-    const employer: Employer|null = await read({ token_id: new ObjectId( proof.getId()) });
+    const employer: Employer|null = await EmployerMapper.read({ token_id: new ObjectId( proof.getId()) });
 
     // Double check that the affiliate exists.
     if(employer === null)
@@ -124,7 +127,7 @@ export async function verify(req: express.Request<any>, res: express.Response)
 
     if(authorized)
     {
-        await update({ token_id: new ObjectId( proof.getId())}, employer);
+        await EmployerMapper.update({ token_id: new ObjectId( proof.getId())}, employer);
         return res.status(200).send( {"success": true} );
     }
 

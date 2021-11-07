@@ -14,17 +14,20 @@ export default class Location
     // Longitude of the current location
     private long: number;
 
+    // The locations address
+    private address: string;
+
     // Country that the current location represents.
     private country: CountryCode;
 
-    constructor(lat: number, long: number, country: CountryCode)
+    constructor(lat: number, long: number, address: string, country: CountryCode)
     {
         this.lat = lat;
         this.long = long;
         this.country = country;
     }
 
-    // GETTERS for this class.
+    // === GETTERS ===
     public getLat(): number
     {
         return this.lat;
@@ -33,6 +36,11 @@ export default class Location
     public getLong(): number
     {
         return this.long;
+    }
+
+    public getAddress(): string
+    {
+        return this.address;
     }
 
     public getCountry(): CountryCode

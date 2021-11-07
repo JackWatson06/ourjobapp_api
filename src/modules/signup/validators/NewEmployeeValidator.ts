@@ -2,24 +2,24 @@ import { JSONSchemaType } from "ajv";
 import * as Constants from "infa/Constants";
 
 export interface NewEmployee {
-    nations       ?: string[],
-    place_id      ?: string,
-    major         ?: string[],
+    nations       ?: string[]
+    place_id      ?: string
+    major         ?: string[]
+    information   ?: string
     affiliate_id  ?: string
     resume_id     ?: string
 
     fname         : string
     lname         : string
-    job_id        : string[],
-    authorized    : string[],
-    hourly_rate   : number,
-    commitment    : number,
-    where         : number,
-    distance      : number,
-    education     : number,
-    experience    : number,
-    information   : string,
-    email         : string,
+    job_id        : string[]
+    authorized    : string[]
+    hourly_rate   : number
+    commitment    : number
+    where         : number
+    distance      : number
+    education     : number
+    experience    : number
+    email         : string
     phone         : string
   }
   
@@ -86,7 +86,8 @@ export const schema: JSONSchemaType<NewEmployee> = {
             enum: Object.values(Constants.Experience)
         }, // <= Enumeration
         information:  { 
-            type: "string" 
+            type: "string",
+            nullable: true
         },
         email:        { 
             type: "string" 
@@ -104,6 +105,6 @@ export const schema: JSONSchemaType<NewEmployee> = {
         }
     },
     required: [ "fname", "lname", "job_id", "hourly_rate", "commitment", "where", "authorized", "distance", "education",
-        "experience", "information", "email", "phone" ],
+        "experience", "email", "phone" ],
     additionalProperties: false
 }

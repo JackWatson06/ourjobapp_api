@@ -7,12 +7,14 @@
 import Employer from "../entities/Employer";
 import Email from "../entities/Email";
 import Token from "../entities/Token";
+import Address from "../entities/Address";
 
 import { NewEmployer } from "../validators/NewEmployerValidator";
 
 import { InsertOneResult, ObjectId } from "mongodb";
 
 import { db, now, MDb } from "infa/MongoDb";
+import { getLocationByPlaceId } from "infa/GoogleApiAdaptor";
 import * as Collections from "Collections";
 
 type Query = {
@@ -83,6 +85,8 @@ export async function read(query: Query): Promise<Employer|null>
         return null;
     }
 
+    const locationData: Collections.Location = await getLocationByPlaceId(employerRow.place_id);
+
     // Create the employer domain model
     const token = new Token(tokenRow.token, tokenRow.expired_at);
     const email = new Email(employerRow.email, token);
@@ -102,7 +106,7 @@ export async function read(query: Query): Promise<Employer|null>
         industry     : employerRow.industry.map((industry: ObjectId) => industry.toString()),
         affiliate_id : employerRow.affiliate_id?.toString()
       }
-    return new Employer(employer, email);
+    return new Employer(employer, email, new Address(locationData.address));
 }
 
 /**

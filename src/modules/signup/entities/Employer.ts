@@ -13,6 +13,7 @@ import { sendEmail } from "notify/Notify";
 import * as contract from "../services/contract";
 
 import Email from "./Email";
+import Address from "./Address";
 
 import { NewEmployer } from "../validators/NewEmployerValidator";
 
@@ -24,16 +25,20 @@ export default class Employer
     // Email verification data.
     private email: Email;
 
+    // Address data for the employer.
+    private address: Address;
+
     // File path for the contract in the system.
     private contract: string;
 
     // Email verification data.
     private verified_at: number;
 
-    constructor(data: NewEmployer, email: Email)
+    constructor(data: NewEmployer, email: Email, address: Address)
     {
-        this.data  = data;
-        this.email = email;
+        this.data     = data;
+        this.email    = email;
+        this.address  = address;
     }
 
     /**
@@ -53,7 +58,7 @@ export default class Employer
             const contractFile: contract.ContractLocator = await contract.generate<contract.Placement>("placement", {
                 VAR_DATE_OF_AGREEMENT      : (today).toLocaleDateString("en-US", {year: 'numeric', month: 'long', day: 'numeric'}),
                 VAR_PARTNER_COMPANY_NAME   : this.data.company_name,
-                VAR_PARTNER_OFFICE_ADDRESS : "Nothing for Now",
+                VAR_PARTNER_OFFICE_ADDRESS : this.address.getAddress(),
                 VAR_DESIGNATED_PARTY_NAME  : `${this.data.fname} ${this.data.lname}`,
                 VAR_DESIGNATED_PARTY_EMAIL : this.data.email
             });

@@ -4,6 +4,7 @@ import app               from "bootstrap/app";
 import * as MongoDb      from "infa/MongoDb";
 import * as  Collections from "Collections";
 import ValidationError from "ajv/dist/runtime/validation_error";
+import { Collection } from "mongodb";
 
 jest.setTimeout(30000);
 
@@ -56,9 +57,9 @@ type Verification = {
 
 afterAll(async () => {
     // Seed the database with fake data for this integration test of the system.
-    // await db.collection("affiliates").deleteMany({});
-    // await db.collection("employees").deleteMany({});
-    // await db.collection("resumes").deleteMany({});
+    await db.collection("affiliates").deleteMany({});
+    await db.collection("employees").deleteMany({});
+    await db.collection("resumes").deleteMany({});
     await MongoDb.close();
 });
 
@@ -211,8 +212,58 @@ describe("employer", () => {
                                 .send(employerUpload);    
         
         // === Assert ===
+        const employer: Collections.Employer|null = await db.collection("employers").findOne<Collections.Employer>({ email: "frodo@thering.com" });
+
         expect(response.status).toBe(200);
-        expect( async () => await db.collection("employers").findOne({ email: "frodo@thering.com" }) ).not.toBe(null);
+        expect( employer ).not.toBe(null);
+
+        if(employer != null)
+        {
+            const expectedPath = `${__dirname}/../../documents/contracts/${employer.contract}`
+            expect( fs.existsSync(expectedPath) ).toBe(true);
+        }
     });
 
+
+    test("can be verified", async () => {
+
+        // === Setup ===
+        const employerUpload: EmployerUpload = {
+            fname        : "Frodo",
+            lname        : "Baggans",
+            position     : "Manager",
+            company_name : "Bagend",
+            place_id     : "HILL12345332",
+            industry     : ["EFEFefefEFEFefefEFEFefef"],
+            experience   : [1],
+            salary       : 56,
+            commitment   : 1,
+            where        : 2,
+            authorized   : true,
+            email        : "frodo@thering.com"
+        }
+        
+        // === Execute ===
+        const response = await request(app).post(`/api/v1/signup/employers`).send(employerUpload);    
+        
+        // === Assert ===
+        const employer: Collections.Employer|null = await db.collection("employers").findOne<Collections.Employer>({ email: "frodo@thering.com" });
+        const token: Collections.Token|null = await db.collection("tokens").findOne<Collections.Token>({ _id: employer?.token_id });
+        
+        expect(token).not.toBe(null);
+
+        const tokenVerification: Verification = {
+            token: token?.token ?? ""
+        }        
+
+        // === Execute ===
+        const responseVerify = await request(app).post(`/api/v1/signup/employers/verify`).send(tokenVerification);    
+
+        expect(responseVerify.status).toBe(200);
+        
+        const verifiedEmployer: Collections.Employer|null = await db.collection("employers").findOne<Collections.Employer>({ email: "frodo@thering.com" }); 
+
+        expect(verifiedEmployer).not.toBe(null);
+        expect(verifiedEmployer?.verified).toBe(true);
+    });
 });
