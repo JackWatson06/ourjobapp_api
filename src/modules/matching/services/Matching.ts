@@ -86,34 +86,24 @@ async function createMatchIfExists(employer: Employer, employee: Employee): Prom
     for(const desiredJob of employee.jobs)
     {
         const industry: Industry = desiredJob.getIndustry();
-        console.log("Indisde desired jobs:\n");
-        
-        // console.log(employer.industry.find(industry));
 
-        if( employer.industry.some(i => i.getName() === industry.getName() ))
+        if( employer.industry.some(industry => industry.getName() === industry.getName() ))
         {
-
-            // console.log("Industry matches.");
             
             const score: number = await locationScore(employee, employer);
 
             if( score != 0 )
             {   
-                console.log("Score isn't 0");
                 return new Match(employee, desiredJob, score);
             }
             else
             {
-                console.log("Failed on Location!");
                 return undefined;
             }
         }
     }
-
     // Get the socre based on the location of the employee relative to the employer.
-    
-
-
+    return undefined;
 }
 
 /**
@@ -150,20 +140,28 @@ function checkDistance(employee: Employee, employerLocation: Location, employeeL
 {
     const employeeNations: Array<CountryCode>|undefined = employee.national;
 
-    if(employee.distance === Constants.Distance.NATIONALLY 
-        && employeeNations != undefined
-        // && employeeNations.includes( employerLocation.getCountry()) )
-        && employeeNations.some(i => i.getCountryCode() === employerLocation.getCountry().getCountryCode()))
+    // If the employee is set to worldwide then match with a one.
+    if(employee.distance === Constants.Distance.WORLDWIDE)
     {
         return 1;
     }
-    else if(employeeLocation != undefined)
+
+    // Check the employees counties is in the employers location.
+    if(employee.distance === Constants.Distance.NATIONALLY 
+        && employeeNations != undefined
+        && employeeNations.some(i => i.getCountryCode() === employerLocation.getCountry().getCountryCode()))
+    {
+        return 2;
+    }
+    
+    // If the employee has a location.
+    if(employeeLocation != undefined)
     {
         const distance: number = computeDistance(employerLocation, employeeLocation);
 
         if( distance < employee.distance)
         {
-            return 1 + ( 1 / distance);
+            return 2 + ( 1 / distance);
         }
     }
 
