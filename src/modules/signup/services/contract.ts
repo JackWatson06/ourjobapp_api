@@ -60,17 +60,22 @@ export async function generate<T extends ContractTypes>(contract: T, binds: Cont
     const contractName = `${contract}_${Math.floor(new Date().getTime() / 1000)}.pdf`;
 
     const templateFile: string                      = await fs.read( fs.TEMPLATE, `contracts/${contract}.hbs`);
-    const compiled: HandlebarsTemplateDelegate<any> = await Handlebars.compile(templateFile);
-    const html = await compiled(binds);
+    const compiled: HandlebarsTemplateDelegate<any> = Handlebars.compile(templateFile);
+    const html                                      = compiled(binds);
 
-    await htmlPdf.create(html, options).toBuffer(async function(err, buffer){
-        if(err)
-        {
-            throw "Could not generate contract.";
-        }
-        
-        await fs.write(fs.DOCUMENT, buffer, `contracts/${contractName}`);
+
+    const buffer: Buffer = await new Promise((resolve, reject) => {
+        htmlPdf.create(html, options).toBuffer(function(err, buffer){
+            if(err)
+            {
+                reject(err);
+            }
+            
+            resolve(buffer);
+        });
     });
+
+    await fs.write(fs.DOCUMENT, buffer, `contracts/${contractName}`);
 
     return {
         name: contractName,

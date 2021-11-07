@@ -26,7 +26,7 @@ export default async function exec()
 
     // Excel worksheet
     const worksheetJSON: MajorRow[] = XLSX.utils.sheet_to_json(page);
-    const extractedJSON: Collections.Charity[] = [];
+    const extractedJSON: Collections.Major[] = [];
 
     // Loop through the different rows we have and store them in the database.
     for(const row of worksheetJSON)

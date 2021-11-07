@@ -65,8 +65,8 @@ export function addAttachment(email: Email, path: string, name: string): Email
  */
 export async function addHtml(email: Email, template: string, binds: {}): Promise<Email>
 {
-    const templateFile: string = await fs.read( fs.TEMPLATE, `email/${template}.hbs`);
-    const compiled: HandlebarsTemplateDelegate<any> = await Handlebars.compile(templateFile);
+    const templateFile: string                      = await fs.read( fs.TEMPLATE, `email/${template}.hbs`);
+    const compiled: HandlebarsTemplateDelegate<any> = Handlebars.compile(templateFile);
 
     return { 
         ...email,

@@ -69,9 +69,10 @@ export default class Affiliate
                 name: this.data.name,
                 link: `${process.env.CLIENT_DOMAIN}/verify/sharer/${this.email.getToken()}` 
             });
-            email = await EmailMs.addAttachment(email, contractFile.path, "Sharer Contract");
-            
+            email = EmailMs.addAttachment(email, contractFile.path, "Sharer Contract");
+                        
             await sendEmail(email);
+            
             return true;
         }
 

@@ -57,9 +57,6 @@ export async function store(req: express.Request<any>, res: express.Response)
         return res.status(200).send( { "success": true } )
     }
 
-    console.log(valid.errors);
-    
-
     // Error code did not work
     return res.status(400).send( { "error" : true } );
 }

@@ -117,7 +117,6 @@ test("an employer can start a payment for an employee", async () => {
 
     // /api/v1/payment/start?epi=6185b8addcc00ea23a35b995&emi=6185b8addcc00ea23a35b996
 
-    // console.log(response);
 });
 
 test("an employer successfully pay for an employee", () => {

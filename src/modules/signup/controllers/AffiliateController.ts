@@ -53,8 +53,8 @@ export async function store(req: express.Request<any>, res: express.Response)
         });
 
         // Verify the afiiliate is who they say they are.
-        await affiliate.verify();
 
+        await affiliate.verify();
         return res.status(200).send( { "success": true } )
     }
     

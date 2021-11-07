@@ -30,8 +30,8 @@ export async function store(req: express.Request, res: express.Response)
         const id: string = ResumeMapper.generate();
         const resume: Resume = new Resume(id, file.name, file.md5, file.mimetype, file.size);
 
-        fs.write(fs.DOCUMENT, file.data, `resumes/${resume.getNameToken()}`);
-        ResumeMapper.create(resume);
+        await fs.write(fs.DOCUMENT, file.data, `resumes/${resume.getNameToken()}`);
+        await ResumeMapper.create(resume);
 
         return res.status(200).send( transform(resume) );
     }

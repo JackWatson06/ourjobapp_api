@@ -90,12 +90,11 @@ async function write(directory: Document|Cache, data: any, file?: string): Promi
     }
 
     return new Promise( (resolve, reject) => {
-        fs.writeFile(absolutePath(directory, determinedFileName), data, { flag: 'a' }, err => {
+        fs.writeFile(absolutePath(directory, determinedFileName), data, err => {
             if(err)
             {
                 reject(err);
-            }
-
+            }            
             resolve(determinedFileName);
         } );
     } );
