@@ -73,7 +73,6 @@ export default class PayPalAdaptor implements PaymentAdaptor
                 if (error) {
                     reject(error);
                 } else {
-
                     // This approval URL 
                     const url: string|undefined = getApprovalUrlFromPaypalPaymentResponse(payment);
                     const id: string|undefined  = payment.id;
@@ -105,6 +104,7 @@ export default class PayPalAdaptor implements PaymentAdaptor
       
         return new Promise((resolve, reject) => {
             paypal.payment.execute(paymentId, executePaymentJson, function (error, payment) {
+
                 if (error) {
                     reject(false);
                 } else {

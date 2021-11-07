@@ -14,8 +14,8 @@
     "docker-script": "docker exec unijobapp_api_node npm run script",
     "match": "docker exec unijobapp_api_node npm run script -- ./modules/matching/commands/MatchAllCommand",
     "email": "docker exec unijobapp_api_node npm run script -- ./modules/matching/commands/EmailMatchesCommand",
-    "refresh-database": "docker exec unijobapp_api_node sh -c \"npm run script -- ../database/database-delete && npm run script -- ../database/database-seed\"",
-    "seed-database": "docker exec unijobapp_api_node npm run script -- ../database/seed/matching-seeder",
+    "refresh-database": "docker exec unijobapp_api_node sh -c \"npm run script -- ../database/database-delete && npm run script -- ../database/database-seed && rm documents/resumes/* && rm documents/contracts/*\"",
+    "dev-seeder": "docker exec unijobapp_api_node npm run script -- ../database/seed/matching-seeder",
     "test:unit": "jest --forceExit -c jest.unit.config.js",
     "test:int": "docker exec unijobapp_api_node npx jest --forceExit -c jest.integration.config.js",
     "test": "npm run test:unit && npm run test:int && npm run refresh-database"

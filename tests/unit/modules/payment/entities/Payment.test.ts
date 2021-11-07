@@ -149,11 +149,11 @@ test("payouts to charities and affiliates are as expected from the payment plan"
     payment.payout();
     
     // === Assert ===
-    expect(payment.getPayouts()[0].getReward().getAmount()).toBe(15.91);
-    expect(payment.getPayouts()[1].getReward().getAmount()).toBe(6.91);
+    expect(payment.getPayouts()[0].getReward().getAmount()).toBe(25);
+    expect(payment.getPayouts()[1].getReward().getAmount()).toBe(7.50);
 
     expect(payment.getPayouts()[0].getDonation().getAmount()).toBe(1);
-    expect(payment.getPayouts()[1].getDonation().getAmount()).toBe(0.4);
+    expect(payment.getPayouts()[1].getDonation().getAmount()).toBe(1);
     
 });
 

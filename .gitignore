@@ -44,7 +44,11 @@ yarn.lock
 /dist
 
 # ignore seed data in the raw-data directory.
-database/raw-data/*
+database/raw-data
+
+# ignore extraction source data, as well as the data that was loaded.
+database/extractions/source/*
+database/extractions/load/*
 
 # ignore any data in the email chache
 .cache/*

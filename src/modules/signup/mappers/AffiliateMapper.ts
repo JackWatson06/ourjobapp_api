@@ -79,6 +79,7 @@ export async function create(affiliate: Affiliate): Promise<boolean> {
         .insertOne(tokenRow);
 
     const data: NewAffiliate = affiliate.getData();
+    
     const affiliateRow: Collections.Affiliate = {
         name         : data.name,
         charity_id   : toObjectId(data.charity_id),

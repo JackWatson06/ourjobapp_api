@@ -40,21 +40,22 @@ export async function store(req: express.Request<any>, res: express.Response)
     const valid = ajv.compile(schema);
 
     const data: NewAffiliate = req.body;
-
+    
     // Create the affilaite domain entity.
     if( valid(data) )
     {
         const email: Email = new Email(data.email, Token.generate());
         const affiliate: Affiliate   = new Affiliate(data, email);
 
+        // Send out a verificaiton email (included with their contract) Do the domain request before persistance thank you
+        // very much.
+        await affiliate.verify();
+
         await create(affiliate).catch( (err) => {
             console.error(err);
             res.status(400).send( { "error" : true } )
         });
 
-        // Verify the afiiliate is who they say they are.
-
-        await affiliate.verify();
         return res.status(200).send( { "success": true } )
     }
     

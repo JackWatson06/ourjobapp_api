@@ -12,6 +12,6 @@ export default class PaymentPlan
     // This will dcrease per the affilaite that we have.
     // First index represents the first affiliate. Second one the second nested affilaite.
     // Could have done this with percents but decided not to.
-    static readonly AFFILIATE_PAYOUTS = [ 15.91, 6.91 ];
-    static readonly CHARITY_PAYOUTS =   [     1, 0.4];
+    static readonly AFFILIATE_PAYOUTS = [ 25, 7.50 ];
+    static readonly CHARITY_PAYOUTS =   [  1,    1 ];
 }

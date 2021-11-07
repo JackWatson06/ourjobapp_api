@@ -10,7 +10,8 @@ import * as MongoDb from "../../src/core/infa/MongoDb";
 import fs from "fs";
 
 /**
- * Load data from a JSON file that is already formated to be inserted into the collection.
+ * Load data from a JSON file that is already formated to be inserted into the collection. This data will be gZipped so 
+ * we will need to consider that fact.
  * @param rawData Name of the file in the raw-data directory
  * @param collection The collection we are loading the data into
  */

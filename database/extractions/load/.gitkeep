@@ -1,0 +1,2 @@
+The load directory represents the directoy which files will go after they are extracted. Data extracted here should 
+be in JSON prepared to be integrated into the database.

@@ -43,14 +43,13 @@ export default class Affiliate
      * false = Was not able to send out the email
      */
     public async verify() : Promise<boolean>
-    {
+    {   
         if( Date.now() < this.email.getExpiredDate() )
         {
-
             // === CONTRACT ===
             const today = new Date();
-            const oneYearFromNow = new Date(new Date().setFullYear(today.getFullYear() + 1))
-
+            const oneYearFromNow = new Date(new Date().setFullYear(today.getFullYear() + 1));
+            
             // Figure out what to do here.
             // This can be abstracted out into a different entity.
             const contractFile: contract.ContractLocator = await contract.generate<contract.Sharer>("sharer", {
@@ -61,16 +60,15 @@ export default class Affiliate
                 VAR_SHARED_EMAIL     : this.data.email
             });
             this.contract = contractFile.name;
-
+            
             // === EMAIL ===
             let email: EmailMs.Email = EmailMs.makeEmail(this.email.getEmail(), "Get Your Link!");
-            // email = EmailMs.addAttachment(email, this.fileName, "Affilaite Contract");
             email = await EmailMs.addHtml(email, "affiliate-verification", {
                 name: this.data.name,
                 link: `${process.env.CLIENT_DOMAIN}/verify/sharer/${this.email.getToken()}` 
             });
             email = EmailMs.addAttachment(email, contractFile.path, "Sharer Contract");
-                        
+        
             await sendEmail(email);
             
             return true;
@@ -115,7 +113,7 @@ export default class Affiliate
     }
 
     public getContract() : string
-    {
+    {   
         return this.contract;
     }
 }

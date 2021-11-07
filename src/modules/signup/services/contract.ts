@@ -76,7 +76,7 @@ export async function generate<T extends ContractTypes>(contract: T, binds: Cont
     });
 
     await fs.write(fs.DOCUMENT, buffer, `contracts/${contractName}`);
-
+    
     return {
         name: contractName,
         path: fs.absolutePath(fs.DOCUMENT, `contracts/${contractName}`)

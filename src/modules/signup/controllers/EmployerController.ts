@@ -49,7 +49,7 @@ export async function store(req: express.Request<any>, res: express.Response)
         // Verify the employer is who they say they are.
         await employer.verify();
 
-        return await create(employer).then( () => {
+        return create(employer).then( () => {
             res.send( { "success": true } )
         }).catch( () => {
             res.send( { "error" : true } )
