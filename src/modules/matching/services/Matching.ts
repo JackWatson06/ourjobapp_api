@@ -147,7 +147,7 @@ function checkDistance(employee: Employee, employerLocation: Location, employeeL
     }
 
     // Check the employees counties is in the employers location.
-    if(employee.distance === Constants.Distance.NATIONALLY 
+    if(employee.distance === Constants.Distance.NATIONWIDE 
         && employeeNations != undefined
         && employeeNations.some(i => i.getCountryCode() === employerLocation.getCountry().getCountryCode()))
     {

@@ -16,8 +16,8 @@ export const Where: Constant = {
 
 export const Distance: Constant = {
     WORLDWIDE               : 1,
-    NATIONALLY              : 2,
-    TEN_MILES               : 10,
+    NATIONWIDE              : 2,
+    TWENTY_FIVE_MILES       : 25,
     FIFTY_MILES             : 50,
     ONE_HUNDRED_MILES       : 100,
     TWO_HUNDRED_FIFTY_MILES : 250

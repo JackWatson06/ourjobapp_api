@@ -30,8 +30,8 @@ export type BatchMatchView = {
 
 const distanceMapping = {
     [ Constants.Distance.WORLDWIDE ]               : "Worldwide",
-    [ Constants.Distance.NATIONALLY ]              : "National",
-    [ Constants.Distance.TEN_MILES ]               : "10 Miles",
+    [ Constants.Distance.NATIONWIDE ]              : "Nationwide",
+    [ Constants.Distance.TWENTY_FIVE_MILES ]       : "25 Miles",
     [ Constants.Distance.FIFTY_MILES ]             : "50 Miles",
     [ Constants.Distance.ONE_HUNDRED_MILES ]       : "100 Miles",
     [ Constants.Distance.TWO_HUNDRED_FIFTY_MILES ] : "250 Miles",
@@ -71,19 +71,25 @@ const experienceMapping = {
  */
 export function transform(batchMatch: BatchMatch): BatchMatchView
 {
-    // console.log(batchMatch);
-    
     return {
         
         name:    batchMatch.getEmployer().name,
         matches: batchMatch.getMatches().map( (match): MatchView => {
+
+            let location: string|undefined = distanceMapping[match.getEmployee().distance] ;
+
+            if(match.getEmployee().location != undefined)
+            {
+                location = match.getEmployee().location?.getAddress()
+            }
+
             return {
                 name        : match.getEmployee().name,
                 job         : match.getJob().getName(),
                 rate        : `$${match.getEmployee().hourlyRate}/hr`,
                 email       : match.getEmployee().email,
                 phone       : match.getEmployee().phone,
-                location    : distanceMapping[match.getEmployee().distance],
+                location    : location ?? "No Location Found",
                 education   : educationMapping[match.getEmployee().education],
                 experience  : experienceMapping[match.getEmployee().experience],
                 where       : whereMapping[match.getEmployee().experience],

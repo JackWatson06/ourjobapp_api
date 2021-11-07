@@ -28,7 +28,7 @@ const newEmployer = new Employer(
     "Joe Schmoe",
     "joe@gmail.com",
     50, 1, false,
-    new Location(0, 0, new CountryCode("US")),
+    new Location(0, 0, "102 Roycroft Circle", new CountryCode("US")),
     [ 1, 1 ],
     [ new Industry("Chemical Engineers") ]
 );

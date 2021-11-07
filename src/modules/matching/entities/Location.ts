@@ -25,6 +25,7 @@ export default class Location
         this.lat = lat;
         this.long = long;
         this.country = country;
+        this.address = address;
     }
 
     // === GETTERS ===

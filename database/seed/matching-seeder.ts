@@ -137,7 +137,7 @@ export default async function exec()
             hourly_rate   : 50,
             commitment    : C.Commitment.FULL_TIME,
             where         : C.Where.IN_PERSON,
-            distance      : C.Distance.NATIONALLY,
+            distance      : C.Distance.NATIONWIDE,
             experience    : C.Experience.EXPERIENCED
         },
         {
@@ -173,7 +173,7 @@ export default async function exec()
             hourly_rate   : 15,
             commitment    : C.Commitment.BOTH,
             where         : C.Where.BOTH,
-            distance      : C.Distance.TEN_MILES,
+            distance      : C.Distance.TWENTY_FIVE_MILES,
             experience    : C.Experience.INTERN
         },
         {
@@ -209,7 +209,7 @@ export default async function exec()
             hourly_rate   : 35,
             commitment    : C.Commitment.FULL_TIME,
             where         : C.Where.IN_PERSON,
-            distance      : C.Distance.NATIONALLY,
+            distance      : C.Distance.NATIONWIDE,
             experience    : C.Experience.EXPERIENCED
         }
     ]
