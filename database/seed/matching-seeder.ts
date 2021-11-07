@@ -80,24 +80,25 @@ export default async function exec()
             where        : C.Where.REMOTE,
             contract     : "Null",
             authorized   : false
-        }// },
-        // {
-        //     token_id     : token,
-        //     fname        : "Employer Three",
-        //     lname        : "Employer Three",
-        //     position     : "Manager",
-        //     company_name : "Tesla",
-        //     verified     : true,
-        //     email        : "m.morgan@americanlaborcompany.com",
+        },
+        {
+            token_id     : token,
+            fname        : "Employer Three",
+            lname        : "Employer Three",
+            position     : "Manager",
+            company_name : "Tesla",
+            verified     : true,
+            email        : "jpw2065@g.rit.com",
 
-        //     industry     : [ financialAnalystId, financialManagerId ],
-        //     place_id     : "ChIJS5dFe_cZTIYRj2dH9qSb7Lk",   // <= Texas United States
-        //     experience   : [ C.Experience.ENTRY, C.Experience.INTERMEDIATE, C.Experience.EXPERIENCED ],
-        //     salary       : 35,         
-        //     commitment   : C.Commitment.BOTH,
-        //     where        : C.Where.BOTH,
-        //     authorized   : true
-        // }
+            industry     : [ financialAnalystId, financialManagerId ],
+            place_id     : "ChIJS5dFe_cZTIYRj2dH9qSb7Lk",   // <= Texas United States
+            experience   : [ C.Experience.ENTRY, C.Experience.INTERMEDIATE, C.Experience.EXPERIENCED ],
+            salary       : 35,         
+            commitment   : C.Commitment.BOTH,
+            where        : C.Where.BOTH,
+            contract     : "Null",
+            authorized   : true
+        }
     ]
 
 

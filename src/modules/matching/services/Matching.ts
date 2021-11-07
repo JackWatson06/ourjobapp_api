@@ -87,7 +87,7 @@ async function createMatchIfExists(employer: Employer, employee: Employee): Prom
     {
         const industry: Industry = desiredJob.getIndustry();
 
-        if( employer.industry.some(industry => industry.getName() === industry.getName() ))
+        if( employer.industry.some(i => i.getName() === industry.getName() ))
         {
             
             const score: number = await locationScore(employee, employer);

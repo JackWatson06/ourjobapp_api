@@ -2,7 +2,7 @@
     <p>
         Hi, {{name}}!
     </p>
-    <p style="text-align: center; margin-bottom: 3rem;">
+    <p style="margin-bottom: 3rem;">
         Please find your updated candidate pool below. Happy hiring!
     </p>
 
@@ -36,7 +36,7 @@
                     <td style="border-right: 1px solid black"><span>Resume</span></td>
                     <td style="border-right: 1px solid black">{{this.info}}</td>          
                 </tr>
-            {{/matches}}
+            {{/each}}
         </tbody>
 
   </table>

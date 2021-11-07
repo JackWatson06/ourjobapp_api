@@ -18,17 +18,17 @@ export default async function exec()
     // Loop through the employers from the mapper. Since we are looping through all we map one at a time with the read
     // bulk command.
     for await (const employer of EmployerMapper.readBulk()) {
-
+        
         if( employer === undefined)
         {
             throw "Undefined Employer error!";
         }
-
+        
         const batchMatch = await MatchingService.match(batch, employer);     
-        const email = new CachedEmail(batchMatch);
+        const email      = new CachedEmail(batchMatch);
 
+        
         await email.generateEmail();
-
         await EmailMapper.create( email );
     }
 

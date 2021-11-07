@@ -18,7 +18,6 @@ type MatchView = {
     phone       : string,
     where       : string,
     commitment  : string,
-    authorized  : string,
     resume      : string,
     paymentLink : string
 }
@@ -77,7 +76,7 @@ export function transform(batchMatch: BatchMatch): BatchMatchView
     return {
         
         name:    batchMatch.getEmployer().name,
-        matches: batchMatch.getMatches().map( (match) => {
+        matches: batchMatch.getMatches().map( (match): MatchView => {
             return {
                 name        : match.getEmployee().name,
                 job         : match.getJob().getName(),
@@ -92,7 +91,7 @@ export function transform(batchMatch: BatchMatch): BatchMatchView
 
                 // Links also need the employees additional information
                 resume      : "",
-                paymentLink : ""
+                paymentLink : `${process.env.DOMAIN}/api/v1/payment/start?epi=${batchMatch.getEmployer().id}&emi=${match.getEmployee().id}`
             }
         })
     }
