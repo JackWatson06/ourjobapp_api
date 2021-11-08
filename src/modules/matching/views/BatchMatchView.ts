@@ -4,6 +4,8 @@
  * Purpose: This class takes a batch match and will return the view that we will show during the email.
  */
 
+ import Location from "../entities/Location";
+
 import BatchMatch from "../entities/BatchMatch"
 import * as Constants from "infa/Constants";
 
@@ -77,12 +79,13 @@ export function transform(batchMatch: BatchMatch): BatchMatchView
         matches: batchMatch.getMatches().map( (match): MatchView => {
 
             let location: string|undefined = distanceMapping[match.getEmployee().distance] ;
+            const employeeLocation: Location|undefined = match.getEmployee().location;
 
-            if(match.getEmployee().location != undefined)
+            if(employeeLocation != undefined)
             {
-                location = match.getEmployee().location?.getAddress()
+                location = employeeLocation.getAddress();
             }
-
+        
             return {
                 name        : match.getEmployee().name,
                 job         : match.getJob().getName(),

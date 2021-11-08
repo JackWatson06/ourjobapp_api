@@ -1,53 +1,45 @@
-<div style="font-family: Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;">
-    <p>
+<div style="font-size: 1.2rem; font-family: Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;">
+    <h5>
         Hi, {{name}}!
-    </p>
+    </h5>
     <p style="margin-bottom: 3rem;">
         Please find your updated candidate pool below. Happy hiring!
     </p>
-
-    <table style="border-collapse: collapse; width: 1200px;">
+    <table style="font-size: 1rem; border-collapse: collapse; width: 1200px;">
         <thead>
             <tr>
-              <th></th>
-              <th style="border-bottom: 1px solid black">Name</th>
-              <th style="border-bottom: 1px solid black">Location</th>
-              <th style="border-bottom: 1px solid black">Email</th>
-              <th style="border-bottom: 1px solid black">Phone</th>
-              <th style="border-bottom: 1px solid black">Education</th>
-              <th style="border-bottom: 1px solid black">Job</th>
-              <th style="border-bottom: 1px solid black">Experience</th>
-              <th style="border-bottom: 1px solid black">Other</th>
+              <th>Name</th>
+              <th>Location</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Education</th>
+              <th>Job</th>
+              <th>Experience</th>
+              <th>Other</th>
             </tr>
         </thead>
 
         <tbody>
             {{#each matches}}
                 <tr>
-                    <td><a style="color: white; background: linear-gradient(135deg,  #2B4F7B, #9E005D); padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; text-decoration: none; border-radius: 10px; margin-right:5px margin-top:5px margin-bottom:5px" href="{{this.paymentLink}}">Hire</a></td>
-                    <td style="border-right: 1px solid black">{{this.name}}</td>
-                    <td style="border-right: 1px solid black">{{this.address}}</td>
-                    <td style="border-right: 1px solid black">{{this.email}}</td> 
-                    <td style="border-right: 1px solid black">{{this.phone}}</td>
-                    <td style="border-right: 1px solid black">{{this.education}}</td>
-                    <td style="border-right: 1px solid black">{{this.job}}</td> 
-                    <td style="border-right: 1px solid black">{{this.experience}}</td>
-                    <td style="border-right: 1px solid black">{{this.info}}</td>          
+                    <td>{{this.name}}</td>
+                    <td>{{this.location}}</td>
+                    <td>{{this.email}}</td> 
+                    <td>{{this.phone}}</td>
+                    <td>{{this.education}}</td>
+                    <td>{{this.job}}</td> 
+                    <td>{{this.experience}}</td>
+                    <td>{{this.info}}</td>          
+                </tr>
+                <tr>
+                    <td align="center" colspan="8"><a href="{{this.paymentLink}}"><div style="color: white; background: linear-gradient(135deg,  #2B4F7B, #9E005D); padding: 5px; margin: 10px; margin-bottom: 20px; text-decoration: none; border-radius: 10px; width: 25%;">Hire</div></a></td>
                 </tr>
             {{/each}}
         </tbody>
-
   </table>
-  
   <p style="margin-top: 3rem;">
     Our best,
     <br>
     Ourjob.app
   </p>
 </div>
-
-
-
-
-
-
