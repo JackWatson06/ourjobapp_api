@@ -6,7 +6,7 @@
  * in our system.
  */
 // Command
-import execEmployerMatch from "modules/matching/commands/MatchOneCommand"
+import execEmployerMatch from "../../../modules/matching/commands/MatchOneCommand"
 
 
 // Data Mappers

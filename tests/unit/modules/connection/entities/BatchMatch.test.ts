@@ -36,7 +36,7 @@ const newEmployer = new Employer(
 
 
 test("can add multiple employee score", () => {
-    const batch: BatchMatch = new BatchMatch("RANDOM", newEmployer);
+    const batch: BatchMatch = new BatchMatch(newEmployer, "RANDOM");
 
     const match: Match      = new Match(newEmployee, newChemist, 10);
     const matchTwo: Match   = new Match(newEmployee, newChemist, 5);
@@ -50,7 +50,7 @@ test("can add multiple employee score", () => {
 });
 
 test("can insert if better score", () => {
-    const batch: BatchMatch = new BatchMatch("RANDOM", newEmployer);
+    const batch: BatchMatch = new BatchMatch(newEmployer, "RANDOM");
 
     const match: Match      = new Match(newEmployee, newChemist, 10);
     const matchTwo: Match   = new Match(newEmployee, newChemist, 5);
@@ -66,7 +66,7 @@ test("can insert if better score", () => {
 
 
 test("does not excede max limit", () => {
-    const batch: BatchMatch = new BatchMatch("RANDOM", newEmployer);
+    const batch: BatchMatch = new BatchMatch(newEmployer, "RANDOM");
     const limit: number     = 100;
 
     for(let i = 0; i < limit + 50; i++)
@@ -79,7 +79,7 @@ test("does not excede max limit", () => {
 
 
 test("inserting highest score", () => {
-    const batch: BatchMatch = new BatchMatch("RANDOM", newEmployer);
+    const batch: BatchMatch = new BatchMatch(newEmployer, "RANDOM");
 
     const match: Match      = new Match(newEmployee, newChemist, 10);
     const matchTwo: Match   = new Match(newEmployee, newChemist, 5);
