@@ -132,10 +132,11 @@ export async function verify(req: express.Request<any>, res: express.Response)
     {
         await EmployerMapper.update({ token_id: new ObjectId( proof.getId())}, employer);
 
-        // Inser the call to the single update command here.
         res.status(200).send( {"success": true} );
 
-        execEmployerMatch(employer.getData().)
+
+        // Trigger the matching process here. Yes I know this is garbage and we will need to revist.
+        execEmployerMatch(employer.getId());
     }
     else
     {

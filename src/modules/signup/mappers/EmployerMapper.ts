@@ -106,7 +106,14 @@ export async function read(query: Query): Promise<Employer|null>
         industry     : employerRow.industry.map((industry: ObjectId) => industry.toString()),
         affiliate_id : employerRow.affiliate_id?.toString()
       }
-    return new Employer(employer, email, new Address(locationData.address));
+    const employerEntity: Employer = new Employer(employer, email, new Address(locationData.address));
+
+    if(employerRow._id != null)
+    {
+        employerEntity.setId(employerRow._id.toString());
+    }
+
+    return employerEntity;   
 }
 
 /**

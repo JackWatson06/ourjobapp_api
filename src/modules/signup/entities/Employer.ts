@@ -34,6 +34,9 @@ export default class Employer
     // Email verification data.
     private verified_at: number;
 
+    // Identifier for the employer.
+    private id: string;
+
     constructor(data: NewEmployer, email: Email, address: Address)
     {
         this.data     = data;
@@ -93,6 +96,15 @@ export default class Employer
     }
 
     /**
+     * Set the id for the employer. This is awful btw.
+     * @param id Id is optional
+     */
+    public setId(id: string)
+    {
+        this.id = id;
+    }
+
+    /**
      * Return the date that we were verified at.
      */
     public getVerifiedOn() : number
@@ -122,5 +134,13 @@ export default class Employer
     public getContract() : string
     {
         return this.contract;
+    }
+
+    /**
+     * Get the identifier for the employer. This is awful btw.
+     */
+    public getId(): string
+    {
+        return this.id;
     }
 }
