@@ -1,54 +1,34 @@
 import * as MongoDb from "infa/MongoDb";
 import * as Collections from "Collections";
 
-import Match from "../entities/Match";
-import BatchMatch from "../entities/BatchMatch";
 import CachedEmail from "../entities/CachedEmail";
 
-import { ObjectId } from "mongodb";
 
-export async function create(email: CachedEmail)
+export async function read(): Promise<Array<CachedEmail>> 
 {
     const db: MongoDb.MDb = MongoDb.db();
-    
-    const match: BatchMatch = email.getMatch();
-    const matches: Array<Match> = match.getMatches();
 
-    // Create the employer match.
-    const batchMatchRow: Collections.BatchMatch = {
-        batch_id    : MongoDb.toObjectId( match.getBatchId() ),
-        employer_id : MongoDb.toObjectId( match.getEmployer().id ),
-        created_at  : MongoDb.now()
-    };
+    return db.collection("emails").find<Collections.Email>({ sent: false, error: false }).map(( result ) => {
+        return new CachedEmail( result._id?.toString() ?? "", result.message_token );
+    }).toArray();
+}
 
-    // Batchmatch
-    const batchMatchId: ObjectId = (await db.collection("batchMatches").insertOne(batchMatchRow)).insertedId;
 
-    // Create the email
-    const emailRow: Collections.Email = {
-        batch_match_id : batchMatchId,
-        message_token  : email.getMessageToken(),
-        email          : match.getEmployer().email,
-        sent           : false,
-        error          : false,
-        created_at     : MongoDb.now()
-    };   
+export async function update(emails: Array<CachedEmail>): Promise<boolean>
+{
+    const db: MongoDb.MDb = MongoDb.db();
 
-    await db.collection("emails").insertOne(emailRow);
-
-    // Loop through all of the employees that matched with the employer.
-    for(const match of matches)
+    for(const email of emails)
     {
-        const matchRow: Collections.Match = {
-            batch_match_id : batchMatchId,
-            employee_id    : MongoDb.toObjectId( match.getEmployee().id ),
-            job_id         : MongoDb.toObjectId( match.getJob().getId() ),
-            score          : match.getScore(),
-        };   
-
-        await db.collection("matches").insertOne(matchRow);
+        // Update the current collection
+        await db.collection("emails").updateOne({ _id: MongoDb.toObjectId(email.getId()) }, { $set: {
+            sent    : email.getSent(),
+            sent_at : email.getSentAt(),
+            error   : email.getError()
+        } });
     }
 
     return true;
 }
+
 

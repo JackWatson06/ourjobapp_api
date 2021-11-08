@@ -5,6 +5,9 @@
  * Purpose: Singing up a new employer is a vital part of our domain. This code seeks to be in charge of creating a new employer
  * in our system.
  */
+// Command
+import execEmployerMatch from "modules/matching/commands/MatchOneCommand"
+
 
 // Data Mappers
 import * as EmployerMapper from "../mappers/EmployerMapper";
@@ -128,8 +131,14 @@ export async function verify(req: express.Request<any>, res: express.Response)
     if(authorized)
     {
         await EmployerMapper.update({ token_id: new ObjectId( proof.getId())}, employer);
-        return res.status(200).send( {"success": true} );
-    }
 
-    return res.status(400).send( {"error": "Token not valid"} )
+        // Inser the call to the single update command here.
+        res.status(200).send( {"success": true} );
+
+        execEmployerMatch(employer.getData().)
+    }
+    else
+    {
+        res.status(400).send( {"error": "Token not valid"} )
+    }
 }

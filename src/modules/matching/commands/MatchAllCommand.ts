@@ -4,10 +4,10 @@ import * as MatchingService from "../services/Matching";
 
 import * as BatchMapper from "../mappers/BatchMapper";
 import * as EmployerMapper from "../mappers/EmployerMapper";
-import * as EmailMapper from "../mappers/CachedEmailMapper";
+import * as CandidateEmailMapper from "../mappers/CandidateEmailMapper";
 
 import Batch from "../entities/Batch";
-import CachedEmail from "../entities/CachedEmail";
+import CandidateEmail from "../entities/CandidateEmail";
 /**
  * Execute the matching algorithm in our application. Prepare the matches to later be sent out through a seperate algorithm
  */
@@ -24,12 +24,12 @@ export default async function exec()
             throw "Undefined Employer error!";
         }
         
-        const batchMatch = await MatchingService.match(batch, employer);     
-        const email      = new CachedEmail(batchMatch);
+        const batchMatch = await MatchingService.match(employer, batch);     
+        const email      = new CandidateEmail(batchMatch);
 
         
-        await email.generateEmail();
-        await EmailMapper.create( email );
+        await email.cacheEmail();
+        await CandidateEmailMapper.create( email );
     }
 
     await BatchMapper.create(batch);

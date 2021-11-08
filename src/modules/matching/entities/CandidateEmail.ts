@@ -4,59 +4,73 @@
  * Purpose: The candidate email represents the email that we recieve when we are looking for candidates.
  */
 
-import { sendFromCache } from "notify/Notify";
+import * as EmailMs from "notify/Email";
+import { cacheEmail, sendEmail } from "notify/Notify";
+
+import BatchMatch from "./BatchMatch";
+import * as BatchMatchView from "../views/BatchMatchView"; // Not a huge fan of using view here but it is what we got.
+import { Batch } from "mongodb";
 
 export default class CandidateEmail
 {
-    private id: string;
-    private emailToken: string;
+    private match: BatchMatch;
+    private messageToken: string;
     private sent: boolean;
-    private sent_at: number;
     private error: boolean;
+    private sentAt: number;
 
-
-    constructor(id: string, emailToken: string)
+    constructor(batchMatch: BatchMatch)
     {
-        this.id         = id;
-        this.emailToken = emailToken;
-        this.sent_at    = 0;
-        this.sent       = false;
-        this.error      = false;
+        this.match        = batchMatch;
+        this.messageToken = "";
+        this.sentAt       = 0;
+        this.sent         = false;
+        this.error        = false;
     }
 
-    /**
-     * Send the email to the employer. Handle the result in this function.
-     */
-    public async send(): Promise<boolean>
+    public async cacheEmail()
     {
+        const binds = BatchMatchView.transform(this.match);
+        
+        let email: EmailMs.Email = EmailMs.makeEmail(this.match.getEmployer().email, "Your Candidate Pool");
+        email = await EmailMs.addHtml(email, "candidates", binds);
+
+        this.messageToken = await cacheEmail(email);
+    }
+
+    public async sendEmail()
+    {
+        const binds = BatchMatchView.transform(this.match);
+        
+        let email: EmailMs.Email = EmailMs.makeEmail(this.match.getEmployer().email, "Your First Candidate Pool!");
+        email = await EmailMs.addHtml(email, "candidates", binds);
+                
         try
         {
-            await sendFromCache(this.emailToken);
-            
-            this.sent_at = Date.now();
-            this.sent    = true;
+            await sendEmail(email);
+            this.sentAt = Date.now();
+            this.error = false;
         }
-        catch(err)
+        catch(error)
         {
-            console.error(err);
-            
             this.error = true;
-            return false;
         }
-
-        return true;
     }
 
-
     // === GETTERS ===
-    public getId(): string
+    public getMessageToken(): string
     {
-        return this.id;
+        return this.messageToken;
+    }
+
+    public getMatch(): BatchMatch
+    {
+        return this.match;
     }
 
     public getSentAt(): number|undefined
     {
-        return this.sent_at;
+        return this.sentAt;
     }
 
     public getSent(): boolean

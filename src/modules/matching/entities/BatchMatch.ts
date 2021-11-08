@@ -15,13 +15,13 @@ export default class BatchMatch
 {
     private MATCH_LIMIT = 100;
 
-    private batchId: string;
+    private batchId: string|undefined;
     private employer: Employer;
 
     // Get employee with the scores.
     private matches: Array<Match>;
 
-    constructor(batchId: string, employer: Employer)
+    constructor(employer: Employer, batchId: string|undefined)
     {
         this.batchId    = batchId;
         this.employer   = employer;
@@ -58,7 +58,7 @@ export default class BatchMatch
 
     // === GETTERS ===
 
-    public getBatchId(): string
+    public getBatchId(): string|undefined
     {
         return this.batchId;
     }

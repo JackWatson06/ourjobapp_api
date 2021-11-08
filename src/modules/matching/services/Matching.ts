@@ -27,9 +27,9 @@ import * as Constants from "infa/Constants";
  * @param batch The batch that we are using to match the employer.
  * @param employer The employer that we are currently matching
  */
-export async function match(batch: Batch, employer: Employer): Promise<BatchMatch> {
+export async function match(employer: Employer, batch?: Batch): Promise<BatchMatch> {
     
-    const newMatch: BatchMatch = new BatchMatch(batch.getId(), employer);
+    const newMatch: BatchMatch = new BatchMatch(employer, batch?.getId());
 
     for await (const employee of EmployeeMapper.readBulk()) {
 

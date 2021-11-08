@@ -1,47 +1,71 @@
-
 /**
  * Original Author: Jack Watson
- * Created Date: 3/11/2021
- * Purpose: An unsent email represents an email that we still have to send out. This email would be in a state where we
- * are ready to go but still just need to trigger the go button. The template has been generated however.
+ * Created Date: 11/3/2021
+ * Purpose: The candidate email represents the email that we recieve when we are looking for candidates.
  */
 
-import * as EmailMs from "notify/Email";
-import { cacheEmail } from "notify/Notify";
+import { sendFromCache } from "notify/Notify";
 
-import BatchMatch from "./BatchMatch";
-import * as BatchMatchView from "../views/BatchMatchView"; // Not a huge fan of using view here but it is what we got.
-
-export default class CachedEmail
+export default class CacheEmail
 {
-    // Email for this email
-    private match: BatchMatch;
 
-    // Keep a message token with the email so we know which email it is
-    private messageToken: string;
+    // The cached email id
+    private id: string;
+    private emailToken: string;
+    private sent: boolean;
+    private sent_at: number;
+    private error: boolean;
 
-    constructor(match: BatchMatch)
+    constructor(id: string, emailToken: string)
     {
-        this.match = match;
+        this.id         = id;
+        this.emailToken = emailToken;
+        this.sent_at    = 0;
+        this.sent       = false;
+        this.error      = false;
     }
 
-    async generateEmail()
+    /**
+     * Send the email to the employer. Handle the result in this function.
+     */
+    public async send(): Promise<boolean>
     {
-        const binds = BatchMatchView.transform(this.match);
-        
-        let email: EmailMs.Email = EmailMs.makeEmail(this.match.getEmployer().email, "You have been matched!");
-        email = await EmailMs.addHtml(email, "candidates", binds);
+        try
+        {
+            await sendFromCache(this.emailToken);
+            
+            this.sent_at = Date.now();
+            this.sent    = true;
+        }
+        catch(err)
+        {
+            console.error(err);
+            
+            this.error = true;
+            return false;
+        }
 
-        this.messageToken = await cacheEmail(email);
+        return true;
     }
 
-    public getMessageToken(): string
+    // === GETTERS ===
+    public getId(): string
     {
-        return this.messageToken;
+        return this.id;
     }
 
-    public getMatch(): BatchMatch
+    public getSentAt(): number|undefined
     {
-        return this.match;
+        return this.sent_at;
+    }
+
+    public getSent(): boolean
+    {
+        return this.sent;
+    }
+
+    public getError(): boolean
+    {
+        return this.error;
     }
 }

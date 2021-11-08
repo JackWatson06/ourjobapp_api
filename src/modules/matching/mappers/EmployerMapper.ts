@@ -28,6 +28,44 @@ function mapIndustry(db: MongoDb.MDb, employerMatchRow: Collections.Employer): A
     })
 }
 
+/**
+ * REad a single employer from the database.
+ * @param employerId Employer identifier
+ */
+export async function read(employerId: string): Promise<Employer|null>
+{    
+    const db: MongoDb.MDb  = MongoDb.db();
+    const employerMatchRow: Collections.Employer|null = await db.collection("employers").findOne<Collections.Employer>({
+        _id: MongoDb.toObjectId(employerId),
+        verified: true
+    });
+
+    // Skip if we don't have the batch match.
+    if(employerMatchRow === null || employerMatchRow._id === undefined)
+    {
+        return null;
+    }
+
+    // Map the authorized countries.
+    const industryMap: Array<Industry> = await Promise.all( mapIndustry(db, employerMatchRow) );
+    const location = await LocationMapper.read(employerMatchRow.place_id);
+    
+    return new Employer(
+        employerMatchRow._id.toString(),
+        `${employerMatchRow.fname} ${employerMatchRow.lname}`,
+        employerMatchRow.email,
+        employerMatchRow.salary,
+        employerMatchRow.where,
+        employerMatchRow.authorized,
+        location,
+        employerMatchRow.experience,
+        industryMap
+    )
+}
+
+/**
+ * Read a bunch of employers from the database.
+ */
 export async function *readBulk()
 {    
     const db: MongoDb.MDb  = MongoDb.db();
