@@ -8,31 +8,36 @@
     <table style="font-size: 1rem; border-collapse: collapse; width: 1200px;">
         <thead>
             <tr>
-              <th>Name</th>
-              <th>Location</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Education</th>
-              <th>Job</th>
-              <th>Experience</th>
-              <th>Other</th>
+              <th style="text-align:center">Name</th>
+              <th style="text-align:center">Location</th>
+              <th style="text-align:center">Email</th>
+              <th style="text-align:center">Phone</th>
+              <th style="text-align:center">Education</th>
+              <th style="text-align:center">Job</th>
+              <th style="text-align:center">Experience</th>
+              <th style="text-align:center">Other</th>
             </tr>
         </thead>
 
         <tbody>
-            {{#each matches}}
+            {{#each buttonRows}}
                 <tr>
-                    <td>{{this.name}}</td>
-                    <td>{{this.location}}</td>
-                    <td>{{this.email}}</td> 
-                    <td>{{this.phone}}</td>
-                    <td>{{this.education}}</td>
-                    <td>{{this.job}}</td> 
-                    <td>{{this.experience}}</td>
-                    <td>{{this.info}}</td>          
+                    <td style="text-align:center">{{this.name}}</td>
+                    <td style="text-align:center">{{this.location}}</td>
+                    <td style="text-align:center">{{this.email}}</td> 
+                    <td style="text-align:center">{{this.phone}}</td>
+                    <td style="text-align:center">{{this.education}}</td>
+                    <td style="text-align:center">{{this.job}}</td> 
+                    <td style="text-align:center">{{this.experience}}</td>
+                    <td style="text-align:center">{{this.info}}</td>          
                 </tr>
                 <tr>
                     <td align="center" colspan="8"><a href="{{this.paymentLink}}"><div style="color: white; background: linear-gradient(135deg,  #2B4F7B, #9E005D); padding: 5px; margin: 10px; margin-bottom: 20px; text-decoration: none; border-radius: 10px; width: 25%;">Hire</div></a></td>
+                </tr>
+            {{/each}}
+            {{#each none}}
+                <tr>
+                    <td align="center" colspan="8"><div style="color: white; background: linear-gradient(135deg,  #2B4F7B, #9E005D); padding: 5px; margin: 10px; margin-bottom: 20px; text-decoration: none; border-radius: 10px; width: 25%;">{{ this }}</div></td>
                 </tr>
             {{/each}}
         </tbody>
@@ -43,3 +48,4 @@
     Ourjob.app
   </p>
 </div>
+

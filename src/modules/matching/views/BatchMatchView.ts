@@ -26,7 +26,8 @@ type MatchView = {
 
 export type BatchMatchView = {
     name: string,
-    matches: Array<MatchView>
+    buttonRows?: Array<MatchView>,
+    none?:Array<string>
 }
 
 
@@ -73,10 +74,19 @@ const experienceMapping = {
  */
 export function transform(batchMatch: BatchMatch): BatchMatchView
 {
-    return {
-        
-        name:    batchMatch.getEmployer().name,
-        matches: batchMatch.getMatches().map( (match): MatchView => {
+    const batchMatchView: BatchMatchView = {
+        name: batchMatch.getEmployer().name,
+    }
+
+    if(batchMatch.getMatches().length === 0 )
+    {
+        // Map the none view.
+        batchMatchView.none = [ "No matches found!" ]
+    }
+    else
+    {
+        // Map the batch matches
+        batchMatchView.buttonRows = batchMatch.getMatches().map( (match): MatchView => {
 
             let location: string|undefined = distanceMapping[match.getEmployee().distance] ;
             const employeeLocation: Location|undefined = match.getEmployee().location;
@@ -104,4 +114,6 @@ export function transform(batchMatch: BatchMatch): BatchMatchView
             }
         })
     }
+
+    return batchMatchView;
 }
