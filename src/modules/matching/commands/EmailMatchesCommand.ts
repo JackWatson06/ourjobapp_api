@@ -6,9 +6,9 @@
  */
 
 
-import * as CandidateEmailMapper from "../mappers/CandidateEmailMapper";
+import * as CachedEmailMapper from "../mappers/CachedEmailMapper";
 
-import CandidateEmail from "../entities/CandidateEmail";
+import CachedEmail from "../entities/CachedEmail";
 
 /**
  * Execute the matching algorithm in our application. Prepare the matches to later be sent out through a seperate algorithm
@@ -16,12 +16,12 @@ import CandidateEmail from "../entities/CandidateEmail";
 export default async function exec()
 {   
     // Get latest batch
-    const candidateEmails: Array<CandidateEmail> = await CandidateEmailMapper.read();
+    const cachedEmails: Array<CachedEmail> = await CachedEmailMapper.read();
     
-    for(const email of candidateEmails)
+    for(const email of cachedEmails)
     {       
         await email.send();
     }
 
-    await CandidateEmailMapper.update(candidateEmails);
+    await CachedEmailMapper.update(cachedEmails);
 }

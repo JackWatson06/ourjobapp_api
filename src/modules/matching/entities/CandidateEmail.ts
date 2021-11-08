@@ -9,7 +9,6 @@ import { cacheEmail, sendEmail } from "notify/Notify";
 
 import BatchMatch from "./BatchMatch";
 import * as BatchMatchView from "../views/BatchMatchView"; // Not a huge fan of using view here but it is what we got.
-import { Batch } from "mongodb";
 
 export default class CandidateEmail
 {
@@ -28,7 +27,7 @@ export default class CandidateEmail
         this.error        = false;
     }
 
-    public async cacheEmail()
+    public async cache()
     {
         const binds = BatchMatchView.transform(this.match);
         
@@ -38,17 +37,18 @@ export default class CandidateEmail
         this.messageToken = await cacheEmail(email);
     }
 
-    public async sendEmail()
+    public async send()
     {
         const binds = BatchMatchView.transform(this.match);
         
         let email: EmailMs.Email = EmailMs.makeEmail(this.match.getEmployer().email, "Your First Candidate Pool!");
         email = await EmailMs.addHtml(email, "candidates", binds);
-                
+
         try
         {
             await sendEmail(email);
             this.sentAt = Date.now();
+            this.sent = true;
             this.error = false;
         }
         catch(error)

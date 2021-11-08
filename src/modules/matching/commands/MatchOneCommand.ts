@@ -10,8 +10,11 @@ import Employer from "../entities/Employer";
 /**
  * I need to get the employer id in here.
  */
-export default async function exec(employerId: string)
+export default async function exec()
 {   
+
+    const employerId: string = "618874ecf94ee8acdc00ac9b";
+
     // Loop through the employers from the mapper. Since we are looping through all we map one at a time with the read
     // bulk command.
     const employer: Employer|null = await EmployerMapper.read(employerId);
@@ -22,8 +25,7 @@ export default async function exec(employerId: string)
 
         const email = new CandidateEmail(batchMatch);
     
-        await email.sendEmail();
-    
+        await email.send();
         await CandidateEmailMapper.create( email ); 
     }
 }

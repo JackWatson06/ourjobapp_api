@@ -28,7 +28,7 @@ export default async function exec()
         const email      = new CandidateEmail(batchMatch);
 
         
-        await email.cacheEmail();
+        await email.cache();
         await CandidateEmailMapper.create( email );
     }
 
