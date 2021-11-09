@@ -1,66 +1,116 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml" lang="en">
-  
     <head>
-        <title>Employee Verification</title>
+        <title>Candidate Email</title>
         <meta property="og:title" content="Email template">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-    
-    <body bgcolor="#F5F8FA" style="width: 100%; margin: auto 0; padding:0; font-family:Lato, sans-serif; font-size:18px; color:#33475B; word-break:break-word">
-        <div style="font-size: 1.2rem; font-family: Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;">
-            <h5>
-                Hi, {{name}}!
-            </h5>
-            <p style="margin-bottom: 3rem;">
-                Please find your updated candidate pool below. Happy hiring!
-            </p>
-            <div style="overflow-x: auto;">
-                <table style="font-size: 1rem; width: 1200px;">
-                    <thead>
-                        <tr>
-                        <th style="text-align:center">Name</th>
-                        <th style="text-align:center">Location</th>
-                        <th style="text-align:center">Email</th>
-                        <th style="text-align:center">Phone</th>
-                        <th style="text-align:center">Education</th>
-                        <th style="text-align:center">Job</th>
-                        <th style="text-align:center">Experience</th>
-                        <th style="text-align:center">Other</th>
-                        </tr>
-                    </thead>
+    <body style="font-size: 1rem; font-family: Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif; padding: 0; margin:0;">
+        
+        <table bgcolor="#dddddd" cellpadding="0" cellspacing="0" role="presentation" style="table-layout:fixed;vertical-align:top;min-width:300px;border-spacing:0;border-collapse:collapse;background-color:#dddddd;width:100%" valign="top" width="100%">
+          <tbody>
+            <tr style="vertical-align:top" valign="top">
+              <td style="word-break:break-word;vertical-align:top;padding:20px;text-align:center;" valign="top">
+                <div style="width:100%; min-width:300px;max-width:600px;display:inline-block;text-align:left;">
+                  <div style=" background: linear-gradient(135deg,  #2B4F7B, #9E005D); height: 4px">
+                  </div>          
+                  <div style="background-color:#FFFFFF; padding-left: 20px; padding-right: 20px; border-right: solid #bfbfbf 1px; border-left: solid #bfbfbf 1px;">
+                    <br />
+                    <h4>
+                      Hi, Jack Watson
+                    </h4>
+                    <p>
+                      Please find your updated candidate pool below. Happy hiring!
+                    </p>
+                    <br>
 
-                    <tbody>
-                        {{#each buttonRows}}
-                            <tr>
-                                <td style="text-align:center">{{this.name}}</td>
-                                <td style="text-align:center">{{this.location}}</td>
-                                <td style="text-align:center">{{this.email}}</td> 
-                                <td style="text-align:center">{{this.phone}}</td>
-                                <td style="text-align:center">{{this.education}}</td>
-                                <td style="text-align:center">{{this.job}}</td> 
-                                <td style="text-align:center">{{this.experience}}</td>
-                                <td style="text-align:center">{{this.info}}</td>          
-                            </tr>
-                            <tr>
-                                <td align="center" colspan="8"><a href="{{this.paymentLink}}"><div style="color: white; background: linear-gradient(135deg,  #2B4F7B, #9E005D); padding: 5px; margin: 10px; margin-bottom: 20px; text-decoration: none; border-radius: 10px; width: 25%;">Hire</div></a></td>
-                            </tr>
-                        {{/each}}
-                        {{#each none}}
-                            <tr>
-                                <td align="center" colspan="8"><div style="color: white; background: linear-gradient(135deg,  #2B4F7B, #9E005D); padding: 5px; margin: 10px; margin-bottom: 20px; text-decoration: none; border-radius: 10px; width: 25%;">{{ this }}</div></td>
-                            </tr>
-                        {{/each}}
-                    </tbody>
-            </table>
-        </div>
-        <p style="margin-top: 3rem;">
-            Our best,
-            <br>
-            Ourjob.app
-        </p>
-        </div>
+                    {{#each employees}}
+                        <table bgcolor="#dddddd" cellpadding="0" cellspacing="0" role="presentation" style="table-layout:fixed;vertical-align:top;min-width:300px;border-spacing:0;border-collapse:collapse;background-color:#dddddd;width:75%;background-color: #f7f7f7;border: solid 1px;" align="center" valign="top" width="75%" >
+                            <tbody>
+                                <tr>
+                                <td>
+                                    <p><span style="display:inline-block;width:2rem"></span><b>Jack Watson</b></p>
+                                </td>
+                                </tr>
+                                <tr>
+                                <td align="left">
+                                    <span style="display:inline-block;width:50%;max-width:50%; margin-left:2.5rem;">
+                                    <table style="font-size:0.8rem;">
+                                        <tbody>
+                                        <tr>
+                                            <td nowrap="nowrap"><u>Name</u></td>
+                                            <td nowrap="nowrap">{{this.name}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td nowrap="nowrap"><u>Location</u></td>
+                                            <td nowrap="nowrap">{{this.location}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td nowrap="nowrap"><u>Email</u></td>
+                                            <td nowrap="nowrap">{{this.email}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td nowrap="nowrap"><u>Phone</u></td>
+                                            <td nowrap="nowrap">{{this.phone}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td nowrap="nowrap"><u>Education</u></td>
+                                            <td nowrap="nowrap">{{this.education}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td nowrap="nowrap"><u>Job</u></td>
+                                            <td nowrap="nowrap">{{this.job}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td nowrap="nowrap"><u>Experience</u></td>
+                                            <td nowrap="nowrap">{{this.experience}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td nowrap="nowrap"><u>Other</u></td>
+                                            <td nowrap="nowrap">{{this.info}}</td>
+                                        </tr>
+                                        </tbody>
+                                    
+                                    </table>
+                                    </span>
+                                </td>
+                                </tr>
+                                <tr>
+                                <td align="center"><br><div style="color: white; background: linear-gradient(135deg,  #2B4F7B, #9E005D); padding: 5px; text-decoration: none; border-radius: 10px; width: 25%;">Hire</div><br></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    {{/each}}
+                    {{#each none}}
+                        <div style="text-align:center;"><div style="display:inline-block;color: black;padding: 5px; text-decoration: none; border-radius: 10px; width: 50%;"><span>No Candidates Matched</span></div><br></div>                    
+                    {{/each}}
+                    <p style="margin-top: 3rem;">
+                        Our best,
+                        <br>
+                        Ourjob.app
+                    </p>
+                    <br>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
     </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,12 @@
+# 
+# Cron jobs for UniJobApp. These jobs will run in the unijobapp node container. The file path
+# /srv/www/unijobapp_api comes from the docker-compose.yml in the root directory of this application.
+#
+
+# Match Cron Script
+0 1 * * 2,4 sh /srv/www/unijobapp_api/cron/match.sh > /proc/1/fd/1 2>/proc/1/fd/2
+
+# Email Cron Script
+30 5 * * 2,4 sh /srv/www/unijobapp_api/cron/email.sh > /proc/1/fd/1 2>/proc/1/fd/2
+
+# Keep this line at the end of the crontab in order for it to be valid.

@@ -25,9 +25,9 @@ type MatchView = {
 }
 
 export type BatchMatchView = {
-    name: string,
-    buttonRows?: Array<MatchView>,
-    none?:Array<string>
+    name       : string,
+    employees ?: Array<MatchView>,
+    none      ?: Array<string>
 }
 
 
@@ -86,7 +86,7 @@ export function transform(batchMatch: BatchMatch): BatchMatchView
     else
     {
         // Map the batch matches
-        batchMatchView.buttonRows = batchMatch.getMatches().map( (match): MatchView => {
+        batchMatchView.employees = batchMatch.getMatches().map( (match): MatchView => {
 
             let location: string|undefined = distanceMapping[match.getEmployee().distance] ;
             const employeeLocation: Location|undefined = match.getEmployee().location;

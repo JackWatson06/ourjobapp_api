@@ -1,5 +1,8 @@
 version: "3.8"
 
+volumes:
+  mongodata:
+
 services:
 
   # Reverse proxy so that we can choose which subdomain we will want to use. Also allows us to do load balancing later.
@@ -35,7 +38,6 @@ services:
       - 80
     volumes:
       - .:/srv/www/unijobapp_api
-    command: [sh, -c, "npm install && npm run dev"]
     environment: 
       MONGO_HOST: mongo
       MONGO_PORT: 27017
@@ -47,6 +49,6 @@ services:
   mongo:
     image: mongo
     volumes: 
-      - ./.db:/data/db
+      - mongodata:/data/db
     expose: 
       - 27017
