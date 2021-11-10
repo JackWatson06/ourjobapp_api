@@ -16,6 +16,6 @@ export type VerifiedAffiliateView = {
 export default function transform(affiliate: Affiliate): VerifiedAffiliateView
 {
     return {
-        link: `ourjob.app/${ affiliate.getName() }`
+        link: `${process.env.CLIENT_DOMAIN}/${ affiliate.getName() }`
     }
 }
