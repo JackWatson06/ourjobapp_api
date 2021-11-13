@@ -23,7 +23,6 @@ declare global {
         MAIL_PORT              : number,
         MAIL_USERNAME          : string,
         MAIL_PASSWORD          : string,
-        MAIL_ENCRYPTION        : string,
         MAIL_FROM_ADDRESS      : string,
         MAIL_FROM_NAME         : string,
         GOOGLE_API_KEY         : string,

@@ -10,20 +10,21 @@ import * as Email from "./Email";
 
 import fs from "infa/FileSystemAdaptor";
 import * as env from "environment"; // This just sets the types for the environment variables
+import SMTPTransport from "nodemailer/lib/smtp-transport";
 
 const from: string     = process.env.MAIL_FROM_ADDRESS
 const fromName: string = process.env.MAIL_FROM_NAME
 
-const transporter = nodemailer.createTransport({
-  host: process.env.MAIL_HOST,
-  port: process.env.MAIL_PORT,
-  secure: true, 
-  auth: {
-    user: process.env.MAIL_USERNAME,
-    pass: process.env.MAIL_PASSWORD
-  },
-});
+const mailerOptions: SMTPTransport.Options = {
+    host: process.env.MAIL_HOST,
+    port: process.env.MAIL_PORT,
+    auth: {
+      user: process.env.MAIL_USERNAME,
+      pass: process.env.MAIL_PASSWORD
+    }
+};
 
+const transporter = nodemailer.createTransport(mailerOptions);
 
 /**
  * Send out en email using the current settings.
