@@ -20,7 +20,6 @@ const DOCUMENT: Document = "/../../../documents/";
 const CACHE: Cache       = "/../../../.cache/";
 const TEMPLATE: Template = "/../../../templates/";
 
-
 /**
  * Get the full path of the contract in our system.
  * @param directory Directory we chose in the root of the project

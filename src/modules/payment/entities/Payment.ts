@@ -7,7 +7,7 @@
  */
 
 import Affiliate from "./Affiliate";
-import { PaymentAdaptor, PayoutCreateRequest } from "infa/PaymentAdaptor";
+import { PaymentI, PayoutCreateRequest } from "infa/PaymentI";
 import Payout from "./Payout";
 
 export default class Payment
@@ -72,7 +72,7 @@ export default class Payment
      * Execute the payment against whatever adaptor we have passed in (right now were using paypal)
      * @param payment Adaptor for the payment
      */
-    public async execute(payment: PaymentAdaptor, payerId: string): Promise<boolean>
+    public async execute(payment: PaymentI, payerId: string): Promise<boolean>
     {
         try
         {
@@ -92,7 +92,7 @@ export default class Payment
     /**
      * Payout this payment to all of the affiliates that are associated with it.
      */
-    public async sendPayouts(payment: PaymentAdaptor): Promise<boolean>
+    public async sendPayouts(payment: PaymentI): Promise<boolean>
     {
         if(this.payouts.length === 0)
         {

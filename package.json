@@ -46,6 +46,7 @@
     "handlebars": "^4.7.7",
     "html-pdf": "^3.0.1",
     "lusca": "^1.7.0",
+    "messagebird": "^3.7.1",
     "migrate": "^1.7.0",
     "module-alias": "^2.2.2",
     "mongodb": "^4.1.2",

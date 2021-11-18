@@ -1,6 +1,6 @@
 import PaymentRequest from "modules/payment/entities/PaymentRequest";
 
-import { PaymentCreateResponse } from "infa/PaymentAdaptor";
+import { PaymentCreateResponse } from "infa/PaymentI";
 import PayPalAdaptor from "infa/PayPalAdaptor";
 
 jest.mock("infa/PayPalAdaptor");

@@ -25,6 +25,7 @@ declare global {
         MAIL_PASSWORD          : string,
         MAIL_FROM_ADDRESS      : string,
         MAIL_FROM_NAME         : string,
+        SMS_SECRET             : string,
         GOOGLE_API_KEY         : string,
         PAYPAL_EMAIL           : string,
         PAYPAL_MODE            : string,

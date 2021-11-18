@@ -15,7 +15,7 @@ export type PayoutCreateRequest = {
     email: string
 }
 
-export interface PaymentAdaptor
+export interface PaymentI
 {
     // Return the redirect
     create(amount: number): Promise<PaymentCreateResponse>;

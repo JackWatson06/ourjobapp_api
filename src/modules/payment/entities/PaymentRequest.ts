@@ -4,7 +4,7 @@
  * Purpose: This represents a payment request that the employer initializes when they want to puchase an employee.
  */
 
-import { PaymentAdaptor, PaymentCreateResponse} from "infa/PaymentAdaptor";
+import { PaymentI, PaymentCreateResponse} from "infa/PaymentI";
 import PaymentPlan from "./PaymentPlan";
 
 export default class PaymentRequest
@@ -31,7 +31,7 @@ export default class PaymentRequest
      * Process payment on the payment request. Use our current implemenation of the payment adaptor.
      * @param paymentProcessor Payment processing adaptor
      */
-    public async processPayment(paymentProcessor: PaymentAdaptor): Promise<boolean>
+    public async processPayment(paymentProcessor: PaymentI): Promise<boolean>
     {
         try
         {

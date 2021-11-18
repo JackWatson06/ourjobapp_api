@@ -3,8 +3,6 @@ import fs                from "fs";
 import app               from "bootstrap/app";
 import * as MongoDb      from "infa/MongoDb";
 import * as  Collections from "Collections";
-import ValidationError from "ajv/dist/runtime/validation_error";
-import { Collection } from "mongodb";
 
 jest.setTimeout(30000);
 
@@ -12,7 +10,7 @@ const db: MongoDb.MDb = MongoDb.db();
 
 type AffiliateUpload = {
     name          : string,
-    email         : string,
+    phone         : string,
     charity_id    : string,
     affiliate_id ?: string,
 };
@@ -69,7 +67,7 @@ describe("affiliates", () => {
         // === Setup ===
         const affiliateUpload: AffiliateUpload = {
             name: "Jack",
-            email: "testing@gmail.com",
+            phone: "111-111-1111",
             charity_id: "EFEFefefEFEFefefEFEFefef",
             affiliate_id: "EFEFefefEFEFefefEFEFefef"
         }

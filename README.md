@@ -42,6 +42,9 @@ This command will refresh the database to it's initial seed data. Us
     npm run script -- ./script_name
 This command allows you to run a script on the actual docker container. You need to do this in order to get access to the database since that is not exposed on a port to the client only wihtin the network created by docker. Node you need to have the ./ for the script-runner to know what file to pull down.
 
+    npx jest --forceExit -c jest.unit.config.js -- {TestName}
+If we only want to run a single test you can use the top command. If you want to run a integration test simply just use the integration configuration instead of the unit test configuration.
+
 ## Aliases
 
 We alias our libraries so that the import statement does not go to long. In order to edit or change these aliases use the tsconfig.json file in the root directory. Additionaly if you are

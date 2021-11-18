@@ -12,7 +12,7 @@
  * 
  */
 
-import {PaymentAdaptor, PaymentCreateResponse, PayoutCreateRequest} from "./PaymentAdaptor";
+import {PaymentI, PaymentCreateResponse, PayoutCreateRequest} from "./PaymentI";
 import paypal from "paypal-rest-sdk";
 
 /**
@@ -35,7 +35,7 @@ function getApprovalUrlFromPaypalPaymentResponse(payment: paypal.PaymentResponse
     return undefined;
 }
 
-export default class PayPalAdaptor implements PaymentAdaptor
+export default class PayPalAdaptor implements PaymentI
 {
     /**
      * Execute a payment using the paypal API. We will also need a execute payment once we get paypals proper terminology.

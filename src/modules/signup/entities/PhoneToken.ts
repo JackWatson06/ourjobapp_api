@@ -1,4 +1,3 @@
-
 /**
  * Original Author: Jack Watson
  * Created Date: 10/24/2021
@@ -38,4 +37,4 @@ export default class Token {
     {
         return this.expiredDate;
     }
-}
+} 
