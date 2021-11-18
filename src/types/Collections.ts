@@ -136,7 +136,8 @@ export type Resume = {
 
 export type Token = {
     _id         ?: ObjectId,
-
+    code        ?: string,
+    
     token       : string,
     expired_at  : number,
     created_at  : number
@@ -150,7 +151,7 @@ export type Affiliate = {
     token_id      : ObjectId,
     name          : string,
     charity_id    : ObjectId,
-    email         : string,
+    phone         : string,
     verified      : boolean,
     contract      : string,
     created_at    : number

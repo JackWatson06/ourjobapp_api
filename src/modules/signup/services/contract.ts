@@ -23,7 +23,7 @@ interface SharerBinds {
     VAR_TERMINATION_DATE : string;
     VAR_PARTNER_NAME     : string;
     VAR_SHARED_NAME      : string;
-    VAR_SHARED_EMAIL     : string;
+    VAR_SHARED_PHONE     : string;
 }
 
 type ContractTypes = Placement|Sharer;

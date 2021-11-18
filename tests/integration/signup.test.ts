@@ -66,10 +66,10 @@ describe("affiliates", () => {
 
         // === Setup ===
         const affiliateUpload: AffiliateUpload = {
-            name: "Jack",
-            phone: "111-111-1111",
-            charity_id: "EFEFefefEFEFefefEFEFefef",
-            affiliate_id: "EFEFefefEFEFefefEFEFefef"
+            name         : "Jack",
+            phone        : "111-111-1111",
+            charity_id   : "EFEFefefEFEFefefEFEFefef",
+            affiliate_id : "EFEFefefEFEFefefEFEFefef"
         }
         
         // === Execute ===
@@ -94,9 +94,9 @@ describe("affiliates", () => {
 
         // === Setup ===
         const affiliateUpload: AffiliateUpload = {
-            name: "Bob",
-            email: "bob@gmail.com",
-            charity_id: "EFEFefefEFEFefefEFEFefef"
+            name       : "Bob",
+            phone      : "111-111-1111",
+            charity_id : "EFEFefefEFEFefefEFEFefef"
         }
         
         await request(app).post(`/api/v1/signup/affiliates`).send(affiliateUpload);    
@@ -124,144 +124,144 @@ describe("affiliates", () => {
     // TEST WE CAN'T MAKE DUPLICATES ... That may be in the unit testing zone.
 })
 
-describe("employee", () => {
-    test("can sign up", async () => {
+// describe("employee", () => {
+//     test("can sign up", async () => {
 
-        // === Setup ===
-        const employeeUpload: EmployeeUpload = {
-            place_id      : "EFEFefefEFEF",
+//         // === Setup ===
+//         const employeeUpload: EmployeeUpload = {
+//             place_id      : "EFEFefefEFEF",
     
-            fname         : "Joe",
-            lname         : "Schmoe",
-            job_id        : ["EFEFefefEFEFefefEFEFefef", "EFEFefefEFEFefefEFEFefef"],
-            authorized    : ["EFEFefefEFEFefefEFEFefef", "EFEFefefEFEFefefEFEFefef"],
-            resume_id     : "EFEFefefEFEFefefEFEFefef",
-            hourly_rate   : 34,
-            commitment    : 1,
-            where         : 1,
-            distance      : 1,
-            education     : 1,
-            experience    : 1,
-            information   : "",
-            email         : "testing@gmail.com",
-            phone         : "111-111-1111"
-        }
+//             fname         : "Joe",
+//             lname         : "Schmoe",
+//             job_id        : ["EFEFefefEFEFefefEFEFefef", "EFEFefefEFEFefefEFEFefef"],
+//             authorized    : ["EFEFefefEFEFefefEFEFefef", "EFEFefefEFEFefefEFEFefef"],
+//             resume_id     : "EFEFefefEFEFefefEFEFefef",
+//             hourly_rate   : 34,
+//             commitment    : 1,
+//             where         : 1,
+//             distance      : 1,
+//             education     : 1,
+//             experience    : 1,
+//             information   : "",
+//             email         : "testing@gmail.com",
+//             phone         : "111-111-1111"
+//         }
         
-        // === Execute ===
-        const response = await request(app)
-                                .post(`/api/v1/signup/employees`)
-                                .send(employeeUpload);    
+//         // === Execute ===
+//         const response = await request(app)
+//                                 .post(`/api/v1/signup/employees`)
+//                                 .send(employeeUpload);    
         
-        // === Assert ===
-        expect(response.status).toBe(200);
-        expect( async () => await db.collection("employees").findOne({ email: "testing@gmail.com" }) ).not.toBe(null);
-    });
+//         // === Assert ===
+//         expect(response.status).toBe(200);
+//         expect( async () => await db.collection("employees").findOne({ email: "testing@gmail.com" }) ).not.toBe(null);
+//     });
     
-    test("employee can upload a resume to the server", async () => {
+//     test("employee can upload a resume to the server", async () => {
     
-        // === Setup ===    
-        const filePath = __dirname + "/../data/Jack_Watson_Resume.pdf"
+//         // === Setup ===    
+//         const filePath = __dirname + "/../data/Jack_Watson_Resume.pdf"
     
-        // === Execute ===
-        const response = await request(app)
-                                .post(`/api/v1/signup/resumes`)
-                                .attach('resume', filePath);  
+//         // === Execute ===
+//         const response = await request(app)
+//                                 .post(`/api/v1/signup/resumes`)
+//                                 .attach('resume', filePath);  
         
-        // === Assert ===
-        const resume: Collections.Resume|null = await db.collection("resumes").findOne<Collections.Resume>({ name: "Jack_Watson_Resume.pdf" });
+//         // === Assert ===
+//         const resume: Collections.Resume|null = await db.collection("resumes").findOne<Collections.Resume>({ name: "Jack_Watson_Resume.pdf" });
         
-        // Check we return correct response here as well with the identifier.
-        expect( response.status ).toBe(200);
-        expect( resume ).not.toBe(null);
-        expect( response.body.id ).not.toBe(undefined);
+//         // Check we return correct response here as well with the identifier.
+//         expect( response.status ).toBe(200);
+//         expect( resume ).not.toBe(null);
+//         expect( response.body.id ).not.toBe(undefined);
     
-        if(resume != null)
-        {
-            const expectedPath = `${__dirname}/../../documents/resumes/${resume.token}`
-            expect( fs.existsSync(expectedPath) ).toBe(true);
-        }
-    });
-});
+//         if(resume != null)
+//         {
+//             const expectedPath = `${__dirname}/../../documents/resumes/${resume.token}`
+//             expect( fs.existsSync(expectedPath) ).toBe(true);
+//         }
+//     });
+// });
 
 
-describe("employer", () => {
+// describe("employer", () => {
 
-    test("can sign up", async () => {
+//     test("can sign up", async () => {
 
-        // === Setup ===
-        const employerUpload: EmployerUpload = {
-            fname        : "Frodo",
-            lname        : "Baggans",
-            position     : "Manager",
-            company_name : "Bagend",
-            place_id     : "HILL12345332",
-            industry     : ["EFEFefefEFEFefefEFEFefef"],
-            experience   : [1],
-            salary       : 56,
-            commitment   : 1,
-            where        : 2,
-            authorized   : true,
-            email        : "frodo@thering.com"
-        }
+//         // === Setup ===
+//         const employerUpload: EmployerUpload = {
+//             fname        : "Frodo",
+//             lname        : "Baggans",
+//             position     : "Manager",
+//             company_name : "Bagend",
+//             place_id     : "HILL12345332",
+//             industry     : ["EFEFefefEFEFefefEFEFefef"],
+//             experience   : [1],
+//             salary       : 56,
+//             commitment   : 1,
+//             where        : 2,
+//             authorized   : true,
+//             email        : "frodo@thering.com"
+//         }
         
-        // === Execute ===
-        const response = await request(app)
-                                .post(`/api/v1/signup/employers`)
-                                .send(employerUpload);    
+//         // === Execute ===
+//         const response = await request(app)
+//                                 .post(`/api/v1/signup/employers`)
+//                                 .send(employerUpload);    
         
-        // === Assert ===
-        const employer: Collections.Employer|null = await db.collection("employers").findOne<Collections.Employer>({ email: "frodo@thering.com" });
+//         // === Assert ===
+//         const employer: Collections.Employer|null = await db.collection("employers").findOne<Collections.Employer>({ email: "frodo@thering.com" });
 
-        expect(response.status).toBe(200);
-        expect( employer ).not.toBe(null);
+//         expect(response.status).toBe(200);
+//         expect( employer ).not.toBe(null);
 
-        if(employer != null)
-        {
-            const expectedPath = `${__dirname}/../../documents/contracts/${employer.contract}`
-            expect( fs.existsSync(expectedPath) ).toBe(true);
-        }
-    });
+//         if(employer != null)
+//         {
+//             const expectedPath = `${__dirname}/../../documents/contracts/${employer.contract}`
+//             expect( fs.existsSync(expectedPath) ).toBe(true);
+//         }
+//     });
 
 
-    test("can be verified", async () => {
+//     test("can be verified", async () => {
 
-        // === Setup ===
-        const employerUpload: EmployerUpload = {
-            fname        : "Frodo",
-            lname        : "Baggans",
-            position     : "Manager",
-            company_name : "Bagend",
-            place_id     : "HILL12345332",
-            industry     : ["EFEFefefEFEFefefEFEFefef"],
-            experience   : [1],
-            salary       : 56,
-            commitment   : 1,
-            where        : 2,
-            authorized   : true,
-            email        : "frodo@thering.com"
-        }
+//         // === Setup ===
+//         const employerUpload: EmployerUpload = {
+//             fname        : "Frodo",
+//             lname        : "Baggans",
+//             position     : "Manager",
+//             company_name : "Bagend",
+//             place_id     : "HILL12345332",
+//             industry     : ["EFEFefefEFEFefefEFEFefef"],
+//             experience   : [1],
+//             salary       : 56,
+//             commitment   : 1,
+//             where        : 2,
+//             authorized   : true,
+//             email        : "frodo@thering.com"
+//         }
         
-        // === Execute ===
-        const response = await request(app).post(`/api/v1/signup/employers`).send(employerUpload);    
+//         // === Execute ===
+//         const response = await request(app).post(`/api/v1/signup/employers`).send(employerUpload);    
         
-        // === Assert ===
-        const employer: Collections.Employer|null = await db.collection("employers").findOne<Collections.Employer>({ email: "frodo@thering.com" });
-        const token: Collections.Token|null = await db.collection("tokens").findOne<Collections.Token>({ _id: employer?.token_id });
+//         // === Assert ===
+//         const employer: Collections.Employer|null = await db.collection("employers").findOne<Collections.Employer>({ email: "frodo@thering.com" });
+//         const token: Collections.Token|null = await db.collection("tokens").findOne<Collections.Token>({ _id: employer?.token_id });
         
-        expect(token).not.toBe(null);
+//         expect(token).not.toBe(null);
 
-        const tokenVerification: Verification = {
-            token: token?.token ?? ""
-        }        
+//         const tokenVerification: Verification = {
+//             token: token?.token ?? ""
+//         }        
 
-        // === Execute ===
-        const responseVerify = await request(app).post(`/api/v1/signup/employers/verify`).send(tokenVerification);    
+//         // === Execute ===
+//         const responseVerify = await request(app).post(`/api/v1/signup/employers/verify`).send(tokenVerification);    
 
-        expect(responseVerify.status).toBe(200);
+//         expect(responseVerify.status).toBe(200);
         
-        const verifiedEmployer: Collections.Employer|null = await db.collection("employers").findOne<Collections.Employer>({ email: "frodo@thering.com" }); 
+//         const verifiedEmployer: Collections.Employer|null = await db.collection("employers").findOne<Collections.Employer>({ email: "frodo@thering.com" }); 
 
-        expect(verifiedEmployer).not.toBe(null);
-        expect(verifiedEmployer?.verified).toBe(true);
-    });
-});
+//         expect(verifiedEmployer).not.toBe(null);
+//         expect(verifiedEmployer?.verified).toBe(true);
+//     });
+// });

@@ -9,12 +9,9 @@
 // Data Mappers
 import { create, read, update } from "../mappers/EmployeeMapper";
 import { read as readProof } from "../mappers/ProofMapper";
-import { ObjectId } from "mongodb";
 
 // Entities
 import Employee  from "../entities/Employee";
-import Email     from "../entities/Email";
-import Token     from "../entities/Token";
 import Proof     from "../entities/Proof";
 
  // Validator
@@ -25,6 +22,7 @@ import { unique } from "../repositories/EmployeeRepository";
 
 // External dependencies
 import * as express from "express";
+import { TextNotification } from "notify/TextNotification";
 import Ajv from "ajv";
 
 /**
@@ -43,8 +41,7 @@ export async function store(req: express.Request<any>, res: express.Response)
     // Create the employee domain entity.
     if( valid(data) )
     {
-        const email: Email       = new Email(data.email, Token.generate());
-        const employee: Employee = new Employee(data, email);
+        const employee: Employee = new Employee(data);
 
         await create(employee).catch( (err) => {
             console.error(err);
@@ -52,7 +49,7 @@ export async function store(req: express.Request<any>, res: express.Response)
         });
 
         // Verify the afiiliate is who they say they are.
-        await employee.verify();
+        await employee.verify(new TextNotification());
 
         return res.status(200).send( { "success": true } )
     }
@@ -62,41 +59,13 @@ export async function store(req: express.Request<any>, res: express.Response)
 }
 
 /**
- * signup.employee.resend - Resend the employees verification link
- * @param req Express request object
- * @param res Express response object
- */
-export async function resend(req: express.Request<any>, res: express.Response)
-{
-    const id: string = req.body.id;
-    
-    // Pull the affiliate from the database.
-    const employee: Employee|null = await read({ _id: new ObjectId( id ) });
-    if(employee === null)
-    {
-        return res.status(400).send( { "error": "No employee found" } )
-    }
-
-    const sent: boolean = await employee.verify();
-
-    if(sent)
-    {
-        return res.status(200).send( { "success": true } )
-    }
-
-    return res.status(400).send( { "error": true } )
-}
-
-/**
  * signup.employee.verify - Verify the employee to be using our system.
  * @param req Express request object
  * @param res Express response object
  */
 export async function verify(req: express.Request<any>, res: express.Response)
 {
-    
     const token: string = req.body.token;
-
     const proof: Proof|null = await readProof(token);
 
     // Make sure that we can find the token
@@ -106,7 +75,7 @@ export async function verify(req: express.Request<any>, res: express.Response)
     }
 
     // Pull the affiliate from the database.,
-    const employee: Employee|null = await read({ token_id: new ObjectId( proof.getId()) });
+    const employee: Employee|null = await read({ tokenId: proof.getId() });
 
     // Double check that the affiliate exists.
     if(employee === null)
@@ -121,13 +90,39 @@ export async function verify(req: express.Request<any>, res: express.Response)
     }
 
     // Othewise verify and persist.
-    const authorized: boolean = employee.authorize();
+    const authorized: boolean = employee.authorize(proof);
 
     if(authorized)
     {
-        await update({ token_id: new ObjectId( proof.getId())}, employee);
+        await update(proof.getId(), employee);
         return res.status(200).send( {"success": true} );
     }
 
     return res.status(400).send( {"error": "Token not valid"} )
 }
+
+// /**
+//  * signup.employee.resend - Resend the employees verification link
+//  * @param req Express request object
+//  * @param res Express response object
+//  */
+// export async function resend(req: express.Request<any>, res: express.Response)
+// {
+//     const id: string = req.body.id;
+    
+//     // Pull the affiliate from the database.
+//     const employee: Employee|null = await read({ _id: new ObjectId( id ) });
+//     if(employee === null)
+//     {
+//         return res.status(400).send( { "error": "No employee found" } )
+//     }
+
+//     const sent: boolean = await employee.verify();
+
+//     if(sent)
+//     {
+//         return res.status(200).send( { "success": true } )
+//     }
+
+//     return res.status(400).send( { "error": true } )
+// }

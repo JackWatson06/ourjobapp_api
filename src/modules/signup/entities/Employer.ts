@@ -7,40 +7,28 @@
  * Inside the controller we can split off the 'data' into specific value objects that would allow us to do reasoning validation.
  * "Reasoning Validation" is a word I came up for in order to validate the input meets expected values. Reduces spam.
  */
-
-import * as EmailMs from "notify/Email";
-import { sendEmail } from "notify/Notify";
+import {EmailNotification} from "notify/EmailNotification";
+import {Email} from "notify/messages/Email";
 import * as contract from "../services/contract";
 
-import Email from "./Email";
 import Address from "./Address";
+import Proof from "./Proof";
+import Token from "./Token";
 
-import { NewEmployer } from "../validators/NewEmployerValidator";
+import {NewEmployer} from "../validators/NewEmployerValidator";
 
 export default class Employer
 {
-    // The new employee data.
     private data: NewEmployer;
-
-    // Email verification data.
-    private email: Email;
-
-    // Address data for the employer.
     private address: Address;
-
-    // File path for the contract in the system.
+    private token: Token;
     private contract: string;
-
-    // Email verification data.
     private verified_at: number;
-
-    // Identifier for the employer.
     private id: string;
 
-    constructor(data: NewEmployer, email: Email, address: Address)
+    constructor(data: NewEmployer, address: Address)
     {
         this.data     = data;
-        this.email    = email;
         this.address  = address;
     }
 
@@ -49,44 +37,41 @@ export default class Employer
      * true = Was able to send out the email
      * false = Was not able to send out the email
      */
-    public async verify() : Promise<boolean>
+    public async verify(notify: EmailNotification) : Promise<boolean>
     {
-        if( Date.now() < this.email.getExpiredDate() )
-        {
-            // === CONTRACT ===
-            const today = new Date();
+        // === TOKEN ===
+        this.token = new Token();
+        this.token.generate();
 
-            // Figure out what to do here.
-            // This can be abstracted out into a different entity.
-            const contractFile: contract.ContractLocator = await contract.generate<contract.Placement>("placement", {
-                VAR_DATE_OF_AGREEMENT      : (today).toLocaleDateString("en-US", {year: 'numeric', month: 'long', day: 'numeric'}),
-                VAR_PARTNER_COMPANY_NAME   : this.data.company_name,
-                VAR_PARTNER_OFFICE_ADDRESS : this.address.getAddress(),
-                VAR_DESIGNATED_PARTY_NAME  : `${this.data.fname} ${this.data.lname}`,
-                VAR_DESIGNATED_PARTY_EMAIL : this.data.email
-            });
-            this.contract = contractFile.name;
+        // === CONTRACT ===
+        const today = new Date();
+
+        // Figure out what to do here.
+        // This can be abstracted out into a different entity.
+        const contractFile: contract.ContractLocator = await contract.generate<contract.Placement>("placement", {
+            VAR_DATE_OF_AGREEMENT      : (today).toLocaleDateString("en-US", {year: 'numeric', month: 'long', day: 'numeric'}),
+            VAR_PARTNER_COMPANY_NAME   : this.data.company_name,
+            VAR_PARTNER_OFFICE_ADDRESS : this.address.getAddress(),
+            VAR_DESIGNATED_PARTY_NAME  : `${this.data.fname} ${this.data.lname}`,
+            VAR_DESIGNATED_PARTY_EMAIL : this.data.email
+        });
+        this.contract = contractFile.name;
 
 
-            // === EMAIL ===
-            let email: EmailMs.Email = EmailMs.makeEmail(this.email.getEmail(), "Start Receiving Candidates!");
-            email = await EmailMs.addHtml(email, "employer-verification", {
-                name: this.data.fname + " " + this.data.lname,
-                link: `${process.env.CLIENT_DOMAIN}/verify/employer/${this.email.getToken()}`
-            });
-            email = EmailMs.addAttachment(email, contractFile.path, "Employer Contract");
+        // === SEND ===
+        const email: Email = await notify.render({
+            address : this.data.email,
+            subject : "Get Your Link!",
+            text    : "employer-verification",
+            html    : "employer-verification"
+        }, { code: this.token.getCode()} );
 
-            await sendEmail(email);
-            
-            return true;
-        }
-
-        return false;
+        return await notify.send(email);
     }
 
-    public authorize()
+    public authorize(proof: Proof)
     {
-        if( Date.now() < this.email.getExpiredDate() )
+        if( Date.now() < proof.getExpiredDate() )
         {   
             this.verified_at = Date.now();
             return true;
@@ -113,11 +98,11 @@ export default class Employer
     }
 
     /**
-     * Get the employees email.
+     * Return the current token for the employer
      */
-    public getEmail() : Email
+    public getToken() : Token
     {
-        return this.email;
+        return this.token;
     }
 
     /**

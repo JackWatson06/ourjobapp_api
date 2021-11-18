@@ -8,11 +8,13 @@
  */
 import crypto from "crypto";
 
-import Token from "./Token";
+export default class Token {
 
-export default class PhoneToken {
+    // Hold the date for when we send the verification email.
+    private expiredDate: number;
 
-    private token: Token
+    // Hold the verification token we have generated to verify this emaill.
+    private token: string;
 
     // Additional code we can use if we are validating through sms. We still need to generate the UUID
     // so that we prevent collision on the code.
@@ -20,14 +22,8 @@ export default class PhoneToken {
 
     public async generate() {
         
-        this.token = new Token();
-        this.token.generate();
-
-        this.code = await new Promise((resolve) => {
-            crypto.randomBytes(3, function(err, buffer) {
-                resolve( parseInt(buffer.toString('hex'), 16).toString().substr(0,6) );
-            });
-        });
+        this.token = crypto.randomUUID();
+        this.expiredDate = Date.now() + (86_400_000);
     }
 
     // === GETTERS ===
@@ -36,8 +32,13 @@ export default class PhoneToken {
         return this.code;
     }
 
-    public getToken(): Token
+    public getToken(): string
     {
         return this.token;
+    }
+
+    public getExpiredDate(): number
+    {
+        return this.expiredDate;
     }
 } 

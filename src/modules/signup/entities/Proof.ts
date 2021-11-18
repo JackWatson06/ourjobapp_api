@@ -8,15 +8,26 @@
 
 export default class Proof
 {    
+    //The identifier for the resource this proof represents.
     private id: string;
 
-    constructor(id: string)
+    //Hold the expired date for this proof
+    private expiredDate: number;
+
+    constructor(id: string, expiredDate: number)
     {
         this.id = id;
+        this.expiredDate = expiredDate;
     }
 
+    // === GETTERS ===
     public getId()
     {
         return this.id;
+    }
+
+    public getExpiredDate()
+    {
+        return this.expiredDate;
     }
 }

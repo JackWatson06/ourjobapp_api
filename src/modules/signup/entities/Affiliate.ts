@@ -5,36 +5,30 @@
  * Created Date: 10/16/2021
  * Purpose: An affiliate represents someone who just signed up through out affiliate program. They need to validate their
  * email before proceeding onto the next steps.
+ * 
+ * @todo Remove the contract from this class.
  */
 
 // Short for Email Message
-import * as EmailMs from "notify/Email";
-import { sendEmail } from "notify/Notify";
+import {TextNotification} from "notify/TextNotification";
+import {Text} from "notify/messages/Text";
+
 import * as contract from "../services/contract";
 
-// Value Objects
-import Email from "./Email";
-
-import { NewAffiliate } from "../validators/NewAffiliateValidator";
+import PhoneToken from "./PhoneToken";
+import Proof from "./Proof";
+import {NewAffiliate} from "../validators/NewAffiliateValidator";
 
 export default class Affiliate
 {
-    // Name of the affiliate. This will be used during link generation.
-    private data: NewAffiliate
-
-    // Email of the affiliate.
-    private email: Email;
-
-    // File path for the contract in the system.
+    private data: NewAffiliate;
+    private token: PhoneToken;
     private contract: string;
-
-    // Link to the contract that they have signed internally.
     private verified_on: number;
 
-    constructor(data: NewAffiliate, email: Email )
+    constructor(data: NewAffiliate )
     { 
-        this.data        = data;
-        this.email       = email;
+        this.data = data;
     }
 
     /**
@@ -42,47 +36,43 @@ export default class Affiliate
      * true = Was able to send out the email
      * false = Was not able to send out the email
      */
-    public async verify() : Promise<boolean>
+    public async verify(notify: TextNotification) : Promise<boolean>
     {   
-        if( Date.now() < this.email.getExpiredDate() )
-        {
-            // === CONTRACT ===
-            const today = new Date();
-            const oneYearFromNow = new Date(new Date().setFullYear(today.getFullYear() + 1));
-            
-            // Figure out what to do here.
-            // This can be abstracted out into a different entity.
-            const contractFile: contract.ContractLocator = await contract.generate<contract.Sharer>("sharer", {
-                VAR_EFFECTIVE_DATE   : (today).toLocaleDateString("en-US", {year: 'numeric', month: 'long', day: 'numeric'}),
-                VAR_TERMINATION_DATE : (oneYearFromNow).toLocaleDateString("en-US", {year: 'numeric', month: 'long', day: 'numeric'}),
-                VAR_PARTNER_NAME     : this.data.name,
-                VAR_SHARED_NAME      : this.data.name,
-                VAR_SHARED_EMAIL     : this.data.email
-            });
-            this.contract = contractFile.name;
-            
-            // === EMAIL ===
-            let email: EmailMs.Email = EmailMs.makeEmail(this.email.getEmail(), "Get Your Link!");
-            email = await EmailMs.addHtml(email, "affiliate-verification", {
-                name: this.data.name,
-                link: `${process.env.CLIENT_DOMAIN}/verify/sharer/${this.email.getToken()}` 
-            });
-            email = EmailMs.addAttachment(email, contractFile.path, "Sharer Contract");
-        
-            await sendEmail(email);
-            
-            return true;
-        }
+        // === TOKEN ===
+        this.token = new PhoneToken();
+        this.token.generate();
 
-        return false;
+        // === CONTRACT ===
+        const today = new Date();
+        const oneYearFromNow = new Date(new Date().setFullYear(today.getFullYear() + 1));
+        
+        // Figure out what to do here.
+        // This can be abstracted out into a different entity.
+        const contractFile: contract.ContractLocator = await contract.generate<contract.Sharer>("sharer", {
+            VAR_EFFECTIVE_DATE   : (today).toLocaleDateString("en-US", {year: 'numeric', month: 'long', day: 'numeric'}),
+            VAR_TERMINATION_DATE : (oneYearFromNow).toLocaleDateString("en-US", {year: 'numeric', month: 'long', day: 'numeric'}),
+            VAR_PARTNER_NAME     : this.data.name,
+            VAR_SHARED_NAME      : this.data.name,
+            VAR_SHARED_PHONE     : this.data.phone
+        });
+        this.contract = contractFile.name;
+        
+        // === SEND ===
+        const text: Text = await notify.render({
+            phone: this.data.phone,
+            subject: "Get Your Link!",
+            text: "affiliate-verification"
+        }, { code: this.token.getCode()} );
+
+        return await notify.send(text);
     }
 
     /**
      * Authorize the affilite to operate. Confirm the expired date is not bad.
      */
-    public authorize()
+    public authorize(proof: Proof)
     {
-        if( Date.now() < this.email.getExpiredDate() )
+        if( Date.now() < proof.getExpiredDate() )
         {   
             this.verified_on = Date.now();
             return true;
@@ -107,9 +97,9 @@ export default class Affiliate
         return this.verified_on;
     }
     
-    public getEmail() : Email
+    public getToken() : PhoneToken
     {
-        return this.email;
+        return this.token;
     }
 
     public getContract() : string

@@ -19,20 +19,17 @@ import * as resume from "./controllers/ResumeController";
 let signupRouter: express.Router = express.Router();
 
 // Routes we use to interact with the employee signup REST endpoints
-signupRouter.post("/employees",         employee.store);
-signupRouter.post("/employees/resend",  employee.resend);
-signupRouter.post("/employees/verify",  employee.verify);
-signupRouter.post("/resumes",           resume.store);
+signupRouter.post("/employees",             employee.store);
+signupRouter.post("/employees/verify/:id",  employee.verify);
+signupRouter.post("/resumes",               resume.store);
 
 // Routes we use to interact with the employers signup REST endpoints
 signupRouter.post("/employers",         employer.store);
-signupRouter.post("/employers/resend",  employer.resend);
 signupRouter.post("/employers/verify",  employer.verify);
 
 // Routes we use to interact with the affiliates signup REST endpoints... Note right now the frontend calls affiliates ... share. This may change
 // but that is why you see it here since the front end proxy requests back here.
-signupRouter.post("/affiliates",         affiliate.store);
-signupRouter.post("/affiliates/resend",  affiliate.resend);
-signupRouter.post("/affiliates/verify",  affiliate.verify);
+signupRouter.post("/affiliates",            affiliate.store);
+signupRouter.post("/affiliates/verify/:id", affiliate.verify);
 
 export default signupRouter;

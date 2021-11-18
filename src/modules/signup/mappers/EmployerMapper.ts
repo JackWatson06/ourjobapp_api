@@ -5,7 +5,6 @@
  */
 
 import Employer from "../entities/Employer";
-import Email from "../entities/Email";
 import Token from "../entities/Token";
 import Address from "../entities/Address";
 
@@ -13,19 +12,14 @@ import { NewEmployer } from "../validators/NewEmployerValidator";
 
 import { InsertOneResult, ObjectId } from "mongodb";
 
-import { db, now, MDb } from "infa/MongoDb";
+import { db, now, MDb, toObjectId, toObjectIds } from "infa/MongoDb";
 import { getLocationByPlaceId } from "infa/GoogleApiAdaptor";
 import * as Collections from "Collections";
 
 type Query = {
-    _id      ?: ObjectId,
-    token_id ?: ObjectId,
+    tokenId  ?: string,
     email    ?: string,
     verified ?: boolean
-}
-
-type UpdateQuery = {
-    token_id : ObjectId
 }
 
 /**
@@ -38,12 +32,13 @@ export async function create(employer: Employer): Promise<boolean>
     // Create the employer
     const mdb: MDb = db();
     
-    const email: Email = employer.getEmail();
+    // === Token ===
+    const token: Token = employer.getToken();
     const tokenRow: Collections.Token = {
-        token       : email.getToken(),
-        expired_at  : email.getExpiredDate(),
-        created_at  : now()
-    }
+        token      : token.getToken(),
+        expired_at : token.getExpiredDate(),
+        created_at : now(),
+    };
 
     const newToken: InsertOneResult<Document> = await mdb.collection("tokens").insertOne(tokenRow)
 
@@ -51,8 +46,8 @@ export async function create(employer: Employer): Promise<boolean>
     const employerRow: Collections.Employer = { 
         ...data,
         contract     : employer.getContract(),
-        industry     : data.industry.map((industry: string) => new ObjectId(industry)),
-        affiliate_id : data.affiliate_id ? new ObjectId(data.affiliate_id): undefined,
+        industry     : toObjectIds(data.industry),
+        affiliate_id : data.affiliate_id ? toObjectId(data.affiliate_id) : undefined,
         token_id     : newToken.insertedId,
         verified     : false
     };
@@ -70,7 +65,13 @@ export async function read(query: Query): Promise<Employer|null>
     const mdb: MDb = db();
 
     // Load the employer
-    const employerRow: Collections.Employer|null = await mdb.collection("employers").findOne<Collections.Employer>(query);
+    const employerRow: Collections.Employer|null = await mdb
+        .collection("employers")
+        .findOne<Collections.Employer>({
+            token_id : query.tokenId ? toObjectId(query.tokenId) : undefined,
+            email    : query.email,
+            verified : query.verified
+        });
     
     if( employerRow === null )
     {
@@ -78,7 +79,9 @@ export async function read(query: Query): Promise<Employer|null>
     }
 
     // Load the employers token
-    const tokenRow: Collections.Token|null = await mdb.collection("tokens").findOne<Collections.Token>({ _id: employerRow.token_id});
+    const tokenRow: Collections.Token|null = await mdb
+        .collection("tokens")
+        .findOne<Collections.Token>({ _id: employerRow.token_id});
 
     if(tokenRow === null)
     {
@@ -88,8 +91,6 @@ export async function read(query: Query): Promise<Employer|null>
     const locationData: Collections.Location = await getLocationByPlaceId(employerRow.place_id);
 
     // Create the employer domain model
-    const token = new Token(tokenRow.token, tokenRow.expired_at);
-    const email = new Email(employerRow.email, token);
     const employer: NewEmployer = {
         fname        : employerRow.fname,
         lname        : employerRow.lname,
@@ -106,7 +107,7 @@ export async function read(query: Query): Promise<Employer|null>
         industry     : employerRow.industry.map((industry: ObjectId) => industry.toString()),
         affiliate_id : employerRow.affiliate_id?.toString()
       }
-    const employerEntity: Employer = new Employer(employer, email, new Address(locationData.address));
+    const employerEntity: Employer = new Employer(employer, new Address(locationData.address));
 
     if(employerRow._id != null)
     {
@@ -122,13 +123,13 @@ export async function read(query: Query): Promise<Employer|null>
  * @param query The query we are to find the correct employer to update.
  * @param employer Employer we want to persist to memory.
  */
-export async function update(query: UpdateQuery, employer: Employer): Promise<boolean>
+export async function update(tokenId: string, employer: Employer): Promise<boolean>
 {
     // Create the employer
     const mdb: MDb = db();
 
     // Update the current collection
-    return (await mdb.collection("employers").updateOne(query, { $set: {
+    return (await mdb.collection("employers").updateOne({ token_id: toObjectId(tokenId)}, { $set: {
         verified    : true,
         verified_on : employer.getVerifiedOn()
     } })).acknowledged;

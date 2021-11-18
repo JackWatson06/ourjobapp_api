@@ -9,12 +9,9 @@
 // Data Mappers
 import { create, read, update } from "../mappers/AffiliateMapper";
 import { read as readProof } from "../mappers/ProofMapper";
-import { ObjectId } from "mongodb";
 
 // Entities
 import Affiliate from "../entities/Affiliate";
-import Email from "../entities/Email";
-import Token from "../entities/Token";
 import Proof from "../entities/Proof";
 
 import { unique } from "../repositories/AffiliateRepository";
@@ -26,6 +23,7 @@ import transform from "../views/VerifiedAffiliateView";
 
 // External dependencies
 import * as express from "express";
+import { TextNotification } from "notify/TextNotification";
 import Ajv from "ajv";
 
 /**
@@ -44,17 +42,16 @@ export async function store(req: express.Request<any>, res: express.Response)
     // Create the affilaite domain entity.
     if( valid(data) )
     {
-        const email: Email = new Email(data.email, Token.generate());
-        const affiliate: Affiliate   = new Affiliate(data, email);
-
-        // Send out a verificaiton email (included with their contract) Do the domain request before persistance thank you
-        // very much.
-        await affiliate.verify();
+        const affiliate: Affiliate = new Affiliate(data);
 
         await create(affiliate).catch( (err) => {
             console.error(err);
             res.status(400).send( { "error" : true } )
         });
+
+        // Send out a verificaiton email (included with their contract) Do the domain request before persistance thank you
+        // very much.
+        await affiliate.verify(new TextNotification());
 
         return res.status(200).send( { "success": true } )
     }
@@ -67,32 +64,6 @@ export async function store(req: express.Request<any>, res: express.Response)
 }
 
 /**
- * signup.affiliate.resend - Resend the verification link
- * @param req Express request object
- * @param res Express response object
- */
-export async function resend(req: express.Request<any>, res: express.Response)
-{
-    const id: string = req.body.id;
-    
-    // Pull the affiliate from the database.
-    const affiliate: Affiliate|null = await read({ _id: new ObjectId( id ) });
-    if(affiliate === null)
-    {
-        return res.status(400).send( { "error": "No affiliate found" } )
-    }
-
-    const sent: boolean = await affiliate.verify();
-
-    if(sent)
-    {
-        return res.status(200).send( { "success": true } )
-    }
-
-    return res.status(400).send( { "error": true } )
-}
-
-/**
  * signup.affiliate.verify - Verify the verification link
  * @param req Express request object
  * @param res Express response object
@@ -100,17 +71,16 @@ export async function resend(req: express.Request<any>, res: express.Response)
 export async function verify(req: express.Request<any>, res: express.Response)
 {
     const token: string = req.body.token;
-
     const proof: Proof|null = await readProof(token);
 
     // Make sure that we can find the token
     if(proof === null)
     {
-        return res.status(404).send({"error" : "Invalid verification link."});    
+        return res.status(404).send({"error" : "Invalid verification code."});    
     }
 
     // Pull the affiliate from the database.,
-    const affiliate: Affiliate|null = await read({ token_id: new ObjectId( proof.getId()) });
+    const affiliate: Affiliate|null = await read({ tokenId: proof.getId() });
 
     // Double check that the affiliate exists.
     if(affiliate === null)
@@ -121,15 +91,16 @@ export async function verify(req: express.Request<any>, res: express.Response)
     // If not unique then throw an error
     if( !( await unique( affiliate )) )
     {
-        return res.status(400).send({"error" : "User with Email, or Link Name has already been authenticated."});    
+        return res.status(400).send({"error" : "User with Link Name has already been authenticated."});    
     }
 
     // Othewise verify and persist.
-    const authorized: boolean = affiliate.authorize();
+    const authorized: boolean = affiliate.authorize(proof);
 
     if(authorized)
     {
-        await update({ token_id: new ObjectId( proof.getId())}, affiliate);
+        await update(proof.getId(), affiliate);
+
         return res.status(200).send( {
                 "success": true,
                 "data": transform(affiliate)
@@ -138,3 +109,31 @@ export async function verify(req: express.Request<any>, res: express.Response)
 
     return res.status(400).send( {"error": "Token not valid"} )
 }
+
+
+// /**
+//  * @todo We need to check this code again after this.
+//  * signup.affiliate.resend - Resend the verification link
+//  * @param req Express request object
+//  * @param res Express response object
+//  */
+// export async function resend(req: express.Request<any>, res: express.Response)
+// {
+//     const id: string = req.body.id;
+    
+//     // Pull the affiliate from the database.
+//     const affiliate: Affiliate|null = await read({ _id: id });
+//     if(affiliate === null)
+//     {
+//         return res.status(400).send( { "error": "No affiliate found" } )
+//     }
+
+//     const sent: boolean = await affiliate.verify(new TextNotification());
+
+//     if(sent)
+//     {
+//         return res.status(200).send( { "success": true } )
+//     }
+
+//     return res.status(400).send( { "error": true } )
+// }

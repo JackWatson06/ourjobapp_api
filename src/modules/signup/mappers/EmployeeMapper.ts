@@ -4,26 +4,21 @@
  * Purpose: This file serves to persiste the employee domain model to our mongodb database.
  */
 import Employee from "../entities/Employee";
-import Email from "../entities/Email";
+import PhoneToken from "../entities/PhoneToken";
 import Token from "../entities/Token";
-import Resume from "../entities/Resume";
 
-import { NewEmployee } from "../validators/NewEmployeeValidator";
+import {NewEmployee} from "../validators/NewEmployeeValidator";
 
-import { Collection, InsertOneResult, ObjectId } from "mongodb";
+import {InsertOneResult, ObjectId} from "mongodb";
 
-import { db, now, MDb } from "infa/MongoDb";
+import { db, MDb, now, toObjectId } from "infa/MongoDb";
 import * as Collections from "Collections";
 
 type Query = {
-    _id      ?: ObjectId,
-    token_id ?: ObjectId,
+    id       ?: string,
+    tokenId  ?: string,
     email    ?: string,
     verified ?: boolean
-}
-
-type UpdateQuery = {
-    token_id : ObjectId
 }
 
 /**
@@ -36,12 +31,14 @@ export async function create(employee: Employee): Promise<boolean>
     const mdb: MDb = db();
 
     // === Token ===
-    const email: Email = employee.getEmail();
+    const phoneToken: PhoneToken = employee.getToken();
+    const token: Token = phoneToken.getToken();
     const tokenRow: Collections.Token = {
-        token       : email.getToken(),
-        expired_at  : email.getExpiredDate(),
-        created_at  : now()
-    }
+        code       : phoneToken.getCode(),
+        token      : token.getToken(),
+        expired_at : token.getExpiredDate(),
+        created_at : now(),
+    };
 
     const newToken: InsertOneResult<Document> = await mdb.collection("tokens").insertOne(tokenRow)
 
@@ -49,12 +46,12 @@ export async function create(employee: Employee): Promise<boolean>
     const data: NewEmployee = employee.getData();
     const employeeRow: Collections.Employee = { 
         ...data,
-        authorized   : data.authorized.map((authorized: string) => new ObjectId(authorized)),
-        job_id       : data.job_id.map((job_id: string) => new ObjectId(job_id)),
-        nations      : data.nations      ? data.nations.map((nation: string) => new ObjectId(nation)) : undefined,
-        major        : data.major        ? data.major.map((major: string) => new ObjectId(major)) : undefined,
-        affiliate_id : data.affiliate_id ? new ObjectId(data.affiliate_id) : undefined, 
-        resume_id    : data.resume_id    ? new ObjectId(data.resume_id) : undefined, 
+        authorized   : data.authorized.map((authorized: string) => toObjectId(authorized)),
+        job_id       : data.job_id.map((job_id: string) => toObjectId(job_id)),
+        nations      : data.nations      ? data.nations.map((nation: string) => toObjectId(nation)) : undefined,
+        major        : data.major        ? data.major.map((major: string) => toObjectId(major)) : undefined,
+        affiliate_id : data.affiliate_id ? toObjectId(data.affiliate_id) : undefined, 
+        resume_id    : data.resume_id    ? toObjectId(data.resume_id) : undefined, 
         token_id     : newToken.insertedId,
         verified     : false 
     };
@@ -72,22 +69,19 @@ export async function read(query: Query): Promise<Employee|null>
     // Create the affiliate
     const mdb: MDb = db();
 
-    const employeeRow: Collections.Employee|null = await mdb.collection("employees").findOne<Collections.Employee>(query);
+    const employeeRow: Collections.Employee|null = await mdb
+        .collection("employees")
+        .findOne<Collections.Employee>({
+            token_id : query.tokenId ? toObjectId(query.tokenId) : undefined,
+            email    : query.email,
+            verified : query.verified
+        });
     
     if( employeeRow === null )
     {
         return null;
     }
 
-    const tokenRow: Collections.Token|null = await mdb.collection("tokens").findOne<Collections.Token>({ _id: employeeRow.token_id});
-
-    if(tokenRow === null)
-    {
-        return null;
-    }
-
-    const token = new Token(tokenRow.token, tokenRow.expired_at);
-    const email = new Email(employeeRow.email, token);
     const employee: NewEmployee = {
         fname        : employeeRow.fname,
         lname        : employeeRow.lname,
@@ -106,7 +100,7 @@ export async function read(query: Query): Promise<Employee|null>
         authorized   : employeeRow.authorized.map((auth: ObjectId) => auth.toString()),
         affiliate_id : employeeRow.affiliate_id?.toString()
       }
-    return new Employee(employee, email);
+    return new Employee(employee);
 }
 
 /**
@@ -115,12 +109,12 @@ export async function read(query: Query): Promise<Employee|null>
  * @param query Update query we are executing.
  * @param employee Employee we want to persist to memory.
  */
-export async function update(query: UpdateQuery, employee: Employee): Promise<boolean>
+export async function update(tokenId: string, employee: Employee): Promise<boolean>
 {
     const mdb: MDb = db();
     
     // Update the current employee collection
-    return (await mdb.collection("employees").updateOne(query, { $set: {
+    return (await mdb.collection("employees").updateOne({token_id: toObjectId(tokenId)}, { $set: {
         verified    : true,
         verified_on : employee.getVerifiedOn()
     } })).acknowledged;

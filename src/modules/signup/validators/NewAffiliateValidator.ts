@@ -2,7 +2,7 @@ import { JSONSchemaType } from "ajv";
 
 export interface NewAffiliate {
     name          : string
-    email         : string
+    phone         : string
     charity_id    : string
     affiliate_id ?: string
   }
@@ -13,7 +13,7 @@ export const schema: JSONSchemaType<NewAffiliate> = {
         name: { 
             type: "string" 
         },
-        email: { 
+        phone: { 
             type: "string" 
         },
         charity_id: { 
@@ -24,6 +24,6 @@ export const schema: JSONSchemaType<NewAffiliate> = {
             nullable: true 
         }
     },
-    required: ["name", "email", "charity_id" ],
+    required: ["name", "phone", "charity_id" ],
     additionalProperties: false
 }

@@ -6,7 +6,6 @@
 
 import { read } from "../mappers/EmployeeMapper";
 import Employee from "../entities/Employee";
-import Email from "../entities/Email";
 
 /**
  * Confirm the employee email is unique against the current collection.
@@ -14,9 +13,7 @@ import Email from "../entities/Email";
  */
 export async function unique( employee: Employee) : Promise<boolean>
 {
-    const email: Email = employee.getEmail();
-
-    if( await read({ "email" : email.getEmail(), "verified": true}) != null )
+    if( await read({ "email" : employee.getData().email, "verified": true}) != null )
     {
         return false;
     }

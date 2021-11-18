@@ -5,20 +5,16 @@
  * Purpose: Singing up a new employer is a vital part of our domain. This code seeks to be in charge of creating a new employer
  * in our system.
  */
-// Command
+// Command (Gross)
 import execEmployerMatch from "../../../modules/matching/commands/MatchOneCommand"
-
 
 // Data Mappers
 import * as EmployerMapper from "../mappers/EmployerMapper";
 import * as ProofManager   from "../mappers/ProofMapper";
 import * as AddressMapper  from "../mappers/AddressMapper";
-import { ObjectId } from "mongodb";
 
 // Entities
 import Employer  from "../entities/Employer";
-import Email     from "../entities/Email";
-import Token     from "../entities/Token";
 import Address   from "../entities/Address";
 import Proof     from "../entities/Proof";
 
@@ -30,6 +26,7 @@ import { unique } from "../repositories/EmployerRepository";
 
 // External dependencies
 import * as express from "express";
+import { EmailNotification } from "notify/EmailNotification";
 import Ajv from "ajv";
 
 /**
@@ -49,47 +46,20 @@ export async function store(req: express.Request<any>, res: express.Response)
     if( valid(data) )
     {
         const address: Address   = await AddressMapper.read(data.place_id);
-        const email: Email       = new Email(data.email, Token.generate());
-        const employer: Employer = new Employer(data, email, address);
+        const employer: Employer = new Employer(data, address);
 
-        // Verify the employer is who they say they are.
-        await employer.verify();
-
-        return EmployerMapper.create(employer).then( () => {
-            res.send( { "success": true } )
-        }).catch( () => {
-            res.send( { "error" : true } )
+        await EmployerMapper.create(employer).catch( (err) => {
+            res.status(400).send( { "error" : true } )
         });
+
+        // Verify the afiiliate is who they say they are.
+        await employer.verify(new EmailNotification());
+
+        return res.status(200).send( { "success": true } )
     }
     
     // Error code did not work
     return res.send( { "error" : true } );
-}
-
-/**
- * api.employer.resend - Resend the employers verification link
- * @param req Express request object
- * @param res Express response object
- */
-export async function resend(req: express.Request<any>, res: express.Response)
-{
-    const id: string = req.body.id;
-    
-    // Pull the employer from the database.
-    const employer: Employer|null = await EmployerMapper.read({ _id: new ObjectId( id ) });
-    if(employer === null)
-    {
-        return res.status(400).send( { "error": "No employer found" } )
-    }
-
-    const sent: boolean = await employer.verify();
-
-    if(sent)
-    {
-        return res.status(200).send( { "success": true } )
-    }
-
-    return res.status(400).send( { "error": true } )
 }
 
 /**
@@ -111,7 +81,7 @@ export async function verify(req: express.Request<any>, res: express.Response)
     }
 
     // Pull the affiliate from the database.,
-    const employer: Employer|null = await EmployerMapper.read({ token_id: new ObjectId( proof.getId()) });
+    const employer: Employer|null = await EmployerMapper.read({ tokenId: proof.getId() });
 
     // Double check that the affiliate exists.
     if(employer === null)
@@ -126,11 +96,11 @@ export async function verify(req: express.Request<any>, res: express.Response)
     }
 
     // Othewise verify and persist.
-    const authorized: boolean = employer.authorize();
+    const authorized: boolean = employer.authorize(proof);
 
     if(authorized)
     {
-        await EmployerMapper.update({ token_id: new ObjectId( proof.getId())}, employer);
+        await EmployerMapper.update(proof.getId(), employer);
 
         res.status(200).send( {"success": true} );
 
@@ -143,3 +113,29 @@ export async function verify(req: express.Request<any>, res: express.Response)
         res.status(400).send( {"error": "Token not valid"} )
     }
 }
+
+// /**
+//  * api.employer.resend - Resend the employers verification link
+//  * @param req Express request object
+//  * @param res Express response object
+//  */
+// export async function resend(req: express.Request<any>, res: express.Response)
+// {
+//     const id: string = req.body.id;
+    
+//     // Pull the employer from the database.
+//     const employer: Employer|null = await EmployerMapper.read({ _id: new ObjectId( id ) });
+//     if(employer === null)
+//     {
+//         return res.status(400).send( { "error": "No employer found" } )
+//     }
+
+//     const sent: boolean = await employer.verify();
+
+//     if(sent)
+//     {
+//         return res.status(200).send( { "success": true } )
+//     }
+
+//     return res.status(400).send( { "error": true } )
+// }

@@ -8,32 +8,27 @@
  * "Reasoning Validation" is a word I came up for in order to validate the input meets expected values. Reduces spam.
  */
 
-import * as EmailMs from "notify/Email";
-import { sendEmail } from "notify/Notify";
+// Short for Email Message
+import {TextNotification} from "notify/TextNotification";
+import {Text} from "notify/messages/Text";
 
-import Email from "./Email";
+import PhoneToken from "./PhoneToken";
+import Proof from "./Proof";
 import Resume from "./Resume";
 
 import { NewEmployee } from "../validators/NewEmployeeValidator";
 
 export default class Employee
 {
-    // The new employee data.
+
     private data: NewEmployee;
-
-    // Email verification data.
-    private email: Email;
-
-    // Get the resume if we have one.
+    private token: PhoneToken;
     private resume: Resume|undefined;
-
-    // Date verified
     private verified_on: number;
 
-    constructor(data: NewEmployee, email: Email, resume?: Resume)
+    constructor(data: NewEmployee, resume?: Resume)
     {
         this.data   = data;
-        this.email  = email;
         this.resume = resume;
     }
 
@@ -42,27 +37,29 @@ export default class Employee
      * true = Was able to send out the email
      * false = Was not able to send out the email
      */
-    public async verify() : Promise<boolean>
+    public async verify(notify: TextNotification) : Promise<boolean>
     {
+        // === TOKEN ===
+        this.token = new PhoneToken();
+        this.token.generate();
 
-        if( Date.now() < this.email.getExpiredDate() )
-        {
-            let email: EmailMs.Email = EmailMs.makeEmail(this.email.getEmail(), "Submit Your Application!");
-            email = await EmailMs.addHtml(email, "employee-verification", {
-                name: this.data.fname + " " + this.data.lname,
-                link: `${process.env.CLIENT_DOMAIN}/verify/employee/${this.email.getToken()}`
-            });
+        // === SEND ===
+        const text: Text = await notify.render({
+            phone: this.data.phone,
+            subject: "Submit Your Application!",
+            text: "employee-verification"
+        }, { code: this.token.getCode()} );
 
-            await sendEmail(email);
-            return true;
-        }
-
-        return false;
+        return await notify.send(text);
     }
 
-    public authorize()
+    /**
+     * Authorize the employee to be used in the system.
+     * @param proof Proof that we need to verify the employee. We grab this from the database
+     */
+    public authorize(proof: Proof)
     {
-        if( Date.now() < this.email.getExpiredDate() )
+        if( Date.now() < proof.getExpiredDate() )
         {   
             this.verified_on = Date.now();
             return true;
@@ -76,27 +73,17 @@ export default class Employee
     {
         return this.resume;
     }
-    
-    /**
-     * Return verified at number which represents when the email for a employee was verified at.
-     */
+
     public getVerifiedOn(): number
     {
         return this.verified_on
     }
 
-    /**
-     * Get the employees email.
-     */
-    public getEmail() : Email
+    public getToken() : PhoneToken
     {
-        return this.email;
+        return this.token;
     }
 
-    /**
-     * Get the employees data. We are just storing it generally here just simply due to the sheer amount of parameters.
-     * It's not a sparse matrix though so we don't have to use a EAV. I tend to jump to EAV way to quickly.
-     */
     public getData(): NewEmployee
     {
         return this.data;
