@@ -33,7 +33,7 @@ beforeAll(async () => {
         salary       : 50, // Less than 50
         commitment   : 1,
         where        : 1,
-        contract     : "Null",
+        contract_id  : MongoDb.generate(),
         authorized   : true,
     }
 
@@ -61,24 +61,24 @@ beforeAll(async () => {
     const affiliates: Array< Collections.Affiliate > = [
 
         {
-            _id        : affiliateIdOne,
-            token_id   : MongoDb.generate(),
-            name       : "Robert",
-            charity_id : MongoDb.generate(),
-            phone      : "111-111-1111",
-            verified   : true,
-            contract   : "Null",
-            created_at : 0
+            _id          : affiliateIdOne,
+            token_id     : MongoDb.generate(),
+            name         : "Robert",
+            charity_id   : MongoDb.generate(),
+            phone        : "111-111-1111",
+            verified     : true,
+            contract_id  : MongoDb.generate(),
+            created_at   : 0
         },{
-            _id        : affiliateIdTwo,
+            _id          : affiliateIdTwo,
             affiliate_id : affiliateIdThree,
-            token_id   : MongoDb.generate(),
-            name       : "Mery",
-            charity_id : MongoDb.generate(),
-            phone      : "111-111-1111",
-            verified   : true,
-            contract   : "Null",
-            created_at : 0
+            token_id     : MongoDb.generate(),
+            name         : "Mery",
+            charity_id   : MongoDb.generate(),
+            phone        : "111-111-1111",
+            verified     : true,
+            contract_id  : MongoDb.generate(),
+            created_at   : 0
         },{
             _id          : affiliateIdThree,
             token_id     : MongoDb.generate(),
@@ -86,7 +86,7 @@ beforeAll(async () => {
             charity_id   : MongoDb.generate(),
             phone        : "111-111-1111",
             verified     : true,
-            contract     : "Null",
+            contract_id  : MongoDb.generate(),
             created_at   : 0
         }
     ]

@@ -7,14 +7,14 @@
  */
 
 // Data Mappers
-import { create, read, update } from "../mappers/AffiliateMapper";
-import { read as readProof } from "../mappers/ProofMapper";
+import { create, update } from "../mappers/AffiliateMapper";
+import { read } from "../mappers/ProofMapper";
 
 // Entities
 import Affiliate from "../entities/Affiliate";
 import Proof from "../entities/Proof";
 
-import { unique } from "../repositories/AffiliateRepository";
+import { unique, getFromTokenId } from "../repositories/AffiliateRepository";
 
  // Validator
 import { NewAffiliate, schema } from "../validators/NewAffiliateValidator";
@@ -71,16 +71,17 @@ export async function verify(req: express.Request<any>, res: express.Response)
 {
     const token : string = req.params.id;
     const code  : string = req.body.code;
-    const proof : Proof|null = await readProof(token, code);
+    
+    const proof : Proof|null = await read(token, code);
 
     // Make sure that we can find the token
     if(proof === null)
     {
         return res.status(404).send({"error" : "Invalid verification code."});    
     }
-
+    
     // Pull the affiliate from the database.,
-    const affiliate: Affiliate|null = await read({ tokenId: proof.getId() });
+    const affiliate: Affiliate|null = await getFromTokenId(proof.getId());
 
     // Double check that the affiliate exists.
     if(affiliate === null)

@@ -1,9 +1,10 @@
-import messagebird from "messagebird";
+import messagebird, { MessageBird } from "messagebird";
 
 import * as env from "environment"; // This just sets the types for the environment variables
 import { Text } from "../messages/Text";
 
-const messageBirdSdk = messagebird(process.env.SMS_SECRET);
+const messageBirdSdk: MessageBird = messagebird(process.env.SMS_SECRET);
+const originator: string = process.env.SMS_NUMBER;
 
 /**
  * Send out en email using the current settings.
@@ -15,7 +16,7 @@ export async function send(text: Text)
 
         // Send a new request to the message bird sdk
         const params = {
-            'originator': text.subject,
+            'originator': originator,
             'recipients': [
                 text.phone
             ],

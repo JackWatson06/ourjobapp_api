@@ -20,7 +20,7 @@ class TextNotification implements NotificationI<Text>
     {
         try
         {
-            send(text);
+            await send(text);
             return true;
         }
         catch(e)

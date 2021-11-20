@@ -3,6 +3,7 @@ import fs                from "fs";
 import app               from "bootstrap/app";
 import * as MongoDb      from "infa/MongoDb";
 import * as  Collections from "Collections";
+import { Code } from "mongodb";
 
 jest.setTimeout(30000);
 
@@ -49,8 +50,12 @@ type EmployerUpload = {
     email        : string
 };
 
-type Verification = {
-    token: string
+type EmailVerification = {
+    code: string
+};
+
+type PhoneVerification = {
+    code: string
 };
 
 afterAll(async () => {
@@ -58,6 +63,8 @@ afterAll(async () => {
     await db.collection("affiliates").deleteMany({});
     await db.collection("employees").deleteMany({});
     await db.collection("resumes").deleteMany({});
+    await db.collection("tokens").deleteMany({});
+    await db.collection("contracts").deleteMany({});
     await MongoDb.close();
 });
 
@@ -78,48 +85,51 @@ describe("affiliates", () => {
                                 .send(affiliateUpload); 
         
         // === Assert ===
-        const affiliate: Collections.Affiliate|null = await db.collection("affiliates").findOne<Collections.Affiliate>({ email: "testing@gmail.com" }); 
+        const affiliate: Collections.Affiliate|null = await db.collection("affiliates").findOne<Collections.Affiliate>({ phone: "111-111-1111" }); 
+        const contract: Collections.Contract|null   = await db.collection("contracts").findOne<Collections.Contract>({ _id: affiliate?.contract_id})
 
         expect(response.status).toBe(200);
         expect(affiliate).not.toBe(null);
 
-        if(affiliate != null)
+        if(affiliate != null && contract != null)
         {
-            const expectedPath = `${__dirname}/../../documents/contracts/${affiliate.contract}`
+            const expectedPath = `${__dirname}/../../documents/contracts/${contract.fileName}`
             expect( fs.existsSync(expectedPath) ).toBe(true);
         }
     });
 
-    // test("can verify", async () => {
+    test("can verify", async () => {
 
-    //     // === Setup ===
-    //     const affiliateUpload: AffiliateUpload = {
-    //         name       : "Bob",
-    //         phone      : "111-111-1111",
-    //         charity_id : "EFEFefefEFEFefefEFEFefef"
-    //     }
+        // === Setup ===
+        const affiliateUpload: AffiliateUpload = {
+            name       : "Bob",
+            phone      : "111-111-1112",
+            charity_id : "EFEFefefEFEFefefEFEFefef"
+        }
         
-    //     await request(app).post(`/api/v1/signup/affiliates`).send(affiliateUpload);    
+        await request(app).post(`/api/v1/signup/affiliates`).send(affiliateUpload);    
         
-    //     const affiliate: Collections.Affiliate|null = await db.collection("affiliates").findOne<Collections.Affiliate>({ email: "bob@gmail.com" }); 
-    //     const token: Collections.Token|null = await db.collection("tokens").findOne<Collections.Token>({ _id: affiliate?.token_id });
+        const affiliate: Collections.Affiliate|null = await db.collection("affiliates").findOne<Collections.Affiliate>({ phone : "111-111-1112", }); 
+        const token: Collections.Token|null         = await db.collection("tokens").findOne<Collections.Token>({ _id: affiliate?.token_id });
         
-    //     expect(token).not.toBe(null);
+        expect(token).not.toBe(null);
 
-    //     const tokenVerification: Verification = {
-    //         token: token?.token ?? ""
-    //     }        
-
-    //     // === Execute ===
-    //     const responseVerify = await request(app).post(`/api/v1/signup/affiliates/verify`).send(tokenVerification);    
-
-    //     expect(responseVerify.status).toBe(200);
+        const tokenVerification: PhoneVerification = {
+            code: token?.code ?? ""
+        }        
         
-    //     const verifiedAffiliate: Collections.Affiliate|null = await db.collection("affiliates").findOne<Collections.Affiliate>({ email: "bob@gmail.com" }); 
+        // === Execute ===
+        const responseVerify = await request(app).post(`/api/v1/signup/affiliates/verify/${token?.token}`).send(tokenVerification);    
+        
+        expect(responseVerify.status).toBe(200);
+        
+        const verifiedAffiliate: Collections.Affiliate|null = await db.collection("affiliates").findOne<Collections.Affiliate>({ phone : "111-111-1112", }); 
+        const consumedToken: Collections.Token|null         = await db.collection("tokens").findOne<Collections.Token>({ _id: affiliate?.token_id }); 
 
-    //     expect(verifiedAffiliate).not.toBe(null);
-    //     expect(verifiedAffiliate?.verified).toBe(true);
-    // });
+        expect(verifiedAffiliate).not.toBe(null);
+        expect(verifiedAffiliate?.verified).toBe(true);
+        expect(consumedToken?.consumed).toBe(true);
+    });
 
     // TEST WE CAN'T MAKE DUPLICATES ... That may be in the unit testing zone.
 })
@@ -264,4 +274,13 @@ describe("affiliates", () => {
 //         expect(verifiedEmployer).not.toBe(null);
 //         expect(verifiedEmployer?.verified).toBe(true);
 //     });
+// });
+
+
+// test("we can view contract", () => {
+
+// });
+
+// test("we can not view contract after expired", () => {
+
 // });

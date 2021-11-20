@@ -4,20 +4,44 @@
  * Purpose: The repo serves the purpose of aggregating multiple Affiliates to act as an in memory database.
  */
 
-import { read } from "../mappers/AffiliateMapper";
+import { db, MDb, toObjectId } from "infa/MongoDb";
+import * as Collections from "Collections";
+
 import Affiliate from "../entities/Affiliate";
+import { toEntity } from "../mappers/AffiliateMapper";
+
+/**
+ * Get the affiliate from the persistance layer.
+ */
+export async function getFromTokenId( tokenId: string) : Promise<Affiliate|null>
+{   
+    const mdb: MDb = db();
+
+    // We need to turn the query into mongodb language.
+    const affiliateRow: Collections.Affiliate|null = await mdb.collection("affiliates").findOne<Collections.Affiliate>({
+            token_id : toObjectId(tokenId),
+        });
+
+    if(affiliateRow === null)
+    {
+        return null;
+    }
+
+    return toEntity(affiliateRow);
+}
 
 /**
  * Confirm if the affiliate passed in is unique.
- * @param Affiliate Affiliate entity
  */
 export async function unique( affiliate: Affiliate) : Promise<boolean>
 {   
-    if( await read({"name" : affiliate.getName(), "verified": true}) != null )
-    {   
-        return false;
-    }
+    const mdb: MDb = db();
+
+    const affiliateRow: Collections.Affiliate|null = await mdb.collection("affiliates").findOne<Collections.Affiliate>({
+        name : affiliate.getName(),
+        verified: true
+    });
 
     // If both of these pased then we can assume they are unique.
-    return true;
+    return affiliateRow === null;
 }

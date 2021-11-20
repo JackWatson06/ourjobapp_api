@@ -15,11 +15,17 @@ import Token from "../entities/Token";
 
 import { InsertOneResult } from "mongodb";
 
-type Query = {
-    tokenId   ?: string;
-    name      ?: string;
-    verified  ?: boolean;
-};
+/**
+ * Simple mapper function so we can abstract the querying process to the repo since we will have different requirements to query.
+ * @param affiliate Affiliate we want to persist to memory.
+ */
+export async function toEntity(affiliate: Collections.Affiliate): Promise<Affiliate|null> {
+    return new Affiliate({
+        ...affiliate,
+        affiliate_id : affiliate.affiliate_id?.toString(),
+        charity_id   : affiliate.charity_id.toString()
+    });
+}
 
 /**
  * Store the affiliate in the database. Return true or false if we were sucessful.... that would be cought thow if there
@@ -40,10 +46,7 @@ export async function create(affiliate: Affiliate): Promise<boolean> {
         created_at : now(),
     };
 
-    const newToken: InsertOneResult<Document> = await mdb
-        .collection("tokens")
-        .insertOne(tokenRow);
-
+    const newToken: InsertOneResult<Document> = await mdb.collection("tokens").insertOne(tokenRow);
 
     // === Pesrsist Contract ===
     const contractRow: Collections.Contract = {
@@ -51,8 +54,6 @@ export async function create(affiliate: Affiliate): Promise<boolean> {
         fileName: affiliate.getContract()
     }
     const newContract: InsertOneResult<Document> = await mdb.collection("contracts").insertOne(contractRow);
-
-
 
     // === Persist Affiliate ===
     const data: NewAffiliate = affiliate.getData();
@@ -70,35 +71,6 @@ export async function create(affiliate: Affiliate): Promise<boolean> {
 
     return (await mdb.collection("affiliates").insertOne(affiliateRow))
         .acknowledged;
-}
-
-/**
- * Store the affiliate in the database. Return true or false if we were sucessful.... that would be cought thow if there
- * were an error maybe we just return void.
- * @param affiliate Affiliate we want to persist to memory.
- */
-export async function read(query: Query): Promise<Affiliate | null> {
-    const mdb: MDb = db();
-
-
-    // We need to turn the query into mongodb language.
-    const affiliateRow: Collections.Affiliate|null = await mdb
-        .collection("affiliates")
-        .findOne<Collections.Affiliate>({
-            token_id : query.tokenId ? toObjectId(query.tokenId) : undefined,
-            name     : query.name,
-            verified : query.verified
-        });
-
-    if (affiliateRow === null) {
-        return null;
-    }
-
-    return new Affiliate({
-        ...affiliateRow,
-        affiliate_id : affiliateRow.affiliate_id?.toString(),
-        charity_id   : affiliateRow.charity_id.toString()
-    });
 }
 
 /**
