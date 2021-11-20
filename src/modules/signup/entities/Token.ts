@@ -23,7 +23,7 @@ export default class Token {
     public async generate() {
         
         this.token = crypto.randomUUID();
-        this.expiredDate = Date.now() + (86_400_000);
+        this.expiredDate = Date.now() + (3_600_000); // That is 1 hour in milliseconds
     }
 
     // === GETTERS ===
