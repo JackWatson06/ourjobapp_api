@@ -15,8 +15,12 @@ import * as affiliate from "./controllers/AffiliateController";
 import * as employee from "./controllers/EmployeeController";
 import * as employer from "./controllers/EmployerController";
 import * as resume from "./controllers/ResumeController";
+import * as contract from "./controllers/ContractController";
 
 let signupRouter: express.Router = express.Router();
+
+
+signupRouter.get("/contracts/:id", contract.show)
 
 // Routes we use to interact with the employee signup REST endpoints
 signupRouter.post("/employees",             employee.store);
@@ -26,6 +30,7 @@ signupRouter.post("/resumes",               resume.store);
 // Routes we use to interact with the employers signup REST endpoints
 signupRouter.post("/employers",         employer.store);
 signupRouter.post("/employers/verify",  employer.verify);
+
 
 // Routes we use to interact with the affiliates signup REST endpoints... Note right now the frontend calls affiliates ... share. This may change
 // but that is why you see it here since the front end proxy requests back here.

@@ -4,7 +4,8 @@
  * Purpose: The candidate email represents the email that we recieve when we are looking for candidates.
  */
 
-import { sendFromCache } from "notify/Notify";
+import {EmailNotification} from "notify/EmailNotification";
+import {Email} from "notify/messages/Email";
 
 export default class CacheEmail
 {
@@ -28,30 +29,30 @@ export default class CacheEmail
     /**
      * Send the email to the employer. Handle the result in this function.
      */
-    public async send(): Promise<boolean>
+    public async send(notify: EmailNotification, email: Email): Promise<boolean>
     {
-        try
+        if(await notify.send(email))
         {
-            await sendFromCache(this.emailToken);
-            
             this.sent_at = Date.now();
             this.sent    = true;
+            return true;
         }
-        catch(err)
+        else
         {
-            console.error(err);
-            
             this.error = true;
             return false;
         }
-
-        return true;
     }
 
     // === GETTERS ===
     public getId(): string
     {
         return this.id;
+    }
+
+    public getEmailToken(): string
+    {
+        return this.emailToken;
     }
 
     public getSentAt(): number|undefined

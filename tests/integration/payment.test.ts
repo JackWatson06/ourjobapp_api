@@ -65,7 +65,7 @@ beforeAll(async () => {
             token_id   : MongoDb.generate(),
             name       : "Robert",
             charity_id : MongoDb.generate(),
-            email      : "watson.jack.p@gmail.com",
+            phone      : "111-111-1111",
             verified   : true,
             contract   : "Null",
             created_at : 0
@@ -75,7 +75,7 @@ beforeAll(async () => {
             token_id   : MongoDb.generate(),
             name       : "Mery",
             charity_id : MongoDb.generate(),
-            email      : "sb-dblno8419065@personal.example.com",
+            phone      : "111-111-1111",
             verified   : true,
             contract   : "Null",
             created_at : 0
@@ -84,7 +84,7 @@ beforeAll(async () => {
             token_id     : MongoDb.generate(),
             name         : "Shell",
             charity_id   : MongoDb.generate(),
-            email        : "m.morgan@americanlaborcompany.com",
+            phone        : "111-111-1111",
             verified     : true,
             contract     : "Null",
             created_at   : 0

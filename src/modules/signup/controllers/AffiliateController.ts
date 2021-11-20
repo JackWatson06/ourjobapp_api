@@ -23,7 +23,7 @@ import transform from "../views/VerifiedAffiliateView";
 
 // External dependencies
 import * as express from "express";
-import { TextNotification } from "notify/TextNotification";
+import {TextNotification} from "notify/TextNotification";
 import Ajv from "ajv";
 
 /**
@@ -44,23 +44,22 @@ export async function store(req: express.Request<any>, res: express.Response)
     {
         const affiliate: Affiliate = new Affiliate(data);
 
-        await create(affiliate).catch( (err) => {
-            console.error(err);
-            res.status(400).send( { "error" : true } )
-        });
-
         // Send out a verificaiton email (included with their contract) Do the domain request before persistance thank you
         // very much.
         await affiliate.verify(new TextNotification());
 
+        await create(affiliate).catch( (err) => {
+            console.error(err);
+            
+            res.status(400).send( { "error" : true } )
+        });
+
         return res.status(200).send( { "success": true } )
     }
     
-    // Error code did not work./
-    return res.status(400).send( { "error" : true } );
-    
     // Return a success code for the successful process ... were going to want to think of an elegant way to do this
     // throughout the application. Returning errors as well. Maybe we find something similar to fractal in PHP
+    return res.status(400).send( { "error" : true } );
 }
 
 /**
@@ -70,8 +69,9 @@ export async function store(req: express.Request<any>, res: express.Response)
  */
 export async function verify(req: express.Request<any>, res: express.Response)
 {
-    const token: string = req.body.token;
-    const proof: Proof|null = await readProof(token);
+    const token : string = req.params.id;
+    const code  : string = req.body.code;
+    const proof : Proof|null = await readProof(token, code);
 
     // Make sure that we can find the token
     if(proof === null)

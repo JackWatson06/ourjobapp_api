@@ -13,7 +13,7 @@ import Employee from "../entities/Employee";
  */
 export async function unique( employee: Employee) : Promise<boolean>
 {
-    if( await read({ "email" : employee.getData().email, "verified": true}) != null )
+    if(await read({ "email" : employee.getData().email, "verified": true}) != null )
     {
         return false;
     }

@@ -1,4 +1,11 @@
+/**
+ * Original Author: Jack Watson
+ * Created Date: 11/7/2021
+ * Purpose: This file will notify a single employer of any matches that they got on signup. We will only be calling this class
+ * once during the signup process because we run matching on employer signup.
+ */
 
+import {EmailNotification} from "notify/EmailNotification";
 import * as MatchingService from "../services/Matching";
 
 import * as EmployerMapper from "../mappers/EmployerMapper";
@@ -16,13 +23,15 @@ export default async function exec(employerId: string)
     // bulk command.
     const employer: Employer|null = await EmployerMapper.read(employerId);
 
+    const emailNotification: EmailNotification = new EmailNotification();
+
     if(employer != null)
     {
         const batchMatch = await MatchingService.match(employer);     
 
         const email = new CandidateEmail(batchMatch);
     
-        await email.send();
+        await email.send(emailNotification);
         await CandidateEmailMapper.create( email ); 
     }
 }

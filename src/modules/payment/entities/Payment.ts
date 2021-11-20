@@ -101,7 +101,7 @@ export default class Payment
 
         const payoutRequests: Array<PayoutCreateRequest> = this.payouts.map((payout) => ({
             amount: payout.getReward().getAmount(),
-            email: payout.getReward().getEmail()
+            phone: payout.getReward().getPhone()
         }));
 
         try{

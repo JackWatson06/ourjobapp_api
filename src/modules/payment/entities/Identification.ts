@@ -7,12 +7,12 @@
 export default class Identification
 {
     private id: string;
-    private email: string;
+    private phone: string;
 
-    constructor(id: string, email: string)
+    constructor(id: string, phone: string)
     {
         this.id = id;
-        this.email = email;
+        this.phone = phone;
     }
 
     // === GETTERS ===
@@ -21,9 +21,9 @@ export default class Identification
         return this.id;
     }
 
-    public getEmail(): string
+    public getPhone(): string
     {
-        return this.email;
+        return this.phone;
     }
 
 }

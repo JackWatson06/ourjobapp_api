@@ -12,7 +12,7 @@ export type PaymentCreateResponse = {
 
 export type PayoutCreateRequest = {
     amount: number,
-    email: string
+    phone: string
 }
 
 export interface PaymentI

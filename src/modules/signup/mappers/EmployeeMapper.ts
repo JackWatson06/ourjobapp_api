@@ -38,6 +38,7 @@ export async function create(employee: Employee): Promise<boolean>
         token      : token.getToken(),
         expired_at : token.getExpiredDate(),
         created_at : now(),
+        consumed   : false
     };
 
     const newToken: InsertOneResult<Document> = await mdb.collection("tokens").insertOne(tokenRow)
@@ -113,6 +114,12 @@ export async function update(tokenId: string, employee: Employee): Promise<boole
 {
     const mdb: MDb = db();
     
+    await mdb.collection("tokens").updateOne({ _id: toObjectId(tokenId)}, {
+        $set: {
+            consumed: true,
+        },
+    })
+
     // Update the current employee collection
     return (await mdb.collection("employees").updateOne({token_id: toObjectId(tokenId)}, { $set: {
         verified    : true,

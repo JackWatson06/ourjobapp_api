@@ -134,11 +134,18 @@ export type Resume = {
     size      : number
 }
 
+export type Contract = {
+    _id ?     : ObjectId,
+    token_id  : ObjectId,
+    fileName  : string
+}
+
 export type Token = {
     _id         ?: ObjectId,
     code        ?: string,
     
     token       : string,
+    consumed    : boolean,
     expired_at  : number,
     created_at  : number
 }
@@ -149,11 +156,11 @@ export type Affiliate = {
     verified_on  ?: number,
 
     token_id      : ObjectId,
-    name          : string,
+    contract_id   : ObjectId,
     charity_id    : ObjectId,
+    name          : string,
     phone         : string,
     verified      : boolean,
-    contract      : string,
     created_at    : number
 }
 
@@ -187,7 +194,7 @@ export type Employee = {
 
 export type Employer = {
     _id          ?: ObjectId,
-    contract_id  ?: ObjectId,
+    contract_id   : ObjectId,
     token_id      : ObjectId,
 
     affiliate_id ?: ObjectId,
@@ -206,6 +213,5 @@ export type Employer = {
     where        : number,
     authorized   : boolean,
     verified     : boolean,
-    contract     : string,
     email        : string,
 }

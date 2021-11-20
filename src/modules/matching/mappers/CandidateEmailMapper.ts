@@ -32,7 +32,7 @@ export async function create(email: CandidateEmail)
     // Create the email
     const emailRow: Collections.Email = {
         batch_match_id : batchMatchId,
-        message_token  : email.getMessageToken(),
+        message_token  : email.getCacheIdentifier(),
         email          : match.getEmployer().email,
         sent           : email.getSent(),
         error          : email.getError(),

@@ -20,6 +20,7 @@ class EmailNotification implements NotificationI<Email>
             return true;
         }
         catch(e){
+            console.error(e);
             return false;
         }
     }

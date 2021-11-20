@@ -129,12 +129,12 @@ export default class PayPalAdaptor implements PaymentI
             "items": [
                 ...payouts.map((payout) => {
                     return {
-                        "recipient_type": "EMAIL",
+                        "recipient_type": "PHONE",
                         "amount": {
                             "value": payout.amount,
                             "currency": "USD"
                         },
-                        "receiver": payout.email,
+                        "receiver": payout.phone,
                         "note": "Thank you for helping someone find a job!",
                     }
                 })

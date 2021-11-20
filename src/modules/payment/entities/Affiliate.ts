@@ -53,7 +53,7 @@ export default class Affiliate
         const depth = this.parent != undefined ? 1 : 0;
 
         payouts.push(new Payout(
-            new Reward(PaymentPlan.AFFILIATE_PAYOUTS[depth], this.identity.getEmail(), this.identity.getId()),
+            new Reward(PaymentPlan.AFFILIATE_PAYOUTS[depth], this.identity.getPhone(), this.identity.getId()),
             new Donation(PaymentPlan.CHARITY_PAYOUTS[depth], this.charity)
         ))
 

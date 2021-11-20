@@ -6,7 +6,7 @@ import Charity from "modules/payment/entities/Charity";
 // Were only able to link
 test("test you can only set an affiliate on time", () => {
 
-    const identity: Identification = new Identification("watson.jack.p@gmail.com", "EFEFefefEFEFefefEFEFefef");
+    const identity: Identification = new Identification("111-111-1111", "EFEFefefEFEFefefEFEFefef");
     const charity: Charity = new Charity("EFEFefefEFEFefefEFEFefef")
 
     // Affilaites need to check to make sure that you can only nest one. If the affiliates aready have an affiliate don't nest. This allows
@@ -24,7 +24,7 @@ test("test you can only set an affiliate on time", () => {
 
 test("single affiliate generates a payout", () => {
     
-    const identity: Identification = new Identification("watson.jack.p@gmail.com", "EFEFefefEFEFefefEFEFefef");
+    const identity: Identification = new Identification("111-111-1111", "EFEFefefEFEFefefEFEFefef");
     const charity: Charity = new Charity("EFEFefefEFEFefefEFEFefef");
 
     // Affilaites need to check to make sure that you can only nest one. If the affiliates aready have an affiliate don't nest. This allows
@@ -37,7 +37,7 @@ test("single affiliate generates a payout", () => {
 
 test("nested affiliates generate two payouts", () => {
 
-    const identity: Identification = new Identification("watson.jack.p@gmail.com", "EFEFefefEFEFefefEFEFefef");
+    const identity: Identification = new Identification("111-111-1111", "EFEFefefEFEFefefEFEFefef");
     const charity: Charity = new Charity("EFEFefefEFEFefefEFEFefef");
 
     // Affilaites need to check to make sure that you can only nest one. If the affiliates aready have an affiliate don't nest. This allows

@@ -65,8 +65,9 @@ export async function store(req: express.Request<any>, res: express.Response)
  */
 export async function verify(req: express.Request<any>, res: express.Response)
 {
-    const token: string = req.body.token;
-    const proof: Proof|null = await readProof(token);
+    const token : string = req.params.id;
+    const code  : string = req.body.code;
+    const proof : Proof|null = await readProof(token, code);
 
     // Make sure that we can find the token
     if(proof === null)

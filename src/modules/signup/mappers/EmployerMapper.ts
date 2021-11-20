@@ -32,20 +32,29 @@ export async function create(employer: Employer): Promise<boolean>
     // Create the employer
     const mdb: MDb = db();
     
-    // === Token ===
+    // === Persist Token ===
     const token: Token = employer.getToken();
     const tokenRow: Collections.Token = {
         token      : token.getToken(),
         expired_at : token.getExpiredDate(),
         created_at : now(),
+        consumed   : false,
     };
 
     const newToken: InsertOneResult<Document> = await mdb.collection("tokens").insertOne(tokenRow)
 
+    // === Pesrsist Contract ===
+    const contractRow: Collections.Contract = {
+        token_id: newToken.insertedId,
+        fileName: employer.getContract()
+    }
+    const newContract: InsertOneResult<Document> = await mdb.collection("contracts").insertOne(contractRow);
+
+    // === Persist Employer ===
     const data: NewEmployer = employer.getData();
     const employerRow: Collections.Employer = { 
         ...data,
-        contract     : employer.getContract(),
+        contract_id  : newContract.insertedId,
         industry     : toObjectIds(data.industry),
         affiliate_id : data.affiliate_id ? toObjectId(data.affiliate_id) : undefined,
         token_id     : newToken.insertedId,
@@ -127,6 +136,12 @@ export async function update(tokenId: string, employer: Employer): Promise<boole
 {
     // Create the employer
     const mdb: MDb = db();
+
+    await mdb.collection("tokens").updateOne({ _id: toObjectId(tokenId)}, {
+        $set: {
+            consumed: true,
+        },
+    })
 
     // Update the current collection
     return (await mdb.collection("employers").updateOne({ token_id: toObjectId(tokenId)}, { $set: {

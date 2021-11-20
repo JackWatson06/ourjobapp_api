@@ -11,9 +11,9 @@ import Employer from "../entities/Employer";
  * Confirm if the employer passed in is uniuqe in the collection.
  * @param Employer Employer entity
  */
-export async function unique( employer: Employer) : Promise<boolean>
+export async function unique(employer: Employer): Promise<boolean>
 {
-    if( await read({ "email" : employer.getData().email, "verified": true}) != null )
+    if(await read({ "email" : employer.getData().email, "verified": true}) != null )
     {
         return false;
     }

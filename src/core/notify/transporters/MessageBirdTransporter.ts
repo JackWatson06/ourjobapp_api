@@ -25,6 +25,7 @@ export async function send(text: Text)
         // Create a new message in the message bird sdk
         messageBirdSdk.messages.create(params, function (err, response) {
             if (err) {
+                console.error(err);
                 return reject(err);
             }
             resolve();

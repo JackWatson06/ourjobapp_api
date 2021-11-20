@@ -29,9 +29,11 @@ type Query = {
 export async function create(affiliate: Affiliate): Promise<boolean> {
     const mdb: MDb = db();
 
+    // === Persist Token ===
     const phoneToken: PhoneToken = affiliate.getToken();
     const token: Token = phoneToken.getToken();
     const tokenRow: Collections.Token = {
+        consumed   : false,
         code       : phoneToken.getCode(),
         token      : token.getToken(),
         expired_at : token.getExpiredDate(),
@@ -42,6 +44,17 @@ export async function create(affiliate: Affiliate): Promise<boolean> {
         .collection("tokens")
         .insertOne(tokenRow);
 
+
+    // === Pesrsist Contract ===
+    const contractRow: Collections.Contract = {
+        token_id: newToken.insertedId,
+        fileName: affiliate.getContract()
+    }
+    const newContract: InsertOneResult<Document> = await mdb.collection("contracts").insertOne(contractRow);
+
+
+
+    // === Persist Affiliate ===
     const data: NewAffiliate = affiliate.getData();
     
     const affiliateRow: Collections.Affiliate = {
@@ -50,8 +63,8 @@ export async function create(affiliate: Affiliate): Promise<boolean> {
         name         : data.name,
         phone        : data.phone,
         token_id     : newToken.insertedId,
+        contract_id  : newContract.insertedId,
         verified     : false,
-        contract     : affiliate.getContract(),
         created_at   : now(),
     };
 
@@ -98,7 +111,14 @@ export async function read(query: Query): Promise<Affiliate | null> {
 export async function update(tokenId: string, affiliate: Affiliate): Promise<boolean> {
     const mdb: MDb = db();
 
-    // Update the current collection
+    // Mark the token as consumed.
+    await mdb.collection("tokens").updateOne({ _id: toObjectId(tokenId)}, {
+        $set: {
+            consumed: true,
+        },
+    })
+
+    // Update the current collection.
     return (
         await mdb.collection("affiliates").updateOne({ token_id: toObjectId(tokenId)}, {
             $set: {

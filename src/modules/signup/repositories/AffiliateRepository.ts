@@ -13,7 +13,7 @@ import Affiliate from "../entities/Affiliate";
  */
 export async function unique( affiliate: Affiliate) : Promise<boolean>
 {   
-    if( await read({ "name" : affiliate.getName(), "verified": true}) != null )
+    if( await read({"name" : affiliate.getName(), "verified": true}) != null )
     {   
         return false;
     }

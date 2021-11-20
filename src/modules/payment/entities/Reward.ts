@@ -1,13 +1,13 @@
 export default class Reward
 {
     private amount: number;
-    private email: string;
+    private phone: string;
     private affiliateId: string;
 
-    constructor(amount: number, email: string, affiliateId: string)
+    constructor(amount: number, phone: string, affiliateId: string)
     {
         this.amount = amount;
-        this.email = email;
+        this.phone = phone;
         this.affiliateId = affiliateId;
     }
 
@@ -17,9 +17,9 @@ export default class Reward
         return this.amount;
     }
 
-    public getEmail(): string
+    public getPhone(): string
     {
-        return this.email;
+        return this.phone;
     }
 
     public getAffiliateId(): string

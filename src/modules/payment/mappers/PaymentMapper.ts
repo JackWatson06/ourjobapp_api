@@ -40,7 +40,7 @@ async function mapAffiliates(db: MongoDb.MDb, affiliateId: ObjectId, depth: numb
     }
 
     const affiliate = new Affiliate(
-        new Identification(affiliateRow._id.toString(), affiliateRow.email),
+        new Identification(affiliateRow._id.toString(), affiliateRow.phone),
         new Charity(affiliateRow.charity_id.toString())
     );
 
