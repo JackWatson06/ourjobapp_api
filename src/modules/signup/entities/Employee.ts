@@ -24,7 +24,7 @@ export default class Employee
     private data: NewEmployee;
     private token: PhoneToken;
     private resume: Resume|undefined;
-    private verified_on: number;
+    private verifiedOn: number;
 
     constructor(data: NewEmployee, resume?: Resume)
     {
@@ -61,7 +61,7 @@ export default class Employee
     {
         if( Date.now() < proof.getExpiredDate() )
         {   
-            this.verified_on = Date.now();
+            this.verifiedOn = Date.now();
             return true;
         }
 
@@ -76,7 +76,7 @@ export default class Employee
 
     public getVerifiedOn(): number
     {
-        return this.verified_on
+        return this.verifiedOn
     }
 
     public getToken() : PhoneToken

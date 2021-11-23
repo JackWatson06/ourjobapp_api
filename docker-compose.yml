@@ -10,45 +10,44 @@ services:
   nginx:
     image: nginx
     ports: 
-      - 8080:80
+      - "127.0.0.1:8080:80"
     volumes:
-      - ./default-nginx.conf:/etc/nginx/conf.d/default.conf
+      - "./default-nginx.conf:/etc/nginx/conf.d/default.conf"
     depends_on: 
-      - node
+      - "node"
 
   # Mongo Express container. Allows us to connect into, and see into the database. 
   # Exposed to PUBLIC!
   mongo-express:
-    image: mongo-express
+    image: "mongo-express"
     ports: 
-      - 8081:8081
+      - "127.0.0.1:8081:8081"
     environment: 
-      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_SERVER: "mongo"
       ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_EXPRESS_USERNAME}
       ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_EXPRESS_PASSWORD}
     depends_on:
-      - mongo
+      - "mongo"
 
   # Node enviornment for running our application. Private connection. Only NGINX can connect.
   node:
-    build: .
-    container_name: unijobapp_api_node
-    working_dir: /srv/www/unijobapp_api
+    build: "."
+    working_dir: "/srv/www/unijobapp_api"
     expose: 
-      - 80
+      - "80"
     volumes:
-      - .:/srv/www/unijobapp_api
+      - ".:/srv/www/unijobapp_api"
     environment: 
-      MONGO_HOST: mongo
-      MONGO_PORT: 27017
+      MONGO_HOST: "mongo"
+      MONGO_PORT: "27017"
     depends_on:
-      - mongo
+      - "mongo"
 
   # Monog Database. Database information stored locally on .db folder. Private connection only Mongo Express and Node
   # can connect to the database.
   mongo:
-    image: mongo
+    image: "mongo"
     volumes: 
-      - mongodata:/data/db
-    expose: 
-      - 27017
+      - "mongodata:/data/db"
+    ports: 
+      - "127.0.0.1:27017:27017"

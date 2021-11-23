@@ -6,14 +6,14 @@ UniJobApp API is the application programing interface into our core application 
 - Download the initially seed database from google drive.
     - https://drive.google.com/drive/u/3/folders/1xjfqHakn3tnhLsu0DIO2RnfRBt-8kHDf
     - Download all .json files and store in the "scripts/raw-data" directory
-- Run docker-compose up
-- Run npm install
-- Run docker refresh-database
+- Run ```docker-compose up```
+- Run ```npm install```
+- Run ```docker refresh-database```
 
 ## Dependencies
     - Docker
     - Docker Compose
-    - NPM (Striclty for running commands, Node and NPM are handled in the docker container. That way we can share versions)
+    - Node v14.17.6 (Striclty for running commands, Node and NPM are handled in the docker container. That way we can share versions)
 
 ## Structure
 The structuure of this applicaiton is based heavily on two github repositories.

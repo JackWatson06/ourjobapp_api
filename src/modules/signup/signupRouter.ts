@@ -19,7 +19,7 @@ import * as contract from "./controllers/ContractController";
 
 let signupRouter: express.Router = express.Router();
 
-
+// Handle viewing contracts if the user has yet to be validated.
 signupRouter.get("/contracts/:id", contract.show)
 
 // Routes we use to interact with the employee signup REST endpoints

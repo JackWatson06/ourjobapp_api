@@ -22,6 +22,32 @@ type Query = {
 }
 
 /**
+ * Simple mapper function so we can abstract the querying process to the repo since we will have different requirements to query.
+ * @param affiliate Affiliate we want to persist to memory.
+ */
+export async function toEntity(employee: Collections.Employee): Promise<Employee|null> {
+    const newEmployee: NewEmployee = {
+        fname        : employee.fname,
+        lname        : employee.lname,
+        hourly_rate  : employee.hourly_rate,
+        commitment   : employee.commitment,
+        where        : employee.where,
+        distance     : employee.distance,
+        education    : employee.education,
+        experience   : employee.experience,
+        information  : employee.information,
+        email        : employee.email,
+        phone        : employee.phone,
+
+        // Map the following properties to the corresponding object id.
+        job_id       : employee.job_id.map((auth: ObjectId) => auth.toString()),
+        authorized   : employee.authorized.map((auth: ObjectId) => auth.toString()),
+        affiliate_id : employee.affiliate_id?.toString()
+      }
+    return new Employee(newEmployee);
+}
+
+/**
  * Store the employee in the database. Return true or false if we were sucessful.... that would be cought thow if there
  * were an error maybe we just return void.
  * @param employee Employee we want to persist to memory.
@@ -59,49 +85,6 @@ export async function create(employee: Employee): Promise<boolean>
 
     return ( await mdb.collection("employees").insertOne(employeeRow)).acknowledged;
 
-}
-
-/**
- * Read the employee from our database. We are going to then return the employee as the domain entity.
- * @param employee Employee we want to persist to memory.
- */
-export async function read(query: Query): Promise<Employee|null>
-{
-    // Create the affiliate
-    const mdb: MDb = db();
-
-    const employeeRow: Collections.Employee|null = await mdb
-        .collection("employees")
-        .findOne<Collections.Employee>({
-            token_id : query.tokenId ? toObjectId(query.tokenId) : undefined,
-            email    : query.email,
-            verified : query.verified
-        });
-    
-    if( employeeRow === null )
-    {
-        return null;
-    }
-
-    const employee: NewEmployee = {
-        fname        : employeeRow.fname,
-        lname        : employeeRow.lname,
-        hourly_rate  : employeeRow.hourly_rate,
-        commitment   : employeeRow.commitment,
-        where        : employeeRow.where,
-        distance     : employeeRow.distance,
-        education    : employeeRow.education,
-        experience   : employeeRow.experience,
-        information  : employeeRow.information,
-        email        : employeeRow.email,
-        phone        : employeeRow.phone,
-
-        // Map the following properties to the corresponding object id.
-        job_id       : employeeRow.job_id.map((auth: ObjectId) => auth.toString()),
-        authorized   : employeeRow.authorized.map((auth: ObjectId) => auth.toString()),
-        affiliate_id : employeeRow.affiliate_id?.toString()
-      }
-    return new Employee(employee);
 }
 
 /**

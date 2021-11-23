@@ -13,7 +13,7 @@ export default class Token {
     // Hold the date for when we send the verification email.
     private expiredDate: number;
 
-    // Hold the verification token we have generated to verify this emaill.
+    // Hold the verification token we have generated to verify this email.
     private token: string;
 
     // Additional code we can use if we are validating through sms. We still need to generate the UUID
@@ -21,7 +21,6 @@ export default class Token {
     private code: string;
 
     public async generate() {
-        
         this.token = crypto.randomUUID();
         this.expiredDate = Date.now() + (3_600_000); // That is 1 hour in milliseconds
     }

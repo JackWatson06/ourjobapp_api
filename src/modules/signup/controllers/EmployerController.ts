@@ -19,10 +19,10 @@ import Address   from "../entities/Address";
 import Proof     from "../entities/Proof";
 
  // Validator
-import { NewEmployer, schema } from "../validators/NewEmployerValidator";
+import {NewEmployer, schema} from "../validators/NewEmployerValidator";
 
 // Repository
-import { unique } from "../repositories/EmployerRepository";
+import {unique, getFromTokenId} from "../repositories/EmployerRepository";
 
 // External dependencies
 import * as express from "express";
@@ -48,12 +48,12 @@ export async function store(req: express.Request<any>, res: express.Response)
         const address: Address   = await AddressMapper.read(data.place_id);
         const employer: Employer = new Employer(data, address);
 
+        // Verify the afiiliate is who they say they are.
+        await employer.verify(new EmailNotification());
+
         await EmployerMapper.create(employer).catch( (err) => {
             res.status(400).send( { "error" : true } )
         });
-
-        // Verify the afiiliate is who they say they are.
-        await employer.verify(new EmailNotification());
 
         return res.status(200).send( { "success": true } )
     }
@@ -69,7 +69,6 @@ export async function store(req: express.Request<any>, res: express.Response)
  */
 export async function verify(req: express.Request<any>, res: express.Response)
 {
-    
     const token: string = req.body.token;
 
     const proof: Proof|null = await ProofManager.read(token);
@@ -77,15 +76,19 @@ export async function verify(req: express.Request<any>, res: express.Response)
     // Make sure that we can find the token
     if(proof === null)
     {
+        console.log("invalid proof");
+        
         return res.status(404).send({"error" : "Invalid verification link."});    
     }
 
     // Pull the affiliate from the database.,
-    const employer: Employer|null = await EmployerMapper.read({ tokenId: proof.getId() });
+    const employer: Employer|null = await getFromTokenId(proof.getId());
 
     // Double check that the affiliate exists.
     if(employer === null)
     {
+        console.log("Invalid verification link");
+        
         return res.status(404).send({"error" : "Invalid verification link."});    
     }
 
@@ -114,28 +117,3 @@ export async function verify(req: express.Request<any>, res: express.Response)
     }
 }
 
-// /**
-//  * api.employer.resend - Resend the employers verification link
-//  * @param req Express request object
-//  * @param res Express response object
-//  */
-// export async function resend(req: express.Request<any>, res: express.Response)
-// {
-//     const id: string = req.body.id;
-    
-//     // Pull the employer from the database.
-//     const employer: Employer|null = await EmployerMapper.read({ _id: new ObjectId( id ) });
-//     if(employer === null)
-//     {
-//         return res.status(400).send( { "error": "No employer found" } )
-//     }
-
-//     const sent: boolean = await employer.verify();
-
-//     if(sent)
-//     {
-//         return res.status(200).send( { "success": true } )
-//     }
-
-//     return res.status(400).send( { "error": true } )
-// }
