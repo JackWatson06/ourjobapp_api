@@ -7,7 +7,7 @@
  * project once I have more defined boudned contexts.
  */
 
-import * as MongoDb from "infa/MongoDb";
+import { collections } from "db/MongoDb";
 import DictionaryResult from "../entities/DictionaryResult";
 
 type DictionaryQuery = { 
@@ -24,12 +24,11 @@ type DictionaryRow = {
 
 export async function read(search: string, source: string): Promise<Array<DictionaryResult>>
 {
-    const db: MongoDb.MDb = MongoDb.db();
     const query: DictionaryQuery = {
         "name": new RegExp(`.*${search}.*`, "i"),
     };
 
-    return db.collection(source).find<DictionaryRow>(query).limit(100).map(( result ) => {
+    return collections[source].find(query).limit(100).map(( result: DictionaryRow ) => {
         return new DictionaryResult( result._id, result.name );
     }).toArray();
 }

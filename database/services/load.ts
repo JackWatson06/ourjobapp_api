@@ -6,7 +6,7 @@
  * 
  */
 
-import * as MongoDb from "../../src/core/infa/MongoDb";
+import { collections } from "db/MongoDb";
 import fs from "fs";
 
 /**
@@ -18,10 +18,9 @@ import fs from "fs";
 export default async function load(rawData: string, collection: string): Promise<void>
 {
     const input: string   = `${__dirname}/../raw-data/${rawData}`;
-    const db: MongoDb.MDb = MongoDb.db();
     const data: Buffer    = fs.readFileSync(input);
 
-    await db.collection(collection).insertMany( JSON.parse(data.toString()) ).catch((err) => {
+    await collections[collection].insertMany( JSON.parse(data.toString()) ).catch((err: Error) => {
         console.error("ERROR");
         console.error(err);
     });

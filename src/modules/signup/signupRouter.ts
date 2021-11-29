@@ -11,30 +11,24 @@
 import express from "express";
 
 // We could put index in the controllers directory.
-import * as affiliate from "./controllers/AffiliateController";
-import * as employee from "./controllers/EmployeeController";
-import * as employer from "./controllers/EmployerController";
-import * as resume from "./controllers/ResumeController";
-import * as contract from "./controllers/ContractController";
+import {store as storeAffiliate} from "./controllers/AffiliateController";
+// import {store as storeEmployee}  from "./controllers/EmployeeController";
+// import {store as storeEmployer}  from "./controllers/EmployerController";
+
+import {readContract} from "./controllers/SignupController";
+import {resend}   from "./controllers/SignupController";
+
+import {verify} from "./controllers/VerifyController";
 
 let signupRouter: express.Router = express.Router();
 
-// Handle viewing contracts if the user has yet to be validated.
-signupRouter.get("/contracts/:id", contract.show)
+signupRouter.post("/affiliate", storeAffiliate);
+// signupRouter.post("/employee", storeEmployee);
+// signupRouter.post("/employer", storeEmployer);
 
-// Routes we use to interact with the employee signup REST endpoints
-signupRouter.post("/employees",             employee.store);
-signupRouter.post("/employees/verify/:id",  employee.verify);
-signupRouter.post("/resumes",               resume.store);
+signupRouter.get(":id/contract", readContract);
+signupRouter.patch(":id/resend", resend);
 
-// Routes we use to interact with the employers signup REST endpoints
-signupRouter.post("/employers",         employer.store);
-signupRouter.post("/employers/verify",  employer.verify);
-
-
-// Routes we use to interact with the affiliates signup REST endpoints... Note right now the frontend calls affiliates ... share. This may change
-// but that is why you see it here since the front end proxy requests back here.
-signupRouter.post("/affiliates",            affiliate.store);
-signupRouter.post("/affiliates/verify/:id", affiliate.verify);
+signupRouter.patch("/verify/:id", verify);
 
 export default signupRouter;

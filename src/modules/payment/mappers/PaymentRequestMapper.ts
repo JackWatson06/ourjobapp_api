@@ -5,8 +5,7 @@
  * in the future.
  */
 
-import * as MongoDb from "infa/MongoDb";
-import * as Collections from "Collections";
+import {collections, toObjectId, now} from "db/MongoDb";
 import PaymentRequest from "../entities/PaymentRequest";
 
 /**
@@ -15,11 +14,9 @@ import PaymentRequest from "../entities/PaymentRequest";
  */
 export async function create( paymentRequest: PaymentRequest ): Promise<boolean>
 {
-    const db: MongoDb.MDb = MongoDb.db();
-
-    const payment: Collections.Payment = {
-        employer_id : MongoDb.toObjectId( paymentRequest.getEmployerId() ),
-        employee_id : MongoDb.toObjectId( paymentRequest.getEmployeeId() ),
+    return ( await collections.payments.insertOne({
+        employer_id : toObjectId( paymentRequest.getEmployerId() ),
+        employee_id : toObjectId( paymentRequest.getEmployeeId() ),
     
         paypal_id   : paymentRequest.getPaymentId(), // Information amount the actual payment.
         currency    : paymentRequest.getCurrency(),
@@ -28,8 +25,6 @@ export async function create( paymentRequest: PaymentRequest ): Promise<boolean>
         success     : false, // State the payment is in.
         error       : false, // State the payment is in.
     
-        started_at  : MongoDb.now(), // Time the payment was started from the paypal redirect
-    }
-
-    return ( await db.collection("payments").insertOne(payment)).acknowledged;
+        started_at  : now(), // Time the payment was started from the paypal redirect
+    })).acknowledged;
 }

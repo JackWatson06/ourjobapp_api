@@ -1,103 +1,69 @@
-
 /**
  * Original Author: Jack Watson
- * Created At: 10/19/2021
- * Purpose: Singing up a new employee is a vital part of our domain. This code seeks to be in charge of creating a new employee
- * in our system.
+ * Created At: 11/28/2021
+ * Purpose: This class will store a new employee using our signup system that we have in place.
+ * 
  */
-
 // Data Mappers
-import {create, update} from "../mappers/EmployeeMapper";
-import {read as readProof} from "../mappers/ProofMapper";
+import { create } from "../mappers/SignupMapper";
 
 // Entities
-import Employee  from "../entities/Employee";
-import Proof     from "../entities/Proof";
+import { Signup }         from "../entities/Signup";
+import { Employee }       from "../entities/signups/Employee";
+import { DocumentUpload } from "../entities/DocumentUpload";
+import { Purpose }        from "../entities/Purpose";
+import { Token }          from "../entities/Token";
 
- // Validator
-import {NewEmployee, schema} from "../validators/NewEmployeeValidator";
-
-// Repository
-import {unique, getFromTokenId} from "../repositories/EmployeeRepository";
+// Validator
+import { NewEmployee, schema } from "../validators/NewEmployeeValidator";
+import { validResume }         from "../validators/ResumeValidator";
 
 // External dependencies
-import * as express from "express";
-import { TextNotification } from "notify/TextNotification";
+import { Notification } from "notify/Notification";
+import { HandlebarsAdaptor } from "template/HandlebarsAdaptor";
+import express from "express";
+import * as fileUpload from "express-fileupload";
 import Ajv from "ajv";
-
+ 
 /**
- * signup.employee.store - Create a brand new employee in our system.
- * @param req Express request object
- * @param res Express response object
+ * Store a new employee in the signup system that we have.
+ * @param req Express request
+ * @param res Express response
  */
-export async function store(req: express.Request<any>, res: express.Response)
+export async function store(req: express.Request, res: express.Response)
 {
-    const ajv = new Ajv();
-
     // Validate that the input coming on the request would be able to create a employee
+    const ajv = new Ajv();
     const valid = ajv.compile(schema);
-    const data: NewEmployee = req.body;   
 
+    const data: NewEmployee = req.body;
+    const resume: fileUpload.UploadedFile|undefined = req.files?.resume as fileUpload.UploadedFile|undefined;
+        
     // Create the employee domain entity.
     if( valid(data) )
     {
-        const employee: Employee = new Employee(data);
+        const token: Token     = new Token();
+        const entity: Employee = new Employee(data);
+        const signup: Signup   = new Signup(entity, token);
 
-        // Verify the afiiliate is who they say they are.
-        await employee.verify(new TextNotification());
+        await signup.sendVerification(new Notification(), new HandlebarsAdaptor());
 
-        await create(employee).catch( (err) => {
-            console.error(err);
-            res.status(400).send( { "error" : true } )
-        });
+        // Add the document upload to the signup.
+        if(resume != undefined && validResume(resume))
+        {
+            signup.uploadDocument(new DocumentUpload(Purpose.RESUME, resume.data, resume.name, resume.size, resume.mimetype));
+        }
 
-        return res.status(200).send( { "success": true } )
+        try
+        {
+            const id: string|null = await create(signup);
+            return res.status(200).send({ id: id });
+        }
+        catch(err)
+        {
+            return res.status(503).send({"error": "Could not create signup."})
+        }
     }
 
-    // Error code did not work
-    return res.status(400).send( { "error" : true } );
-}
-
-/**
- * signup.employee.verify - Verify the employee to be using our system.
- * @param req Express request object
- * @param res Express response object
- */
-export async function verify(req: express.Request<any>, res: express.Response)
-{
-    const token : string = req.params.id;
-    const code  : string = req.body.code;
-    const proof : Proof|null = await readProof(token, code);
-
-    // Make sure that we can find the token
-    if(proof === null)
-    {   
-        return res.status(404).send({"error" : "Invalid verification link."});    
-    }
-
-    // Pull the affiliate from the database.,
-    const employee: Employee|null = await getFromTokenId(proof.getId());
-
-    // Double check that the affiliate exists.
-    if(employee === null)
-    {
-        return res.status(404).send({"error" : "Invalid verification link."});    
-    }
-
-    // If not unique then throw an error
-    if( !( await unique( employee )) )
-    {
-        return res.status(400).send({"error" : "Employee with Email already been authenticated."});    
-    }
-
-    // Othewise verify and persist.
-    const authorized: boolean = employee.authorize(proof);
-
-    if(authorized)
-    {
-        await update(proof.getId(), employee);
-        return res.status(200).send( {"success": true} );
-    }
-
-    return res.status(400).send( {"error": "Token not valid"} )
+    return res.status(400).send( { "error" : "Data invalid." } );
 }

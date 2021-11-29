@@ -7,11 +7,9 @@
  * @TODO Add protection so that we don't aciddentaly run this on the production server and delete literally all of our data.
  */
 
-import * as mongoDb from "infa/MongoDb";
+import { dropDatabase } from "db/MongoDb";
 
 export default async function exec()
 {
-    const db: mongoDb.MDb = mongoDb.db();
-
-    await db.dropDatabase();
+    await dropDatabase();
 }

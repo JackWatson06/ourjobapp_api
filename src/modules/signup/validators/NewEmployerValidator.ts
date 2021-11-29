@@ -10,6 +10,7 @@ export interface NewEmployer {
     position     : string,
     company_name : string,
     place_id     : string,
+    address      : string,
     industry     : string[],
     experience   : number[],
     salary       : number,

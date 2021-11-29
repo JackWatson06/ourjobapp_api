@@ -1,37 +1,36 @@
-
 /**
  * Original Author: Jack Watson
- * Created At: 10/16/2021
- * Purpose: We need a way to interact with the underlying affiliates that we have in the system. This controller file
- * allows us to run different commands on the affiliate in order to set the state of a affiliate in our system.
+ * Created At: 11/28/2021
+ * Purpose: This class will store a new affilaite using our signup system that we have in place.
+ * 
+ * 
+ * @todo Return a success code for the successful process ... were going to want to think of an elegant way to do this
+ * throughout the application. Returning errors as well. Maybe we find something similar to fractal in PHP
  */
 
-// Data Mappers
-import { create, update } from "../mappers/AffiliateMapper";
-import { read } from "../mappers/ProofMapper";
+ // Data Mappers
+import { create } from "../mappers/SignupMapper";
 
 // Entities
-import Affiliate from "../entities/Affiliate";
-import Proof from "../entities/Proof";
-
-import { unique, getFromTokenId } from "../repositories/AffiliateRepository";
+import { Signup }            from "../entities/Signup";
+import { Affiliate }         from "../entities/signups/Affiliate";
+import { Token }             from "../entities/Token";
 
  // Validator
 import { NewAffiliate, schema } from "../validators/NewAffiliateValidator";
 
-import transform from "../views/VerifiedAffiliateView";
-
 // External dependencies
-import * as express from "express";
-import {TextNotification} from "notify/TextNotification";
+import { Notification } from "notify/Notification";
+import { HandlebarsAdaptor } from "template/HandlebarsAdaptor";
+import express from "express";
 import Ajv from "ajv";
 
 /**
- * signup.affiliate.store - Create a brand new affiliate in the system.
- * @param req Express request object
- * @param res Express response object
+ * Store a new affiliate in the signup system that we have.
+ * @param req Express request
+ * @param res Express response
  */
-export async function store(req: express.Request<any>, res: express.Response)
+export async function store(req: express.Request, res: express.Response)
 {
     // Validate that the input coming on the request would be able to create a affiliate
     const ajv = new Ajv();
@@ -42,99 +41,26 @@ export async function store(req: express.Request<any>, res: express.Response)
     // Create the affilaite domain entity.
     if( valid(data) )
     {
-        const affiliate: Affiliate = new Affiliate(data);
+        const notification: Notification   = new Notification();
+        const template: HandlebarsAdaptor  = new HandlebarsAdaptor();
 
-        // Send out a verificaiton email (included with their contract) Do the domain request before persistance thank you
-        // very much.
-        await affiliate.verify(new TextNotification());
+        const token: Token                 = new Token();
+        const entity: Affiliate            = new Affiliate(data);
+        const signup: Signup               = new Signup(entity, token);
 
-        await create(affiliate).catch( (err) => {
-            console.error(err);
-            
-            res.status(400).send( { "error" : true } )
-        });
+        await signup.addContract(entity, template);
+        await signup.sendVerification(notification, template);
 
-        return res.status(200).send( { "success": true } )
+        try
+        {
+            const id: string|null = await create(signup);
+            return res.status(200).send({ id: id });
+        }
+        catch(err)
+        {
+            return res.status(503).send({"error": "Could not create signup."})
+        }
     }
     
-    // Return a success code for the successful process ... were going to want to think of an elegant way to do this
-    // throughout the application. Returning errors as well. Maybe we find something similar to fractal in PHP
-    return res.status(400).send( { "error" : true } );
+    return res.status(400).send( { "error" : "Data invalid." } );
 }
-
-/**
- * signup.affiliate.verify - Verify the verification link
- * @param req Express request object
- * @param res Express response object
- */
-export async function verify(req: express.Request<any>, res: express.Response)
-{
-    const token : string = req.params.id;
-    const code  : string = req.body.code;
-    
-    const proof : Proof|null = await read(token, code);
-
-    // Make sure that we can find the token
-    if(proof === null)
-    {
-        return res.status(404).send({"error" : "Invalid verification code."});    
-    }
-    
-    // Pull the affiliate from the database.,
-    const affiliate: Affiliate|null = await getFromTokenId(proof.getId());
-
-    // Double check that the affiliate exists.
-    if(affiliate === null)
-    {
-        return res.status(404).send({"error" : "Invalid verification link."});    
-    }
-
-    // If not unique then throw an error
-    if( !( await unique( affiliate )) )
-    {
-        return res.status(400).send({"error" : "User with Link Name has already been authenticated."});    
-    }
-
-    // Othewise verify and persist.
-    const authorized: boolean = affiliate.authorize(proof);
-
-    if(authorized)
-    {
-        await update(proof.getId(), affiliate);
-
-        return res.status(200).send( {
-                "success": true,
-                "data": transform(affiliate)
-            } );
-    }
-
-    return res.status(400).send( {"error": "Token not valid"} )
-}
-
-
-// /**
-//  * @todo We need to check this code again after this.
-//  * signup.affiliate.resend - Resend the verification link
-//  * @param req Express request object
-//  * @param res Express response object
-//  */
-// export async function resend(req: express.Request<any>, res: express.Response)
-// {
-//     const id: string = req.body.id;
-    
-//     // Pull the affiliate from the database.
-//     const affiliate: Affiliate|null = await read({ _id: id });
-//     if(affiliate === null)
-//     {
-//         return res.status(400).send( { "error": "No affiliate found" } )
-//     }
-
-//     const sent: boolean = await affiliate.verify(new TextNotification());
-
-//     if(sent)
-//     {
-//         return res.status(200).send( { "success": true } )
-//     }
-
-//     return res.status(400).send( { "error": true } )
-// }

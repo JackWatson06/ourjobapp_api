@@ -77,7 +77,10 @@
     "xlsx": "^0.17.2"
   },
   "_moduleAliases": {
-    "infa": "src/core/infa",
-    "notify": "src/core/notify"
+    "db"       : "src/core/db",
+    "infa"     : "src/core/infa",
+    "notify"   : "src/core/notify",
+    "payment"  : "src/core/payment",
+    "template" : "src/core/template"
   }
 }

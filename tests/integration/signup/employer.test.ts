@@ -1,8 +1,8 @@
 import request           from "supertest";
 import fs                from "fs";
 import app               from "bootstrap/app";
-import * as MongoDb      from "infa/MongoDb";
-import * as  Collections from "Collections";
+import * as MongoDb      from "db/MongoDb";
+import * as  Collections from "db/DatabaseSchema";
 
 jest.setTimeout(30000);
 

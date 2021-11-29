@@ -1,4 +1,4 @@
-import * as MongoDb from "infa/MongoDb";
+import { collections } from "db/MongoDb";
 import load from "./services/load";
 
 export default async function exec()
@@ -9,21 +9,19 @@ export default async function exec()
     await load("jobs.json",       "jobs");
     await load("majors.json",     "majors");
 
-    const db: MongoDb.MDb = MongoDb.db();
-
-    await db.collection("charities").createIndex({
+    await collections.charities.createIndex({
         "name": 1
     });
-    await db.collection("jobGroups").createIndex({
+    await collections.job_groups.createIndex({
         "name": 1
     });
-    await db.collection("jobs").createIndex({
+    await collections.jobs.createIndex({
         "name": 1
     });
-    await db.collection("majors").createIndex({
+    await collections.majors.createIndex({
         "name": 1
     });
-    await db.collection("countries").createIndex({
+    await collections.countries.createIndex({
         "name": 1
     });
 }

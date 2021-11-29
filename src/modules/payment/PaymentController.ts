@@ -8,7 +8,7 @@
  */
 import express from "express";
 
-import PayPalAdaptor from "infa/PayPalAdaptor";
+import PayPalAdaptor from "payment/PayPalAdaptor";
 import PaymentRequest from "./entities/PaymentRequest";
 import Payment from "./entities/Payment";
 

@@ -4,7 +4,7 @@
  * Purpose: This represents a payment request that the employer initializes when they want to puchase an employee.
  */
 
-import { PaymentI, PaymentCreateResponse} from "infa/PaymentI";
+import { PaymentI, PaymentCreateResponse} from "src/core/payment/PaymentI";
 import PaymentPlan from "./PaymentPlan";
 
 export default class PaymentRequest

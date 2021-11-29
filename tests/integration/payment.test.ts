@@ -1,7 +1,7 @@
 import request           from "supertest";
 import app               from "bootstrap/app";
-import * as MongoDb      from "infa/MongoDb";
-import * as  Collections from "Collections";
+import * as MongoDb      from "db/MongoDb";
+import * as  Collections from "db/DatabaseSchema";
 
 const db: MongoDb.MDb = MongoDb.db();
 

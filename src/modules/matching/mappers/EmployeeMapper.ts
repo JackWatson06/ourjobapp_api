@@ -3,8 +3,8 @@
  * Created Date: 11/3/2021
  * Purpose: This class will map the employee to our own internal memory represneation of an employee inside this entity framework.
  */
-import * as MongoDb from "infa/MongoDb";
-import * as Collections from "Collections";
+import { collections } from "db/MongoDb";
+import { Schema } from "db/DatabaseSchema";
 
 import { ObjectId } from "mongodb";
 
@@ -15,17 +15,16 @@ import Job         from "../entities/Job";
 import CountryCode from "../entities/CountryCode";
 import Location    from "../entities/Location";
 import Industry    from "../entities/Industry";
-import { employee } from "modules/search/controllers/ExistingEmailController";
 
 /**
  * Map the jobs of the employee to what they are going to be used during the matching service.
  * @param db MongoDb
  * @param employeeMatchRow The matching employee row
  */
-function mapJobs(db: MongoDb.MDb, employeeMatchRow: Collections.Employee): Array<Promise<Job>>
+function mapJobs(employeeMatchRow: Schema.Employee): Array<Promise<Job>>
 {
     return employeeMatchRow.job_id.map( async (jobId: ObjectId) => {
-        const job: Collections.Job|null = await db.collection("jobs").find<Collections.Job>({ _id: jobId}).next()
+        const job: Schema.Job|null = await collections.jobs.find({ _id: jobId}).next()
 
         if( job != null && job._id != undefined)
         {
@@ -42,10 +41,10 @@ function mapJobs(db: MongoDb.MDb, employeeMatchRow: Collections.Employee): Array
  * @param db Database instance
  * @param countryObjectId ObjectIds that we need to encode to just regular country codes.
  */
-function mapCountryCode(db: MongoDb.MDb, countryObjectId: Array<ObjectId>): Array<Promise<CountryCode>>
+function mapCountryCode(countryObjectId: Array<ObjectId>): Array<Promise<CountryCode>>
 {
     return countryObjectId.map( async (countryId: ObjectId) => {
-        const country: Collections.Country|null = await db.collection("countries").find<Collections.Country>({ _id: countryId}).next()
+        const country: Schema.Country|null = await collections.countries.find({ _id: countryId}).next()
 
         if( country != null )
         {
@@ -62,13 +61,10 @@ function mapCountryCode(db: MongoDb.MDb, countryObjectId: Array<ObjectId>): Arra
  */
 export async function *readBulk()
 {    
-    const db: MongoDb.MDb  = MongoDb.db();
-    const employeeCursor = db.collection("employees").find<Collections.Employee>({
-        verified: true
-    });
+    const employeeCursor = collections.employees.find({});
 
     while(await employeeCursor.hasNext()) {
-        const employeeMatchRow: Collections.Employee|null = await employeeCursor.next();
+        const employeeMatchRow: Schema.Employee|null = await employeeCursor.next();
 
         // Skip if we don't have the batch match.
         if(employeeMatchRow === null || employeeMatchRow._id === undefined)
@@ -78,14 +74,14 @@ export async function *readBulk()
         }
 
         // Map the authorized countries.
-        const authorizedCodes: Array<CountryCode> = await Promise.all( mapCountryCode(db, employeeMatchRow.authorized) );
-        const jobMap: Array<Job>                  = await Promise.all( mapJobs(db, employeeMatchRow) );
+        const authorizedCodes: Array<CountryCode> = await Promise.all( mapCountryCode(employeeMatchRow.authorized) );
+        const jobMap: Array<Job>                  = await Promise.all( mapJobs(employeeMatchRow) );
         let nationalCodes: Array<CountryCode>|undefined;
         let location: Location|undefined;
 
         if( employeeMatchRow.nations != undefined )
         {
-            nationalCodes = await Promise.all( mapCountryCode(db, employeeMatchRow.nations) );
+            nationalCodes = await Promise.all( mapCountryCode(employeeMatchRow.nations) );
         }
         
         if( employeeMatchRow.place_id != undefined )

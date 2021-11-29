@@ -3,8 +3,8 @@
  * Created Date: 10/3/2021
  * Purpose: The purpose of this script is to turn the jobs xslx file that we have into a json file.
  */
-import * as MongoDb from "infa/MongoDb";
-import * as Collections from "Collections";
+import { now } from "db/MongoDb";
+import { Schema } from "db/DatabaseSchema";
 import { titleCase } from "title-case";
 import * as crypto from "crypto";
 import * as XLSX from "xlsx";
@@ -39,8 +39,8 @@ export default async function exec()
     const worksheetJSON: JobsRow[] = XLSX.utils.sheet_to_json(page);
 
     // The database records to be stored
-    const extractedJobsJSON: Collections.Job[]          = [];
-    const extractedJobGroupJSON: Collections.JobGroup[] = [];
+    const extractedJobsJSON: Schema.Job[]          = [];
+    const extractedJobGroupJSON: Schema.JobGroup[] = [];
 
     for(const row of worksheetJSON)
     {
@@ -53,10 +53,10 @@ export default async function exec()
         // If the charity is already in the list then we just want to skip the charity.
         if( !jobDictionary.hasOwnProperty(jobHash) )
         {   
-            const job: Collections.Job = {
+            const job: Schema.Job = {
                 name: jobString,
                 job_group: jobGroupString,
-                created_at: MongoDb.now()
+                created_at: now()
             }
 
             jobDictionary[jobHash] = 0;
@@ -67,9 +67,9 @@ export default async function exec()
         // If the charity is already in the list then we just want to skip the charity.
         if( !jobGroupDictionary.hasOwnProperty(jobGroupHash) )
         {   
-            const jobGroup: Collections.JobGroup = {
+            const jobGroup: Schema.JobGroup = {
                 name: jobGroupString,
-                created_at: MongoDb.now()
+                created_at: now()
             }
 
             jobGroupDictionary[jobGroupHash] = 0;

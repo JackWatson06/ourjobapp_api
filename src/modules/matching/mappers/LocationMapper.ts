@@ -1,6 +1,6 @@
 
 import { getLocationByPlaceId } from "infa/GoogleApiAdaptor";
-import * as Collections from "Collections";
+import { Schema } from "db/DatabaseSchema";
 
 import Location from "../entities/Location";
 import CountryCode from "../entities/CountryCode";
@@ -11,6 +11,6 @@ import CountryCode from "../entities/CountryCode";
  */
 export async function read(placeId: string): Promise<Location>
 {
-    const location: Collections.Location = await getLocationByPlaceId(placeId);
+    const location: Schema.Location = await getLocationByPlaceId(placeId);
     return new Location(location.latitutde, location.longitude, location.address, new CountryCode( location.country_code ));
 }

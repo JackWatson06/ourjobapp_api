@@ -23,7 +23,7 @@ const transporter = nodemailer.createTransport(mailerOptions);
  * Send out en email using the current settings.
  * @param email Email we are sending (create thee email form the Notify folder)
  */
-export async function send(email: Email)
+export async function sendEmail(email: Email)
 {   
   // send mail with defined transport object
   return await transporter.sendMail({

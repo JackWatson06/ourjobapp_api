@@ -7,7 +7,7 @@
  * project once I have more defined boudned contexts.
  */
 
-import * as MongoDb from "infa/MongoDb"
+import {collections} from "db/MongoDb";
 import ExistingResource from "../entities/ExistingResource"
 
 type ExisitingLinkQuery = { 
@@ -21,13 +21,11 @@ type ExisitingLinkQuery = {
  */
 export async function read(name: string): Promise<ExistingResource>
 {
-    const db: MongoDb.MDb = MongoDb.db();
-    
     const query: ExisitingLinkQuery = {
         "name"     : name,
         "verified" : true
     };
     
-    const hasOneLink: number = await db.collection("affiliates").find(query).limit(1).count();
+    const hasOneLink: number = await collections.affiliates.find(query).limit(1).count();
     return new ExistingResource( hasOneLink != 0 );
 }

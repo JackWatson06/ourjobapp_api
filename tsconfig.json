@@ -13,8 +13,11 @@
         "paths": {
             "bootstrap/*" : [ "src/bootstrap/*" ],
             "modules/*"   : [ "src/modules/*" ],
+            "db/*"        : [ "src/core/db/*" ],
             "infa/*"      : [ "src/core/infa/*" ],
             "notify/*"    : [ "src/core/notify/*" ],
+            "payment/*"   : [ "src/core/payment/*" ],
+            "template/*"  : [ "src/core/template/*" ],
             "*": [
                 "src/types/*",
                 "node_modules/*"

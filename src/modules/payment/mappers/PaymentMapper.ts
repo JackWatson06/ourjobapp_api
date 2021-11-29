@@ -5,8 +5,8 @@
  * that are moving through out system.
  */
 
-import * as MongoDb from "infa/MongoDb";
-import * as Collections from "Collections";
+import { collections, toObjectId } from "db/MongoDb";
+import { Schema } from "db/DatabaseSchema";
 
 import Payment from "../entities/Payment";
 import Affiliate from "../entities/Affiliate";
@@ -30,9 +30,9 @@ type UpdateQuery = {
  * @param affiliates The current runing total of the affiliates
  * @param depth How far down are we the chain already
  */
-async function mapAffiliates(db: MongoDb.MDb, affiliateId: ObjectId, depth: number = 0): Promise<Affiliate|undefined>
+async function mapAffiliates(affiliateId: ObjectId, depth: number = 0): Promise<Affiliate|undefined>
 {   
-    const affiliateRow: Collections.Affiliate|null = await db.collection("affiliates").findOne<Collections.Affiliate>({ _id: affiliateId });
+    const affiliateRow: Schema.Affiliate|null = await collections.affiliates.findOne({ _id: affiliateId });
 
     if(affiliateRow === null || affiliateRow._id === undefined || depth === 2 )
     {
@@ -47,7 +47,7 @@ async function mapAffiliates(db: MongoDb.MDb, affiliateId: ObjectId, depth: numb
     // We have a nested affiliate.
     if(affiliateRow.affiliate_id != undefined)
     {
-        const nestedAffiliate: Affiliate|undefined = await mapAffiliates(db, affiliateRow.affiliate_id, depth++);
+        const nestedAffiliate: Affiliate|undefined = await mapAffiliates(affiliateRow.affiliate_id, depth++);
 
         if(nestedAffiliate != undefined)
         {
@@ -64,9 +64,7 @@ async function mapAffiliates(db: MongoDb.MDb, affiliateId: ObjectId, depth: numb
  */
 export async function read( paymentId: string ): Promise<Payment|null>
 {
-    const db: MongoDb.MDb = MongoDb.db();
-
-    const paymentRow: Collections.Payment|null = await db.collection("payments").findOne<Collections.Payment>({ paypal_id: paymentId });
+    const paymentRow: Schema.Payment|null = await collections.payments.findOne({ paypal_id: paymentId });
     
     if(paymentRow === null)
     {
@@ -77,15 +75,15 @@ export async function read( paymentId: string ): Promise<Payment|null>
     const employeeQuery = { _id: paymentRow.employee_id };
     
     // Get all the affiliates of affiliates if we have them.
-    const employerRow: Collections.Employer|null = await db.collection("employers").findOne<Collections.Employer>(employerQuery);
-    const employeeRow: Collections.Employee|null = await db.collection("employees").findOne<Collections.Employee>(employeeQuery);
+    const employerRow: Schema.Employer|null = await collections.employers.findOne(employerQuery);
+    const employeeRow: Schema.Employee|null = await collections.employees.findOne(employeeQuery);
     
     const payment: Payment = new Payment(paymentRow.paypal_id);
 
     // Add the employers affiliates if we have any of them.
     if(employerRow != null && employerRow.affiliate_id != undefined)
     {   
-        const affiliate: Affiliate|undefined = await mapAffiliates(db, employerRow.affiliate_id);
+        const affiliate: Affiliate|undefined = await mapAffiliates(employerRow.affiliate_id);
 
         if(affiliate != undefined)
         {
@@ -96,7 +94,7 @@ export async function read( paymentId: string ): Promise<Payment|null>
     // Add the employees affilaites if we have any of them.
     if(employeeRow != null && employeeRow.affiliate_id != undefined)
     {
-        const affiliate: Affiliate|undefined = await  mapAffiliates(db, employeeRow.affiliate_id);
+        const affiliate: Affiliate|undefined = await  mapAffiliates(employeeRow.affiliate_id);
 
         if(affiliate != undefined)
         {
@@ -114,8 +112,6 @@ export async function read( paymentId: string ): Promise<Payment|null>
  */
 export async function update( payment: Payment ): Promise<boolean>
 {
-    const db: MongoDb.MDb = MongoDb.db();
-
     const updatePayment: UpdateQuery = {
         success     : payment.getSuccess(), // State the payment is in.
         error       : payment.getError(), // State the payment is in.
@@ -128,18 +124,17 @@ export async function update( payment: Payment ): Promise<boolean>
     const paymentQuery = { paypal_id: payment.getId() };
 
     // Update and return the identifier for the paymentId;
-    const paymentId: ObjectId|undefined = ( await db.collection("payments")
-        .findOneAndUpdate(paymentQuery, { $set: updatePayment }) ).value?._id;
+    const paymentId: ObjectId|undefined = ( await collections.payments.findOneAndUpdate(paymentQuery, { $set: updatePayment }) ).value?._id;
 
 
     if(paymentId != undefined)
     {
         for(const payout of payment.getPayouts())
         {
-            const payoutRow: Collections.Payout = {
-                affiliate_id     : MongoDb.toObjectId( payout.getReward().getAffiliateId() ),
+            await collections.payouts.insertOne({
+                affiliate_id     : toObjectId( payout.getReward().getAffiliateId() ),
                 payment_id       : paymentId,
-                charity_id       : MongoDb.toObjectId( payout.getDonation().getCharity().getId() ),
+                charity_id       : toObjectId( payout.getDonation().getCharity().getId() ),
                 batch_id         : payout.getBatchId(),
                 
                 amount           : payout.getReward().getAmount(),
@@ -149,9 +144,7 @@ export async function update( payment: Payment ): Promise<boolean>
                 
                 success          : payout.getSuccess(),
                 error            : payout.getError(),
-            }
-
-            await db.collection("payouts").insertOne(payoutRow);
+            });
         }
     }
 

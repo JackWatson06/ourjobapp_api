@@ -1,33 +1,52 @@
-
 /**
  * Original Author: Jack Watson
- * Created At: 10/22/2021
- * Purpose: We need a simply data object to communicate with us that we were able to find the verification token in the 
- * database.
+ * Created At: 11/29/2021
+ * Purpose: This class holds the authetnication behavior for authenticating someone who is trying to use our system.
  */
 
-export default class Proof
-{    
-    //The identifier for the resource this proof represents.
-    private id: string;
+export class Proof {
 
-    //Hold the expired date for this proof
-    private expiredDate: number;
+    private secret: string;
+    private code: number|undefined;
+    private expiredAt: number;
 
-    constructor(id: string, expiredDate: number)
+    private verifiedAt: number;
+    private verified: boolean;
+
+    constructor(
+        secret: string, 
+        code: number|undefined, 
+        expiredAt: number, 
+        verified: boolean)
     {
-        this.id = id;
-        this.expiredDate = expiredDate;
+        this.secret     = secret;
+        this.code       = code;
+        this.expiredAt  = expiredAt;
+        this.verifiedAt = 0;
+        this.verified   = verified;
     }
 
-    // === GETTERS ===
-    public getId()
+    /**
+     * Prove that the form data submitted tot his application should be used in the application.
+     * @param secret The secret that we must check
+     * @param code The code that we may have on sms verification
+     */
+    public prove(secret: string, code: number|undefined)
     {
-        return this.id;
+        this.verified = !this.verified && Date.now() < this.expiredAt && this.secret === secret && this.code === code;
+        this.verifiedAt = Date.now();
+
+        return this.verified;
     }
 
-    public getExpiredDate()
+    // === Getters ===
+    public getVerified(): boolean
     {
-        return this.expiredDate;
+        return this.verified
+    }
+
+    public getVerifiedAt(): number
+    {
+        return this.verifiedAt;
     }
 }

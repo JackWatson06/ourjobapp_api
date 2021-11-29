@@ -1,5 +1,7 @@
 import * as BatchMapper from "../mappers/BatchMapper";
-import * as MongoDb from "infa/MongoDb"
+
+import { collections, generate} from "db/MongoDb"
+import { Schema } from "db/DatabaseSchema"
 
 import Batch from "../entities/Batch";
 
@@ -8,7 +10,7 @@ import Batch from "../entities/Batch";
  */
 export function getId(): string
 {
-    return MongoDb.generate().toString();
+    return generate().toString();
 }
 
 /**
@@ -17,7 +19,14 @@ export function getId(): string
  */
 export async function getMostRecentBatch(): Promise<Batch>
 {    
-    return await BatchMapper.read({}, [ 
+    const batchRow: Schema.Batch|null = await collections.batches.find({}).sort([ 
         ["created_at", -1]
-    ] );
+    ]).limit(1).next();
+
+    if(batchRow === null)
+    {
+        throw "Could not find most recent batch row."
+    }
+
+    return BatchMapper.map(batchRow);
 }

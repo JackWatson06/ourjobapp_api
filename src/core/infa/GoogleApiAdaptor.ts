@@ -1,8 +1,8 @@
 // Hmmmmm I feel indiferent about this we use MongoDB here so we can cache some of the results of the google api to reduce
 // the amount of times we are actually querying the API. I will have to take a look at a better way to do this. Maybe I add
 // some sort of cache layer on top of this to remove the gomongoDb calls inside this class.
-import * as MongoDb from "./MongoDb";
-import * as Collections from "Collections";
+import * as MongoDb from "../db/MongoDb";
+import * as Collections from "db/DatabaseSchema";
 
 import axios from "axios";
 

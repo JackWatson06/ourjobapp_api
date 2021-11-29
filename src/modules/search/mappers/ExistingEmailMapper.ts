@@ -1,4 +1,4 @@
-import * as MongoDb from "infa/MongoDb";
+import { collections } from "db/MongoDb"; 
 import ExistingResource from "../entities/ExistingResource";
 
 type ExistinEmailQuery = { 
@@ -8,12 +8,11 @@ type ExistinEmailQuery = {
 
 export async function read(search: string, source: string): Promise<ExistingResource>
 {
-    const db: MongoDb.MDb = MongoDb.db();
     const query: ExistinEmailQuery = {
         "email"   : new RegExp(`^${search}$`, "i"),
         "verified": true
     };
 
-    const hasOneEmail: number = await db.collection(source).find(query).limit(1).count();
+    const hasOneEmail: number = await collections[source].find(query).limit(1).count();
     return new ExistingResource( hasOneEmail != 0 );
 }

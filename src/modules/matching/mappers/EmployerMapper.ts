@@ -1,12 +1,9 @@
-import * as MongoDb from "infa/MongoDb";
-import * as Collections from "Collections";
-
-import { ObjectId } from "mongodb";
+import { collections, toObjectId, ObjectId } from "db/MongoDb";
+import { Schema } from "db/DatabaseSchema";
 
 import * as LocationMapper from "./LocationMapper";
 
 import Employer    from "../entities/Employer";
-import Location    from "../entities/Location";
 import Industry from "../entities/Industry";
 
 /**
@@ -14,10 +11,10 @@ import Industry from "../entities/Industry";
  * @param db Instance of db
  * @param employerMatchRow The matching employer row that we are currently mapping
  */
-function mapIndustry(db: MongoDb.MDb, employerMatchRow: Collections.Employer): Array<Promise<Industry>>
+function mapIndustry(employerMatchRow: Schema.Employer): Array<Promise<Industry>>
 {
     return employerMatchRow.industry.map( async (industryId: ObjectId) => {
-        const industry: Collections.JobGroup|null = await db.collection("jobGroups").find<Collections.JobGroup>({ _id: industryId}).next()
+        const industry: Schema.JobGroup|null = await collections.job_groups.find({ _id: industryId}).next()
 
         if( industry != null && industry._id != undefined)
         {
@@ -34,10 +31,8 @@ function mapIndustry(db: MongoDb.MDb, employerMatchRow: Collections.Employer): A
  */
 export async function read(employerId: string): Promise<Employer|null>
 {    
-    const db: MongoDb.MDb  = MongoDb.db();
-    const employerMatchRow: Collections.Employer|null = await db.collection("employers").findOne<Collections.Employer>({
-        _id: MongoDb.toObjectId(employerId),
-        verified: true
+    const employerMatchRow: Schema.Employer|null = await collections.employers.findOne({
+        _id: toObjectId(employerId)
     });
 
     // Skip if we don't have the batch match.
@@ -47,7 +42,7 @@ export async function read(employerId: string): Promise<Employer|null>
     }
 
     // Map the authorized countries.
-    const industryMap: Array<Industry> = await Promise.all( mapIndustry(db, employerMatchRow) );
+    const industryMap: Array<Industry> = await Promise.all( mapIndustry(employerMatchRow) );
     const location = await LocationMapper.read(employerMatchRow.place_id);
     
     return new Employer(
@@ -68,13 +63,10 @@ export async function read(employerId: string): Promise<Employer|null>
  */
 export async function *readBulk()
 {    
-    const db: MongoDb.MDb  = MongoDb.db();
-    const employerCursor = db.collection("employers").find<Collections.Employer>({
-        verified: true
-    });
+    const employerCursor = collections.employers.find({});
 
     while(await employerCursor.hasNext()) {
-        const employerMatchRow: Collections.Employer|null = await employerCursor.next();
+        const employerMatchRow: Schema.Employer|null = await employerCursor.next();
 
         // Skip if we don't have the batch match.
         if(employerMatchRow === null || employerMatchRow._id === undefined)
@@ -84,7 +76,7 @@ export async function *readBulk()
         }
 
         // Map the authorized countries.
-        const industryMap: Array<Industry> = await Promise.all( mapIndustry(db, employerMatchRow) );
+        const industryMap: Array<Industry> = await Promise.all( mapIndustry(employerMatchRow) );
         const location = await LocationMapper.read(employerMatchRow.place_id);
         
         yield new Employer(

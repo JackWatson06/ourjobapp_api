@@ -74,27 +74,19 @@ async function read(directory: Document|Cache|Template, file: string): Promise<s
  * @param file File name we are writing to within the directory.
  * @param data Data we are writing to the file.
  */
-async function write(directory: Document|Cache, data: any, file?: string): Promise<string>
+async function write(directory: Document|Cache, data: any): Promise<string>
 {
     // If we don't pass in a filename then we will generate a file name. this can be useful if we are
     // storing something in the cache. We will seperate the filesystem API with the caching API soon!
-    let determinedFileName: string;
-    if(file === undefined)
-    {
-        determinedFileName = objectHash.MD5(data);
-    }
-    else
-    {
-        determinedFileName = file;
-    }
+    const fileName: string = objectHash.MD5(data);
 
     return new Promise( (resolve, reject) => {
-        fs.writeFile(absolutePath(directory, determinedFileName), data, err => {
+        fs.writeFile(absolutePath(directory, fileName), data, err => {
             if(err)
             {
                 reject(err);
             }            
-            resolve(determinedFileName);
+            resolve(fileName);
         } );
     } );
 }

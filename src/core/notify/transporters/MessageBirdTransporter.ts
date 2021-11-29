@@ -10,7 +10,7 @@ const originator: string = process.env.SMS_NUMBER;
  * Send out en email using the current settings.
  * @param email Email we are sending (create thee email form the Notify folder)
  */
-export async function send(text: Text)
+export async function sendText(text: Text)
 {   
     return new Promise<void>((resolve, reject) => {
 

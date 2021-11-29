@@ -4,7 +4,7 @@
  * Purpose: The address that we are mapping to the domain. Note that the address pulls from the GoogleApiAdaptor. This
  * adaptor has a built in cache to prevent from querying against the API multiple times. We store this cache in MongoDB
  */
-import * as Collection          from "Collections";
+import * as Collection          from "db/DatabaseSchema";
 import { getLocationByPlaceId } from "infa/GoogleApiAdaptor";
 
 import Address from "../entities/Address";

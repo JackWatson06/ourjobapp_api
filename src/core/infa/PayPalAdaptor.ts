@@ -12,7 +12,7 @@
  * 
  */
 
-import {PaymentI, PaymentCreateResponse, PayoutCreateRequest} from "./PaymentI";
+import {PaymentI, PaymentCreateResponse, PayoutCreateRequest} from "../payment/PaymentI";
 import paypal from "paypal-rest-sdk";
 
 /**

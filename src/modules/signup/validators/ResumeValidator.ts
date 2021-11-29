@@ -24,7 +24,7 @@ const LIMIT = 5242880;
  * Validate a file we just uploaded.
  * @param file File we just uploaded from express-fileupload
  */
-export default function validate(file: fileUpload.UploadedFile): boolean
+export function validResume(file: fileUpload.UploadedFile): boolean
 {
     if(file.size > LIMIT && !TYPES.includes( file.mimetype ) )
     {
