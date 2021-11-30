@@ -31,7 +31,7 @@ export class Proof {
      * @param secret The secret that we must check
      * @param code The code that we may have on sms verification
      */
-    public prove(secret: string, code: number|undefined)
+    public prove(secret: string, code ?: number)
     {
         this.verified = !this.verified && Date.now() < this.expiredAt && this.secret === secret && this.code === code;
         this.verifiedAt = Date.now();

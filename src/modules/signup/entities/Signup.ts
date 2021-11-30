@@ -28,6 +28,8 @@ export class Signup
     {
         this.entity = entity;
         this.token  = token;
+        this.uploadedDocuments = [];
+        this.localDocuments    = [];
     }
 
     /**

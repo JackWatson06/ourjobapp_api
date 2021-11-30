@@ -22,7 +22,7 @@ import Affiliate from "modules/payment/entities/Affiliate";
 import Identification from "modules/payment/entities/Identification";
 import Charity from "modules/payment/entities/Charity";
 
-import PayPalAdaptor from "src/core/payment/PayPalAdaptor";
+import PayPalAdaptor from "payment/PayPalAdaptor";
 
 jest.mock("infa/PayPalAdaptor");
 

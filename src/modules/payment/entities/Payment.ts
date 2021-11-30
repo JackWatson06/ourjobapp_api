@@ -7,7 +7,7 @@
  */
 
 import Affiliate from "./Affiliate";
-import { PaymentI, PayoutCreateRequest } from "src/core/payment/PaymentI";
+import { PaymentI, PayoutCreateRequest } from "payment/PaymentI";
 import Payout from "./Payout";
 
 export default class Payment

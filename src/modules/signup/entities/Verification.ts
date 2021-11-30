@@ -18,6 +18,7 @@ export class Verification
     {
         this.form = form;
         this.documentIds = documentIds;
+        this.proof = proof;
     }
 
     /**
@@ -25,7 +26,7 @@ export class Verification
     * @param secret The secret to be validated properly.
     * @param code Optional code that we may need to pass in.
     */
-    public authorized(secret: string, code: number|undefined): boolean
+    public authorized(secret: string, code ?: number): boolean
     {
         return this.proof.prove(secret, code);
     }
