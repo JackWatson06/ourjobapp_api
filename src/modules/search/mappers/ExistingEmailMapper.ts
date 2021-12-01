@@ -2,15 +2,13 @@ import { collections } from "db/MongoDb";
 import ExistingResource from "../entities/ExistingResource";
 
 type ExistinEmailQuery = { 
-    email: RegExp;
-    verified: boolean;
+    email: RegExp
 };
 
 export async function read(search: string, source: string): Promise<ExistingResource>
 {
     const query: ExistinEmailQuery = {
-        "email"   : new RegExp(`^${search}$`, "i"),
-        "verified": true
+        "email"   : new RegExp(`^${search}$`, "i")
     };
 
     const hasOneEmail: number = await collections[source].find(query).limit(1).count();

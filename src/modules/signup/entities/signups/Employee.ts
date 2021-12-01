@@ -39,7 +39,7 @@ export class Employee implements Verifiable
 
         return await notification.text({
             phone: this.data.phone,
-            subject: "Submit Your Application!",
+            subject: "Create Your Candidate Pool!",
             text: message
         });
     }

@@ -22,7 +22,7 @@ export async function index(req: express.Request, res: express.Response) : Promi
     const title: string = req.query.name as string;
 
     // Call up the repository.
-    read(title, "jobGroups").then((data: Array<DictionaryResult>) => {
+    read(title, "job_groups").then((data: Array<DictionaryResult>) => {
         res.send(data);
     });
 }

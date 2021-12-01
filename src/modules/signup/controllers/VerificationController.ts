@@ -14,8 +14,8 @@ import express from "express";
 
 export async function verify(req: express.Request, res: express.Response)
 {
-    const secret : string|undefined = req.body.secret;
-    const code   : number|undefined = req.body.code;
+    const secret : string|undefined = req.body.secret as string;
+    const code   : number|undefined = req.body.code as number;
 
     const id: string = req.params.id;
     const verification: Verification|null = await find(id);
@@ -24,6 +24,7 @@ export async function verify(req: express.Request, res: express.Response)
     {
         return res.status(404).send({"error": "Could not find the correct signup. Please try submitting the form again!"});
     }
+
 
     if(verification.authorized(secret, code))
     {

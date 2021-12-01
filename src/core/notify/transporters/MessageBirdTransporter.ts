@@ -28,6 +28,7 @@ export async function sendText(text: Text)
                 console.error(err);
                 return reject(err);
             }
+            console.log(response);
             resolve();
         });
     });

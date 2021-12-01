@@ -64,5 +64,7 @@ export async function store(req: express.Request, res: express.Response)
         }
     }
 
+    console.error(valid.errors);
+    
     return res.status(400).send( { "error" : "Data invalid." } );
 }
