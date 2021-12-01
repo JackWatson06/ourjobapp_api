@@ -5,8 +5,6 @@ import { collections, close, toObjectId } from "db/MongoDb";
 import { Schema } from "db/DatabaseSchema";
 import { Constants } from "db/Constants"
 
-jest.setTimeout(10000);
-
 type EmployerUpload = {
     fname        : string
     lname        : string
@@ -108,7 +106,7 @@ describe("employer", () => {
         });
         
         // === Execute ===
-        const responseVerify = await request(app).patch(`/api/v1/signup/verify`).send({            
+        const responseVerify = await request(app).patch(`/api/v1/signup/verify/${signupResponse.body.id}`).send({            
             secret: token?.secret ?? ""
         } );    
 

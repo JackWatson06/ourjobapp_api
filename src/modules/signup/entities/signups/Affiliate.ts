@@ -56,7 +56,7 @@ export class Affiliate implements Verifiable, Contractable
         
         // Figure out what to do here.
         // This can be abstracted out into a different entity.
-        return await template.render("contracts/placement", {
+        return await template.render("contracts/sharer", {
             VAR_EFFECTIVE_DATE   : (today).toLocaleDateString("en-US", {year: 'numeric', month: 'long', day: 'numeric'}),
             VAR_TERMINATION_DATE : (oneYearFromNow).toLocaleDateString("en-US", {year: 'numeric', month: 'long', day: 'numeric'}),
             VAR_PARTNER_NAME     : this.data.name,

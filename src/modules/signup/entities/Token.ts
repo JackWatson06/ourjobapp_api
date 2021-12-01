@@ -9,14 +9,14 @@ import crypto from "crypto";
 
 export class Token{
 
-    private secret     : string;
+    private secret     : string|undefined;
     private code       : number|undefined;
     private verified   : boolean;
     private expiredAt  : number;
 
-    constructor( secret ?: string, code ?: number, expiredAt ?: number,  verified ?: boolean )
+    constructor(expiredAt ?: number,  verified ?: boolean, secret ?: string, code ?: number )
     { 
-        this.secret     = secret ?? crypto.randomUUID();
+        this.secret     = secret;
         this.code       = code;
         this.verified   = verified ?? false;
         this.expiredAt  = expiredAt ?? (Date.now() + (3_600_000));
@@ -26,7 +26,7 @@ export class Token{
      * Check to see if this token can be regenerated. If we are passed expiration then the user most go through the frontend
      * form again. This would be additionally true when they have been consumed.
      */
-    public valid(): boolean
+    public active(): boolean
     {
         return !this.verified && Date.now() < this.expiredAt;
     }
@@ -39,13 +39,21 @@ export class Token{
     {
         this.code = await new Promise((resolve) => {
             crypto.randomBytes(3, function(err, buffer) {
-                resolve( parseInt( parseInt(buffer.toString('hex'), 16).toString().substr(0,6)) );
+                resolve( parseInt( parseInt(buffer.toString('hex'), 16).toString().substr(0,5)) );
             });
         });
     }
 
+    /**
+     * We have chosen to do secret token verification.
+     */
+    public async addSecret(): Promise<void>
+    {
+        this.secret = crypto.randomUUID();
+    }
+
     // === GETTERS ===    
-    public getSecret(): string
+    public getSecret(): string|undefined
     {
         return this.secret;
     }

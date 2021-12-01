@@ -35,9 +35,10 @@ export class Employer implements Verifiable, Contractable
      */
     public async verify(token: Token, notification: INotification, template: ITemplate): Promise<boolean>
     {
+        token.addSecret();
         const binds: {} = {
             contract_link : `${process.env.DOMAIN}/api/v1/signup/${this.id}/contract`,
-            verify_link   : `${process.env.CLIENT_DOMAIN}/verify/employer/${token.getSecret()}`,
+            verify_link   : `${process.env.CLIENT_DOMAIN}/verify/employer?id=${this.id}&s=${token.getSecret()}`,
             name          : `${this.data.fname} ${this.data.lname}`
         };
         const message: string     = await template.render("text/employer-verification", binds);

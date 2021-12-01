@@ -198,8 +198,8 @@ export namespace Schema {
     export type Token = {
         _id         ?: ObjectId,
         code        ?: number,
+        secret      ?: string,
         signup_id    : ObjectId
-        secret       : string,
         verified     : boolean,
         verified_at  : number,
         expired_at   : number,

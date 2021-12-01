@@ -5,8 +5,6 @@ import { collections, close, toObjectId } from "db/MongoDb";
 import { Schema } from "db/DatabaseSchema";
 import { Constants } from "db/Constants";
 
-jest.setTimeout(10000);
-
 type AffiliateUpload = {
     name          : string,
     phone         : string,
@@ -77,13 +75,9 @@ describe("affiliates", () => {
         const signupResponse: request.Response = await request(app).post(`/api/v1/signup/affiliates`).send(affiliateUpload);
         const token: Schema.Token|null = await collections.tokens.findOne({ signup_id: toObjectId(signupResponse.body.id)});
         
-        // === Execute ===
-        const verificationUpload: VerificationUpload = {
-            secret: token?.secret ?? "",
-            code: token?.code ?? 0
-        }
-        
-        const response: request.Response = await request(app).patch(`/api/v1/signup/verify`).send(verificationUpload);
+        const response: request.Response = await request(app).patch(`/api/v1/signup/verify/${signupResponse.body.id}`).send({
+            code   : token?.code ?? 0
+        });
         
         // === Assert ===
         const affiliate: Schema.Affiliate|null = await collections.affiliates.findOne({ phone: "111-111-1112"});
@@ -157,12 +151,9 @@ describe("affiliates", () => {
         const signupResponse: request.Response = await request(app).post(`/api/v1/signup/affiliates`).send(affiliateUpload);
         const token: Schema.Token|null = await collections.tokens.findOne<Schema.Token>({ signup_id: toObjectId(signupResponse.body.id)});
     
-        const verificationUpload: VerificationUpload = {
-            secret : token?.secret ?? "",
+        await request(app).patch(`/api/v1/signup/verify/${signupResponse.body.id}`).send({
             code   : token?.code ?? 0
-        }
-    
-        await request(app).patch(`/api/v1/signup/verify`).send(verificationUpload);
+        });
     
         // === Execute ===
         const contractResponse: request.Response = await request(app).get(`/api/v1/signup/${signupResponse.body.id}/contract`).send();
@@ -184,12 +175,9 @@ describe("affiliates", () => {
         const signupResponse: request.Response = await request(app).post(`/api/v1/signup/affiliates`).send(affiliateUpload);
         const token: Schema.Token|null = await collections.tokens.findOne<Schema.Token>({ signup_id: toObjectId(signupResponse.body.id)});
     
-        const verificationUpload: VerificationUpload = {
-            secret : token?.secret ?? "",
+        await request(app).patch(`/api/v1/signup/verify/${signupResponse.body.id}`).send({
             code   : token?.code ?? 0
-        }
-    
-        await request(app).patch(`/api/v1/signup/verify`).send(verificationUpload);
+        });
 
         // === Execute ===
         const resendResponse: request.Response = await request(app).patch(`/api/v1/signup/${signupResponse.body.id}/resend`).send();

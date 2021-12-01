@@ -55,7 +55,7 @@ test("we can render a new contract on a signup.", async () => {
 test("we can send out a verification for a signup.", async () => {
 
     const token: Token = new tokenMock();
-    jest.spyOn(token, "valid").mockImplementation(() => true);
+    jest.spyOn(token, "active").mockImplementation(() => true);
 
     const signup: Signup = new Signup(
         new verifiableMock,
@@ -68,7 +68,7 @@ test("we can send out a verification for a signup.", async () => {
 test("we cannot send a verification for a signup if token is not valid.", async () => {
 
     const token: Token = new tokenMock();
-    jest.spyOn(token, "valid").mockImplementation(() => false);
+    jest.spyOn(token, "active").mockImplementation(() => false);
 
     const signup: Signup = new Signup(
         new verifiableMock,
@@ -82,7 +82,7 @@ test("we cannot send a verification for a signup if token is not valid.", async 
 // Contracts
 test("we can read contract if token is valid.", () => {
     const token: Token = new tokenMock();
-    jest.spyOn(token, "valid").mockImplementation(() => true);
+    jest.spyOn(token, "active").mockImplementation(() => true);
 
     const signup: Signup = new Signup(
         new verifiableMock,
@@ -106,7 +106,7 @@ test("we can not read contract if it does not exist on signup.", () => {
 test("we can not read contract if token is invalid.", () => {
 
     const token: Token = new tokenMock();
-    jest.spyOn(token, "valid").mockImplementation(() => false);
+    jest.spyOn(token, "active").mockImplementation(() => false);
 
     const signup: Signup = new Signup(
         new verifiableMock,

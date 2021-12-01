@@ -11,5 +11,13 @@ import { dropDatabase } from "db/MongoDb";
 
 export default async function exec()
 {
-    await dropDatabase();
+    try
+    {
+        await dropDatabase();
+    }
+    catch(error)
+    {
+        console.error("Critical failure during drop database attempt.");
+        console.error(error);
+    }
 }

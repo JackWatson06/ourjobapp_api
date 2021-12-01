@@ -11,8 +11,6 @@ import { collections, close, toObjectId } from "db/MongoDb";
 import { Schema }             from "db/DatabaseSchema";
 import { Constants }          from "db/Constants";
 
-jest.setTimeout(10000);
-
 type EmployeeUpload = {
     place_id      : string,
 
@@ -147,14 +145,11 @@ describe("employee", () => {
         
         const signupResponse: request.Response = await request(app).post(`/api/v1/signup/employees`).send(employeeUpload);    
         const token: Schema.Token|null       = await collections.tokens.findOne({ signup_id: toObjectId(signupResponse.body.id)});
-    
-        const tokenVerification: PhoneVerification = {
-            secret: token?.secret ?? "",
-            code: token?.code ?? 0
-        }
 
         // === Execute ===
-        const responseVerify = await request(app).patch(`/api/v1/signup/verify`).send(tokenVerification);            
+        const responseVerify = await request(app).patch(`/api/v1/signup/verify/${signupResponse.body.id}`).send({
+            code: token?.code ?? 0
+        });            
 
         // === Assert ===
         const verifiedEmployee: Schema.Employee|null = await collections.employees.findOne({ phone : "111-111-1113", }); 
@@ -193,8 +188,7 @@ describe("employee", () => {
         await request(app).post(`/api/v1/signup/employees/${signupResponse.body.id}/resume`).attach('resume', filePath);  
 
         // === Execute ===
-        await request(app).patch(`/api/v1/signup/verify`).send({
-            secret: token?.secret ?? "",
+        await request(app).patch(`/api/v1/signup/verify/${signupResponse.body.id}`).send({
             code: token?.code ?? 0
         });    
 

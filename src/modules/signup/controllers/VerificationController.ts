@@ -14,9 +14,11 @@ import express from "express";
 
 export async function verify(req: express.Request, res: express.Response)
 {
-    const secret : string           = req.body.secret;
+    const secret : string|undefined = req.body.secret;
     const code   : number|undefined = req.body.code;
-    const verification: Verification|null = await find(secret);
+
+    const id: string = req.params.id;
+    const verification: Verification|null = await find(id);
 
     if(verification === null)
     {
@@ -25,7 +27,7 @@ export async function verify(req: express.Request, res: express.Response)
 
     if(verification.authorized(secret, code))
     {
-        await update(secret, verification);
+        await update(id, verification);
         return res.status(200).send( {"success": "Successfully verified your account!" });
     }
 

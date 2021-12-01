@@ -37,7 +37,7 @@ export async function find(id: string): Promise<Signup|null>
         return null;
     }
 
-    const token: Token = new Token(tokenRow.secret, tokenRow.code, tokenRow.expired_at, tokenRow.verified);
+    const token: Token = new Token(tokenRow.expired_at, tokenRow.verified, tokenRow.secret, tokenRow.code);
     const signup: Signup = new Signup(findTypeMapper(signupRow), token);
 
     (await findDocument(signupRow._id ?? new ObjectId())).map((document) => signup.addDocument(document));

@@ -31,6 +31,6 @@ signupRouter.post("/employees/:id/resume", uploadResume);
 signupRouter.get("/:id/contract", readContract);
 signupRouter.patch("/:id/resend", resend);
 
-signupRouter.patch("/verify", verify);
+signupRouter.patch("/verify/:id", verify);
 
 export default signupRouter;

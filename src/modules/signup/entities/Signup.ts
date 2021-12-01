@@ -66,7 +66,7 @@ export class Signup
      */
     public getContractPath(): string|null
     {
-        if(!this.token.valid())
+        if(!this.token.active())
         {
             return null;
         }
@@ -90,7 +90,7 @@ export class Signup
     public async sendVerification(notification: INotification, template: ITemplate): Promise<boolean>
     {
         // We can use this if statement for resending the verification.
-        if(this.token.valid())
+        if(this.token.active())
         {
             return await this.entity.verify(this.token, notification, template)
         }

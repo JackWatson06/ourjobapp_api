@@ -1,4 +1,4 @@
-import dependencies from "bootstrap/dependencies";
+import dependencies from "./bootstrap/dependencies";
 import errorHandler from "errorhandler";
 import app from "./bootstrap/app";
 

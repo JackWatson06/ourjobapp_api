@@ -6,16 +6,16 @@
 
 export class Proof {
 
-    private secret: string;
+    private secret: string|undefined;
     private code: number|undefined;
     private expiredAt: number;
     private verifiedAt: number;
     private verified: boolean;
 
-    constructor(
-        secret: string, 
+    constructor( 
         expiredAt: number, 
         verified: boolean,
+        secret?: string,
         code?: number)
     {
         this.secret     = secret;
@@ -30,8 +30,13 @@ export class Proof {
      * @param secret The secret that we must check
      * @param code The code that we may have on sms verification
      */
-    public prove(secret: string, code ?: number)
+    public prove(secret?: string, code ?: number): boolean
     {
+        if(this.secret === undefined && this.code === undefined)
+        {
+            return false;
+        }
+
         this.verified = !this.verified && Date.now() < this.expiredAt && this.secret === secret && this.code === code;
         this.verifiedAt = Date.now();
         return this.verified;

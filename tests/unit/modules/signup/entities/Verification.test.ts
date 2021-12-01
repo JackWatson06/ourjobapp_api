@@ -18,8 +18,7 @@ const formMock: jest.Mock<Form> = jest.fn<Form, []>(() => ({
 jest.mock("modules/signup/entities/Proof");
 const proofMock: jest.Mock<Proof> = Proof as jest.Mock<Proof>;
 
-test("we can be authorzied with a secret code.", () => {
-
+test("we can be authorzied with a secret.", () => {
     const proof: Proof = new proofMock();
     jest.spyOn(proof, "prove").mockImplementation(() => true);
 
@@ -28,13 +27,12 @@ test("we can be authorzied with a secret code.", () => {
     expect(verification.authorized("123")).toBe(true);
 });
 
-test("we can be authorzied without a secret code.", () => {
-
+test("we can be authorzied with a code.", () => {
     const proof: Proof = new proofMock();
     jest.spyOn(proof, "prove").mockImplementation(() => true);
 
     const verification: Verification = new Verification(new formMock, [], proof);
 
-    expect(verification.authorized("123", 123)).toBe(true);
+    expect(verification.authorized(undefined, 123)).toBe(true);
 });
 

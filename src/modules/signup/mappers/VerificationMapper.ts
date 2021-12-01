@@ -22,9 +22,9 @@ import { NewEmployer } from "../validators/NewEmployerValidator";
  * Find the correct verification process by using the secret that we pass in.
  * @param secret that we use to find the correct verification. If this is not found we return null
  */
-export async function find(secret: string): Promise<Verification|null>
+export async function find(id: string): Promise<Verification|null>
 {
-    const tokenRow: Schema.Token|null = await collections.tokens.findOne({ secret: secret });
+    const tokenRow: Schema.Token|null = await collections.tokens.findOne({ signup_id: toObjectId(id) });
     const signupRow: Schema.Signup|null = await collections.signups.findOne({ _id: tokenRow?.signup_id });
 
     if(tokenRow === null || signupRow === null)
@@ -38,7 +38,7 @@ export async function find(secret: string): Promise<Verification|null>
         resource_id: signupRow._id
     }).map<string>( (documents) => documents._id?.toString() ?? "" ).toArray();
     
-    const proof: Proof = new Proof(tokenRow.secret, tokenRow.expired_at, tokenRow.verified, tokenRow?.code);
+    const proof: Proof = new Proof(tokenRow.expired_at, tokenRow.verified, tokenRow?.secret, tokenRow?.code);
 
 
     return new Verification(formData, documentIds, proof);
@@ -71,12 +71,12 @@ function findTypeMapper(signupRow: Schema.Signup): Form
  * Map the update verification into our system. If we have a brand new verified resource then load it into it's corresponding table
  * by once again for the millionth time using a map.... we have a toal of FOUR maps that we now have to maintain... sick. Could we 
  * get that down to one please?
- * @param secret Identifier for the object mapped to persistance
+ * @param id Identifier for the object mapped to persistance
  * @param signup Existing Signup
  */
-export async function update(secret: string, verification: Verification): Promise<boolean>
+export async function update(id: string, verification: Verification): Promise<boolean>
 {
-    const tokenRow: Schema.Token|null = await collections.tokens.findOne({ secret: secret });
+    const tokenRow: Schema.Token|null = await collections.tokens.findOne({ signup_id: toObjectId(id) });
     if(tokenRow === null)
     {
         return false;
@@ -102,12 +102,7 @@ export async function update(secret: string, verification: Verification): Promis
 async function updateTypeMapper(verification: Verification, signupId: ObjectId): Promise<ObjectId>
 {
     const formData: Form = verification.getFormData();
-
-    console.log(typeof formData);
-    console.log(formData);
     
-    
-
     // Affiliate
     if(formData instanceof Affiliate)
     {

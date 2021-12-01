@@ -26,7 +26,7 @@ export class Verification
     * @param secret The secret to be validated properly.
     * @param code Optional code that we may need to pass in.
     */
-    public authorized(secret: string, code ?: number): boolean
+    public authorized(secret?: string, code ?: number): boolean
     {
         return this.proof.prove(secret, code);
     }
