@@ -16,7 +16,6 @@ export async function verify(req: express.Request, res: express.Response)
 {
     const secret : string           = req.body.secret;
     const code   : number|undefined = req.body.code;
-
     const verification: Verification|null = await find(secret);
 
     if(verification === null)
@@ -27,10 +26,9 @@ export async function verify(req: express.Request, res: express.Response)
     if(verification.authorized(secret, code))
     {
         await update(secret, verification);
-
         return res.status(200).send( {"success": "Successfully verified your account!" });
     }
 
-    return res.status(400).send( {"error": "Toke has been expired. Please try submitting the form agains! We apologize for this issue."} )
+    return res.status(400).send( {"error": "Token has been expired. Please try submitting the form agains! We apologize for this issue."} )
 }
 

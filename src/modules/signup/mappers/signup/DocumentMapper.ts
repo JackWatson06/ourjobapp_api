@@ -27,10 +27,10 @@ export async function find(signupId: ObjectId): Promise<Array<LocalDocument>>
         [Constants.Document.RESUME]: Purpose.RESUME,
     }
 
-    return collections.documents.find({
+    return (await collections.documents.find({
         resource    : Constants.Resource.SIGNUP,
         resource_id : signupId
-    }).map<LocalDocument>(
+    })).map<LocalDocument>(
         (document) => new LocalDocument(mapping[document.type], document.path)
     ).toArray();
 }

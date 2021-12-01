@@ -12,23 +12,25 @@ import express from "express";
 
 // We could put index in the controllers directory.
 import {store as storeAffiliate} from "./controllers/AffiliateController";
-// import {store as storeEmployee}  from "./controllers/EmployeeController";
-// import {store as storeEmployer}  from "./controllers/EmployerController";
+import {store as storeEmployer}  from "./controllers/EmployerController";
+import {store as storeEmployee, uploadResume}  from "./controllers/EmployeeController";
 
 import {readContract} from "./controllers/SignupController";
 import {resend}   from "./controllers/SignupController";
 
-import {verify} from "./controllers/VerifyController";
+import {verify} from "./controllers/VerificationController";
 
 let signupRouter: express.Router = express.Router();
 
-signupRouter.post("/affiliate", storeAffiliate);
-// signupRouter.post("/employee", storeEmployee);
-// signupRouter.post("/employer", storeEmployer);
+signupRouter.post("/affiliates", storeAffiliate);
+signupRouter.post("/employers", storeEmployer);
 
-signupRouter.get(":id/contract", readContract);
-signupRouter.patch(":id/resend", resend);
+signupRouter.post("/employees", storeEmployee);
+signupRouter.post("/employees/:id/resume", uploadResume);
 
-signupRouter.patch("/verify/:id", verify);
+signupRouter.get("/:id/contract", readContract);
+signupRouter.patch("/:id/resend", resend);
+
+signupRouter.patch("/verify", verify);
 
 export default signupRouter;

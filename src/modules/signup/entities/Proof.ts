@@ -9,15 +9,14 @@ export class Proof {
     private secret: string;
     private code: number|undefined;
     private expiredAt: number;
-
     private verifiedAt: number;
     private verified: boolean;
 
     constructor(
         secret: string, 
-        code: number|undefined, 
         expiredAt: number, 
-        verified: boolean)
+        verified: boolean,
+        code?: number)
     {
         this.secret     = secret;
         this.code       = code;
@@ -35,7 +34,6 @@ export class Proof {
     {
         this.verified = !this.verified && Date.now() < this.expiredAt && this.secret === secret && this.code === code;
         this.verifiedAt = Date.now();
-
         return this.verified;
     }
 

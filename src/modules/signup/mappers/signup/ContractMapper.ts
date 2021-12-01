@@ -48,7 +48,7 @@ export async function create(contract: string, signupId: ObjectId): Promise<Obje
     
     return (await collections.documents.insertOne({
         type        : Constants.Document.CONTRACT,
-        resource    : Constants.Resource.AFFILIATE,
+        resource    : Constants.Resource.SIGNUP,
         resource_id : signupId,
         name        : fileName,
         path        : fileName,

@@ -8,6 +8,7 @@
  */
 
 import objectHash from "object-hash";
+import path from "path";
 import fs from "fs";
 
 // Define the types that are allowed into the functions below... this is interesting to say the least. Like these
@@ -25,9 +26,9 @@ const TEMPLATE: Template = "/../../../templates/";
  * @param directory Directory we chose in the root of the project
  * @param file The file we want to get the full path of
  */
-function absolutePath(directory: Document|Cache|Template, file: string)
+function absolutePath(directory: Document|Cache|Template, file: string): string
 {
-    return `${__dirname}${directory}${file}`;
+    return path.resolve(`${__dirname}${directory}${file}`);
 }
 
 /**

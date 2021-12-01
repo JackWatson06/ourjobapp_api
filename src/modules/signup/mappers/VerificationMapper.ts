@@ -37,7 +37,9 @@ export async function find(secret: string): Promise<Verification|null>
         resource: Constants.Resource.SIGNUP,
         resource_id: signupRow._id
     }).map<string>( (documents) => documents._id?.toString() ?? "" ).toArray();
-    const proof: Proof = new Proof(tokenRow.secret, tokenRow.code, tokenRow.expired_at, tokenRow.verified);
+    
+    const proof: Proof = new Proof(tokenRow.secret, tokenRow.expired_at, tokenRow.verified, tokenRow?.code);
+
 
     return new Verification(formData, documentIds, proof);
 }
@@ -81,7 +83,7 @@ export async function update(secret: string, verification: Verification): Promis
     }
 
     // Map the entity that was just verified.
-    const entityId: ObjectId = await updateTypeMapper(verification, tokenRow.signup_id);
+    await updateTypeMapper(verification, tokenRow.signup_id);
 
     // Mark the token as already consumed.
     return (await collections.tokens.updateOne({ _id: tokenRow?._id }, {
@@ -100,6 +102,11 @@ export async function update(secret: string, verification: Verification): Promis
 async function updateTypeMapper(verification: Verification, signupId: ObjectId): Promise<ObjectId>
 {
     const formData: Form = verification.getFormData();
+
+    console.log(typeof formData);
+    console.log(formData);
+    
+    
 
     // Affiliate
     if(formData instanceof Affiliate)

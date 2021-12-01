@@ -5,7 +5,7 @@
  * 
  */
 // Data Mappers
-import { create } from "../mappers/SignupMapper";
+import { create, find, update } from "../mappers/SignupMapper";
 
 // Entities
 import { Signup }         from "../entities/Signup";
@@ -37,8 +37,8 @@ export async function store(req: express.Request, res: express.Response)
     const valid = ajv.compile(schema);
 
     const data: NewEmployee = req.body;
-    const resume: fileUpload.UploadedFile|undefined = req.files?.resume as fileUpload.UploadedFile|undefined;
         
+
     // Create the employee domain entity.
     if( valid(data) )
     {
@@ -47,12 +47,6 @@ export async function store(req: express.Request, res: express.Response)
         const signup: Signup   = new Signup(entity, token);
 
         await signup.sendVerification(new Notification(), new HandlebarsAdaptor());
-
-        // Add the document upload to the signup.
-        if(resume != undefined && validResume(resume))
-        {
-            signup.uploadDocument(new DocumentUpload(Purpose.RESUME, resume.data, resume.name, resume.size, resume.mimetype));
-        }
 
         try
         {
@@ -66,4 +60,36 @@ export async function store(req: express.Request, res: express.Response)
     }
 
     return res.status(400).send( { "error" : "Data invalid." } );
+}
+
+/**
+ * Upload a resume for the employee. This will want to be changed to be more generic at some point. We will want to have the client
+ * pick the upload type for the docuemnt.
+ * @param req Request object
+ * @param res Response bject
+ */
+export async function uploadResume(req: express.Request, res: express.Response)
+{
+    const id: string = req.params.id;
+    const resume: fileUpload.UploadedFile|undefined = req.files?.resume as fileUpload.UploadedFile|undefined;
+
+    const signup: Signup|null = await find(id);
+    
+    if(signup === null)
+    {
+        return res.status(404).send({"error": "Could not find the current signup."})
+    }
+    
+    // Add the document upload to the signup.
+    if(resume != undefined && validResume(resume))
+    {
+        signup.uploadDocument(new DocumentUpload(Purpose.RESUME, resume.data, resume.name, resume.size, resume.mimetype));
+        await update(id, signup);
+        
+        return res.status(200).send( {"success": "Successfully resent your secret!" });
+    }
+    
+    return res.status(400).send({"error": "Invalid input to add in a resume."});
+
+
 }

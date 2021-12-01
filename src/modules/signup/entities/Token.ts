@@ -14,16 +14,12 @@ export class Token{
     private verified   : boolean;
     private expiredAt  : number;
 
-    constructor(
-        secret: string         = "", 
-        code: number|undefined = undefined,
-        expiredAt: number      = 0, 
-        verified: boolean      = false)
+    constructor( secret ?: string, code ?: number, expiredAt ?: number,  verified ?: boolean )
     { 
-        this.secret     = secret;
+        this.secret     = secret ?? crypto.randomUUID();
         this.code       = code;
-        this.verified   = verified;
-        this.expiredAt  = expiredAt;
+        this.verified   = verified ?? false;
+        this.expiredAt  = expiredAt ?? (Date.now() + (3_600_000));
     }
 
     /**
@@ -33,15 +29,6 @@ export class Token{
     public valid(): boolean
     {
         return !this.verified && Date.now() < this.expiredAt;
-    }
-
-    /**
-     * Generate a new secret that we can use for this token.
-     */
-    public generateSecretToken(): void
-    {
-        this.secret    = crypto.randomUUID();
-        this.expiredAt = Date.now() + (3_600_000); // That is 1 hour in milliseconds
     }
 
     /**

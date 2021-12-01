@@ -28,8 +28,8 @@ export const EmployeeMapper: ISignupMapper<Employee> = {
     async create(entity: Employee): Promise<ObjectId>
     {   
         return (await collections.signups.insertOne({
-            type: Constants.Resource.EMPLOYEE,
-            data: entity.getData()
+            type : Constants.Resource.EMPLOYEE,
+            data : entity.getData()
         })).insertedId;
     }
 }

@@ -2,7 +2,9 @@ import { Db, MongoClient, ObjectId, Collection } from "mongodb";
 import { Schema } from "./DatabaseSchema";
 
 const uri: string = `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}`
-const client: MongoClient = new MongoClient(uri);
+const client: MongoClient = new MongoClient(uri, {
+    ignoreUndefined: true
+  });
 
 // Map our collections to a typed named version of it. Also allow them to be read through regular array syntax.
 type StringKeys = {
@@ -19,7 +21,7 @@ interface CollectionMap extends StringKeys {
     batch_matches : Collection<Schema.BatchMatch>,
     matches       : Collection<Schema.Match>,
     emails        : Collection<Schema.Email>,
-    location      : Collection<Schema.Location>,
+    locations     : Collection<Schema.Location>,
     payments      : Collection<Schema.Payment>,
     payouts       : Collection<Schema.Payout>,
     affiliates    : Collection<Schema.Affiliate>,
@@ -38,24 +40,26 @@ function initializeDatabase(): void
 {
     const db: Db = client.db(process.env.MONGO_DB);
 
-    collections.tokens        = db.collection("tokens");
-    collections.countries     = db.collection("countries");
-    collections.jobs          = db.collection("jobs");
-    collections.job_groups    = db.collection("jobGroups");
-    collections.charities     = db.collection("charities");
-    collections.batches       = db.collection("batches");
-    collections.batch_matches = db.collection("batchMatches");
-    collections.matches       = db.collection("matches");
-    collections.emails        = db.collection("emails");
-    collections.location      = db.collection("location");
-    collections.payments      = db.collection("payments");
-    collections.payouts       = db.collection("payouts");
-    collections.affiliates    = db.collection("affiliates");
-    collections.employees     = db.collection("employees");
-    collections.employers     = db.collection("employers");
-    collections.documents     = db.collection("documents");
-    collections.signups       = db.collection("signups");
-    collections.tokens        = db.collection("tokens");
+    collections = {
+        majors        : db.collection("majors"),
+        countries     : db.collection("countries"),
+        jobs          : db.collection("jobs"),
+        job_groups    : db.collection("jobGroups"),
+        charities     : db.collection("charities"),
+        batches       : db.collection("batches"),
+        batch_matches : db.collection("batchMatches"),
+        matches       : db.collection("matches"),
+        emails        : db.collection("emails"),
+        locations     : db.collection("location"),
+        payments      : db.collection("payments"),
+        payouts       : db.collection("payouts"),
+        affiliates    : db.collection("affiliates"),
+        employees     : db.collection("employees"),
+        employers     : db.collection("employers"),
+        documents     : db.collection("documents"),
+        signups       : db.collection("signups"),
+        tokens        : db.collection("tokens")
+    }
 }
 
 /**
@@ -67,6 +71,8 @@ export async function connect(): Promise<void>
     await client.connect();
 
     initializeDatabase();
+
+    console.info(`Open MongoDB Connection - URI: ${uri}`);
 }
 
 /**

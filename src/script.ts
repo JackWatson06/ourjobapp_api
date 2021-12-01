@@ -1,4 +1,4 @@
-import bootstrap from "./bootstrap/dependencies";
+import dependencies from "./bootstrap/dependencies";
 import * as mongoDb from "db/MongoDb";
 
 /**
@@ -8,7 +8,7 @@ import * as mongoDb from "db/MongoDb";
  */
 async function bootstrapScriptEnviornment(script: string)
 {
-    await bootstrap();
+    await dependencies();
 
     try
     {

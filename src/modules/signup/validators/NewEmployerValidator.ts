@@ -1,5 +1,5 @@
 import { JSONSchemaType } from "ajv";
-import * as Constants from "infa/Constants";
+import { Constants } from "db/Constants";
 
 export interface NewEmployer {
     website      ?: string,
@@ -10,7 +10,6 @@ export interface NewEmployer {
     position     : string,
     company_name : string,
     place_id     : string,
-    address      : string,
     industry     : string[],
     experience   : number[],
     salary       : number,
@@ -53,7 +52,7 @@ export const schema: JSONSchemaType<NewEmployer> = {
             type : "array",
             items: {
                 type: "integer",
-                enum: Object.values(Constants.Experience)
+                enum: Constants.values(Constants.Experience)
             },
         },
         salary       : { 
@@ -61,11 +60,11 @@ export const schema: JSONSchemaType<NewEmployer> = {
         },             // <= Enumeration
         commitment   : { 
             type: "integer",
-            enum: Object.values(Constants.Commitment)
+            enum: Constants.values(Constants.Commitment)
         },   // <= Enumeration
         where        : { 
             type: "integer",
-            enum: Object.values(Constants.Where)
+            enum: Constants.values(Constants.Where)
         },   // <= Enumeration
         authorized: { 
             type: "boolean" 

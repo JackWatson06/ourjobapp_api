@@ -13,7 +13,7 @@
     "refresh-database": "npm run script -- ../database/database-delete && npm run script -- ../database/database-seed && rm -f documents/resumes/* && rm -f documents/contracts/*",
     "dev-seeder": "npm run script -- ../database/seed/matching-seeder",
     "test:unit": "jest --forceExit -c jest.unit.config.js",
-    "test:int": "npx jest --forceExit -c jest.integration.config.js",
+    "test:int": "npx jest --detectOpenHandles --forceExit -c jest.integration.config.js",
     "test": "npm run test:unit && npm run test:int && npm run refresh-database"
   },
   "repository": {
@@ -77,10 +77,10 @@
     "xlsx": "^0.17.2"
   },
   "_moduleAliases": {
-    "db"       : "src/core/db",
-    "infa"     : "src/core/infa",
-    "notify"   : "src/core/notify",
-    "payment"  : "src/core/payment",
-    "template" : "src/core/template"
+    "db": "src/core/db",
+    "infa": "src/core/infa",
+    "notify": "src/core/notify",
+    "payment": "src/core/payment",
+    "template": "src/core/template"
   }
 }

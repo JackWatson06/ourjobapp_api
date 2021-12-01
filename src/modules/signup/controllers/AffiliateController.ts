@@ -50,7 +50,7 @@ export async function store(req: express.Request, res: express.Response)
 
         await signup.addContract(entity, template);
         await signup.sendVerification(notification, template);
-
+        
         try
         {
             const id: string|null = await create(signup);

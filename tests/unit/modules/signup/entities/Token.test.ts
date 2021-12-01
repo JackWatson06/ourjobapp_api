@@ -11,8 +11,6 @@ test("we generate a UUID for the secret.", () => {
 
     const token: Token = new Token();
 
-    token.generateSecretToken();
-
     expect(token.getSecret().length).toEqual(36);
 });
 
@@ -27,8 +25,6 @@ test("we generate a six digit code for the phone code.", () => {
 test("token can be valid.", () => {
 
     const token: Token = new Token();
-
-    token.generateSecretToken();
 
     expect(token.valid()).toEqual(true);
 

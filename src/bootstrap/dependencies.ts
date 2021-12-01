@@ -7,7 +7,7 @@ import 'module-alias/register';
 import * as dotenv from "dotenv";
 dotenv.config();
 
-import { connect } from "../core/db/MongoDb";
+import { connect } from "db/MongoDb";
 import paypal from "paypal-rest-sdk";
 
 import * as env from "environment"; // This just sets the types for the environment variables
@@ -46,6 +46,6 @@ function payment(): void
  */
 export default async function bootstrap()
 {   
-    mongoDb();
+    await mongoDb();
     payment();
 }

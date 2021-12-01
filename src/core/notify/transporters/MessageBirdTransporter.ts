@@ -13,7 +13,6 @@ const originator: string = process.env.SMS_NUMBER;
 export async function sendText(text: Text)
 {   
     return new Promise<void>((resolve, reject) => {
-
         // Send a new request to the message bird sdk
         const params = {
             'originator': originator,

@@ -1,8 +1,8 @@
 // Hmmmmm I feel indiferent about this we use MongoDB here so we can cache some of the results of the google api to reduce
 // the amount of times we are actually querying the API. I will have to take a look at a better way to do this. Maybe I add
 // some sort of cache layer on top of this to remove the gomongoDb calls inside this class.
-import * as MongoDb from "../db/MongoDb";
-import * as Collections from "db/DatabaseSchema";
+import { collections, now } from "db/MongoDb";
+import { Schema } from "db/DatabaseSchema";
 
 import axios from "axios";
 
@@ -45,12 +45,10 @@ export async function getPlaceByName(name: string): Promise<google.maps.places.A
  * so that we do not hit the Google API to much.
  * @param placeId Place ID we want to get our Location for.
  */
-export async function getLocationByPlaceId(placeId: string): Promise<Collections.Location>
+export async function getLocationByPlaceId(placeId: string): Promise<Schema.Location>
 {
-    const db: MongoDb.MDb = MongoDb.db();
-
     // See if we already have the location in the database.
-    let location: Collections.Location|null = await db.collection("locations").findOne<Collections.Location>({
+    let location: Schema.Location|null = await collections.locations.findOne({
         place_id: placeId
     });
     
@@ -87,11 +85,11 @@ export async function getLocationByPlaceId(placeId: string): Promise<Collections
             longitude    : latLong.lng,
             address      : googleLocation?.formatted_address ?? NULL_ADDRESS,
             country_code : findCountryCode(googleLocation)  ?? NULL_COUNTRY,
-            created_at   : MongoDb.now()
+            created_at   : now()
         }
 
         // Cache the location in the database.
-        await db.collection("locations").insertOne(location);
+        await collections.locations.insertOne(location);
     }
 
     return location;

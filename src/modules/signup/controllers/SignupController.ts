@@ -35,8 +35,12 @@ export async function readContract(req: express.Request, res: express.Response)
 
     const contractPath: string|null = signup.getContractPath();
     if(contractPath != null)
-    {
-        return res.sendFile(fs.absolutePath(fs.DOCUMENT, contractPath));   
+    {        
+        return res.sendFile(fs.absolutePath(fs.DOCUMENT, contractPath), {
+            headers: {
+                "Content-Type" : "application/pdf"
+            }
+        });   
     }
     
     return res.status(404).send({"error": "Could not find the request contract."});
@@ -55,15 +59,17 @@ export async function resend(req: express.Request, res: express.Response)
     const template: HandlebarsAdaptor  = new HandlebarsAdaptor();
 
     const signup: Signup|null = await find(id);
+    
     if(signup === null)
     {
         return res.status(404).send({"error": "Could not find the current signup."})
     }
-
-    if(signup.sendVerification(notification, template))
-    {
+    
+    if(await signup.sendVerification(notification, template))
+    {   
         await update(id, signup);
-        return res.status(200);
+        
+        return res.status(200).send( {"success": "Successfully resent your secret!" });
     }
     
     return res.status(503).send({"error": "Could not resend verification. This has been logged for further investigation."});

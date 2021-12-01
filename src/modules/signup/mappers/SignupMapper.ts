@@ -11,6 +11,7 @@ import { Signup }     from "../entities/Signup";
 import { Verifiable } from "../entities/signups/Verifiable";
 import { Affiliate }  from "../entities/signups/Affiliate";
 import { Employee }   from "../entities/signups/Employee";
+import { Employer }   from "../entities/signups/Employer";
 import { Token }      from "../entities/Token";
 
 import { create as createContract } from "./signup/ContractMapper";
@@ -19,6 +20,7 @@ import { find as findDocument } from "./signup/DocumentMapper";
 
 import { AffiliateMapper } from "./signup/AffiliateMapper";
 import { EmployeeMapper } from "./signup/EmployeeMapper";
+import { EmployerMapper } from "./signup/EmployerMapper";
 
 
 /**
@@ -39,7 +41,7 @@ export async function find(id: string): Promise<Signup|null>
     const signup: Signup = new Signup(findTypeMapper(signupRow), token);
 
     (await findDocument(signupRow._id ?? new ObjectId())).map((document) => signup.addDocument(document));
-
+    
     return signup;
 }
 
@@ -56,6 +58,10 @@ function findTypeMapper(signupRow: Schema.Signup): Verifiable {
     else if(signupRow.type === Constants.Resource.EMPLOYEE)
     {
         return EmployeeMapper.find(signupRow);
+    }
+    else if(signupRow.type === Constants.Resource.EMPLOYER)
+    {
+        return EmployerMapper.find(signupRow);
     }
 
     throw new Error(`Type error. Please create a mapper for the signup type: ${signupRow.type}`);
@@ -85,12 +91,12 @@ export async function create(signup: Signup): Promise<string>
     const contractString: string|null = signup.getRenderedContract();
     if(contractString != null)
     {
-        createContract(contractString, signupId);
+        await createContract(contractString, signupId);
     }
 
-    for(const document of signup.getDocuments())
+    for(const document of signup.getUploadedDocuments())
     {
-        createDocument(document, signupId);
+        await createDocument(document, signupId);
     }
 
     return signupId.toString();
@@ -114,6 +120,10 @@ async function createTypeMapper(signup: Signup): Promise<ObjectId>
     {
         return EmployeeMapper.create(entity);
     }
+    else if(entity instanceof Employer)
+    {
+        return EmployerMapper.create(entity);
+    }
 
     throw new Error(`Type error. Please create a mapper for the signup type: ${signup.getEntity().constructor.name}`);
 }
@@ -126,6 +136,13 @@ async function createTypeMapper(signup: Signup): Promise<ObjectId>
  */
 export async function update(id: string, signup: Signup): Promise<boolean>
 {
+    // If we have added any additional uploaded documents we will want to persist these.
+    for(const document of signup.getUploadedDocuments())
+    {
+        await createDocument(document, toObjectId(id));
+    }
+
+    // Return the updated collection.
     return (await collections.tokens.updateOne({ signup_id: toObjectId(id)}, {
         $set: {
             code        : signup.getToken().getCode(),

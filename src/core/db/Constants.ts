@@ -53,4 +53,15 @@ export namespace Constants {
         CONTRACT,
         RESUME
     }
+
+    /**
+     * Not the best function in terms of type safety although does the job nicely. Numeric Enumerations are a bitch in typescript
+     * https://github.com/microsoft/TypeScript/issues/33200
+     * @param enu Enumeration we are pulling the numbers out of
+     */
+    export function values(enu: {[s: string]: any}): Array<number>
+    {
+        const keys: Array<string> = Object.keys(enu).filter(k => typeof enu[k as any] === "number");
+        return keys.map(k => enu[k as any]);
+    }
 }

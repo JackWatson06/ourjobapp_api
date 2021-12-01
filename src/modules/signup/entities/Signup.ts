@@ -92,7 +92,6 @@ export class Signup
         // We can use this if statement for resending the verification.
         if(this.token.valid())
         {
-            this.token.generateSecretToken();
             return await this.entity.verify(this.token, notification, template)
         }
 
@@ -105,7 +104,7 @@ export class Signup
         return this.entity;
     }
 
-    public getDocuments(): Array<DocumentUpload>
+    public getUploadedDocuments(): Array<DocumentUpload>
     {
         return this.uploadedDocuments;
     }
