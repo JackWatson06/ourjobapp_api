@@ -10,7 +10,6 @@ import AffiliateCookie from "../entities/AffiliateCookie"
 
 type AffiliateQuery = { 
     name: string;
-    verified: boolean;
 };
 
 type AffiliateRow = {
@@ -20,8 +19,7 @@ type AffiliateRow = {
 export async function read(search: string): Promise<AffiliateCookie>
 {
     const query: AffiliateQuery = {
-        name: search,
-        verified: true 
+        name: search
     };
 
     return collections.affiliates.findOne<AffiliateRow>(query).then((document: AffiliateRow) => {
