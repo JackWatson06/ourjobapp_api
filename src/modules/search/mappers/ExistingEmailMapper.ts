@@ -5,7 +5,7 @@ type ExistinEmailQuery = {
     email: RegExp
 };
 
-export async function read(search: string, source: string): Promise<ExistingResource>
+export async function find(search: string, source: string): Promise<ExistingResource>
 {
     const query: ExistinEmailQuery = {
         "email"   : new RegExp(`^${search}$`, "i")

@@ -5,24 +5,22 @@
  * the existance of an affilaite before we go ahead and create their link.
  */
 
-import express from "express";
+import { find } from "../mappers/ExistingLinkMapper";
 import ExistingResource from "../entities/ExistingResource";
-import { read } from "../mappers/ExistingLinkMapper";
+import express from "express";
 
 /**
- * Search all of the charities that are allowed in our domain.
+ * Search all of the affiliates links that are currently in the database since those have to be unique.
  * @param req Express request object
  * @param res Response object
- * 
- * @TODO Implement CharityDTO
  */
-export async function show(req: express.Request, res: express.Response) : Promise<void> 
+export async function affiliateLink(req: express.Request, res: express.Response) : Promise<void> 
 {
     // Get the name stored in the request as a string.
     const name: string = req.query.name as string;
 
     // Call up the repository.
-    read(name).then((data: ExistingResource) => {
-        res.send( { result: data.getExists() } );
+    find(name).then((data: ExistingResource) => {
+        res.send( { exists: data.getExists() } );
     });
 }

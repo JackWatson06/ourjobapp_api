@@ -19,8 +19,9 @@ import { index as indexJobGroup }  from "./controllers/JobGroupController";
 import { index as indexMajor }     from "./controllers/MajorController";
 import { index as indexCountries } from "./controllers/CountryController";
 
-import * as ExistingLink from "./controllers/ExistingLinkController";
-import * as ExistingEmail from "./controllers/ExistingEmailController";
+import {affiliateLink} from "./controllers/ExistingLinkController";
+import {employerEmail} from "./controllers/ExistingEmailController";
+import {employeePhone} from "./controllers/ExistingPhoneController";
 
 let searchRouter: express.Router = express.Router();
 
@@ -33,8 +34,8 @@ searchRouter.get("/majors",     indexMajor);
 searchRouter.get("/countries",  indexCountries);
 
 
-searchRouter.get("/existing/links",              ExistingLink.show);
-searchRouter.get("/existing/employee-emails",    ExistingEmail.employee);
-searchRouter.get("/existing/employer-emails",    ExistingEmail.employer);
+searchRouter.get("/existing/affiliate",  affiliateLink);
+searchRouter.get("/existing/employee",   employeePhone);
+searchRouter.get("/existing/employer",   employerEmail);
 
 export default searchRouter;

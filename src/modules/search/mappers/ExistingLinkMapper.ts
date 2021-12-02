@@ -12,20 +12,20 @@ import ExistingResource from "../entities/ExistingResource"
 
 type ExisitingLinkQuery = { 
     name: string;
-    verified: true;
 };
 
 /**
  * Test to make sure that we only have one of a single link.
  * @param name Name of the link that we are searching for.
  */
-export async function read(name: string): Promise<ExistingResource>
+export async function find(name: string): Promise<ExistingResource>
 {
     const query: ExisitingLinkQuery = {
-        "name"     : name,
-        "verified" : true
+        "name" : name
     };
     
     const hasOneLink: number = await collections.affiliates.find(query).limit(1).count();
+    console.log(hasOneLink);
+    
     return new ExistingResource( hasOneLink != 0 );
 }
