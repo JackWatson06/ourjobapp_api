@@ -1,6 +1,8 @@
 import dependencies from "./bootstrap/dependencies";
 import * as mongoDb from "db/MongoDb";
 
+const ROOT = "../"
+
 /**
  * Create the environment in which we will be running all scripts under. Take the name of the script we want to execute
  * as the argument to the method. At some point we will want to think about merging this with the default bootstrapping code
@@ -14,7 +16,7 @@ async function bootstrapScriptEnviornment(script: string)
     {
         console.log(`Executing ${script}`);
         const start = Date.now();
-        const exec = await import(`${script}`);
+        const exec = await import(`${ROOT}${script}`);
 
         await exec.default();
         const elapsedMilli = Date.now() - start;

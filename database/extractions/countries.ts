@@ -8,6 +8,8 @@ import { Schema } from "db/DatabaseSchema";
 import { titleCase } from "title-case";
 import * as XLSX from "xlsx";
 import fs from "fs";
+import {gzip} from "node-gzip";
+
 
 // Just look at the coutnry data lol for some reason when we turn to JSON it is all Afghanistan.
 type CountryRow = {
@@ -16,8 +18,8 @@ type CountryRow = {
 };
 
 // Where is the file that we are looking for located.
-const INPUT  = __dirname + "/../raw-data/countries.xlsx";
-const OUTPUT = __dirname + "/../raw-data/countries.json";
+const INPUT  = __dirname + "/source/countries.xlsx";
+const OUTPUT = __dirname + "/../raw-data/countries.gz";
 
 export default async function exec()
 {
@@ -42,7 +44,7 @@ export default async function exec()
     }
 
     // Write the majors to a file.
-    fs.writeFile(OUTPUT, JSON.stringify(extractedJSON), (error: NodeJS.ErrnoException) => {
+    fs.writeFile(OUTPUT, await gzip(JSON.stringify(extractedJSON)), (error: NodeJS.ErrnoException) => {
         if(error)
         {
             console.log(error);

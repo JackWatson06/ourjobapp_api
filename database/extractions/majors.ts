@@ -8,6 +8,7 @@ import { Schema } from "db/DatabaseSchema";
 import { titleCase } from "title-case";
 import * as XLSX from "xlsx";
 import fs from "fs";
+import {gzip} from "node-gzip";
 
 // Define the charity type that is read in from the xcel sheet.
 type MajorRow = {
@@ -15,8 +16,8 @@ type MajorRow = {
 };
 
 // Where is the file that we are looking for located.
-const INPUT  = __dirname + "/../raw-data/college-majors.xlsx";
-const OUTPUT = __dirname + "/../raw-data/majors.json";
+const INPUT  = __dirname + "/source/college-majors.xlsx";
+const OUTPUT = __dirname + "/../raw-data/majors.gz";
 
 export default async function exec()
 {
@@ -40,7 +41,7 @@ export default async function exec()
     }
 
     // Write the majors to a file.
-    fs.writeFile(OUTPUT, JSON.stringify(extractedJSON), (error: NodeJS.ErrnoException) => {
+    fs.writeFile(OUTPUT, await gzip(JSON.stringify(extractedJSON)), (error: NodeJS.ErrnoException) => {
         if(error)
         {
             console.log(error);

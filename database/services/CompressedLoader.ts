@@ -7,6 +7,7 @@
  */
 
 import { collections } from "db/MongoDb";
+import { ungzip } from "node-gzip";
 import fs from "fs";
 
 /**
@@ -15,10 +16,10 @@ import fs from "fs";
  * @param rawData Name of the file in the raw-data directory
  * @param collection The collection we are loading the data into
  */
-export default async function load(rawData: string, collection: string): Promise<void>
+export async function loadCompressedJson(rawData: string, collection: string): Promise<void>
 {
-    const input: string   = `${__dirname}/../raw-data/${rawData}`;
-    const data: Buffer    = fs.readFileSync(input);
+    const input: string  = `${__dirname}/../seed-data/${rawData}.gz`;
+    const data: Buffer   = await ungzip(fs.readFileSync(input));
 
     await collections[collection].insertMany( JSON.parse(data.toString()) ).catch((err: Error) => {
         console.error("ERROR");

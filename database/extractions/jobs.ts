@@ -9,6 +9,7 @@ import { titleCase } from "title-case";
 import * as crypto from "crypto";
 import * as XLSX from "xlsx";
 import fs from "fs";
+import {gzip} from "node-gzip";
 
 // Define the charity type that is read in from the xcel sheet.
 type JobsRow = {
@@ -21,9 +22,9 @@ type TitleDictionary = {
 }
 
 // Where is the file that we are looking for located.
-const INPUT            = __dirname + "/../raw-data/job-list.xlsx";
-const OUTPUT_JOB       = __dirname + "/../raw-data/jobs.json";
-const OUTPUT_JOB_GROUP = __dirname + "/../raw-data/job-groups.json";
+const INPUT            = __dirname + "/source/job-list.xlsx";
+const OUTPUT_JOB       = __dirname + "/../raw-data/jobs.gz";
+const OUTPUT_JOB_GROUP = __dirname + "/../raw-data/job-groups.gz";
 
 
 export default async function exec()
@@ -85,7 +86,7 @@ export default async function exec()
     }
 
     // Write the majors to a file.
-    fs.writeFile(OUTPUT_JOB, JSON.stringify(extractedJobsJSON), error);
-    fs.writeFile(OUTPUT_JOB_GROUP, JSON.stringify(extractedJobGroupJSON), error);
+    fs.writeFile(OUTPUT_JOB,        await gzip(JSON.stringify(extractedJobsJSON)), error);
+    fs.writeFile(OUTPUT_JOB_GROUP,  await gzip(JSON.stringify(extractedJobGroupJSON)), error);
 
 }

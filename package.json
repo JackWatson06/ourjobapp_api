@@ -10,10 +10,10 @@
     "script": "npx ts-node src/script.ts",
     "match": "npm run script -- ./modules/matching/commands/MatchAllCommand",
     "email": "npm run script -- ./modules/matching/commands/EmailMatchesCommand",
-    "refresh-database": "npm run script -- ../database/database-delete && npm run script -- ../database/database-seed && rm -f documents/*",
+    "refresh-database": "npm run script -- database/DatabaseDelete && npm run script -- database/DatabaseSeed && rm -f documents/*",
     "dev-seeder": "npm run script -- ../database/seed/matching-seeder",
     "test:unit": "jest --forceExit -c jest.unit.config.js",
-    "test:int": "npx jest --detectOpenHandles --forceExit -c jest.integration.config.js",
+    "test:int": "jest --detectOpenHandles --forceExit -c jest.integration.config.js",
     "test": "npm run test:unit && npm run test:int && npm run refresh-database"
   },
   "repository": {
@@ -29,6 +29,7 @@
   "dependencies": {
     "@types/ajv": "^1.0.0",
     "@types/express-fileupload": "^1.1.7",
+    "@types/node-gzip": "^1.1.0",
     "@types/paypal-rest-sdk": "^1.7.6",
     "@types/xlsx": "0.0.36",
     "ajv": "^8.6.3",
@@ -46,6 +47,7 @@
     "migrate": "^1.7.0",
     "module-alias": "^2.2.2",
     "mongodb": "^4.1.2",
+    "node-gzip": "^1.1.2",
     "nodemailer": "^6.7.0",
     "object-hash": "^2.2.0",
     "paypal-rest-sdk": "^1.8.1",

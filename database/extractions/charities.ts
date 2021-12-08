@@ -9,6 +9,7 @@ import { titleCase } from "title-case";
 import * as crypto from "crypto";
 import * as XLSX from "xlsx";
 import fs from "fs";
+import {gzip} from "node-gzip";
 
 // Define the charity type that is read in from the xcel sheet.
 type CharityRow = {
@@ -20,15 +21,15 @@ type CharityDictionary = {
 }
 
 // Where is the file that we are looking for located.
-const INPUT  = __dirname + "/../raw-data/charities.xlsx";
-const OUTPUT = __dirname + "/../raw-data/charities.json";
+const INPUT  = __dirname + "/source/charities.xlsx";
+const OUTPUT = __dirname + "/../raw-data/charities.gz";
 
 export default async function exec()
 {
     const workbook : XLSX.WorkBook = XLSX.readFile(INPUT);
 
     const charityDictionary: CharityDictionary = {};
-    const extractedJSON: Schema.Charity[] = [];
+    const extractedJSON: Schema.Charity[]      = [];
     let initialCharityCount: number            = 0;
     let finalCharityCount: number              = 0;
 
@@ -74,7 +75,7 @@ export default async function exec()
     console.log("Final Charity Count: " + finalCharityCount);
     
     // Write the extracted charities to a file.
-    fs.writeFile(OUTPUT, JSON.stringify(extractedJSON), (error) => {
+    fs.writeFile(OUTPUT, await gzip(JSON.stringify(extractedJSON)), (error) => {
         if (error) {
             console.error(error);
         }

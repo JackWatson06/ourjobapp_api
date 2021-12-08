@@ -1,30 +1,30 @@
 import { collections } from "db/MongoDb";
-import load from "./services/load";
+import { loadCompressedJson } from "./services/CompressedLoader";
 
 export default async function exec()
 {
     try
     {
-        await load("charities.json",  "charities");
-        await load("countries.json",  "countries");
-        await load("job-groups.json", "job_groups");
-        await load("jobs.json",       "jobs");
-        await load("majors.json",     "majors");
+        await loadCompressedJson("charities",  "charities");
+        await loadCompressedJson("countries",  "countries");
+        await loadCompressedJson("job-groups", "job_groups");
+        await loadCompressedJson("jobs",       "jobs");
+        await loadCompressedJson("majors",     "majors");
     
         await collections.charities.createIndex({
-            "name": 1
+            "name": "text"
         });
         await collections.job_groups.createIndex({
-            "name": 1
+            "name": "text"
         });
         await collections.jobs.createIndex({
-            "name": 1
+            "name": "text"
         });
         await collections.majors.createIndex({
-            "name": 1
+            "name": "text"
         });
         await collections.countries.createIndex({
-            "name": 1
+            "name": "text"
         });
     }
     catch(error)
