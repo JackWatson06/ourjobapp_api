@@ -1,24 +1,32 @@
 {
     "compilerOptions": {
         "module": "commonjs",
+        "target": "es6",
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
-        "target": "es6",
         "noImplicitAny": true,
-        "moduleResolution": "node",
         "sourceMap": true,
+        "strictNullChecks": true,
+        "moduleResolution": "node",
         "outDir": "dist",
         "baseUrl": ".",
         "paths": {
-            "infa/*" : [ "src/core/infa/*" ],
+            "bootstrap/*" : [ "src/bootstrap/*" ],
+            "modules/*"   : [ "src/modules/*" ],
+            "db/*"        : [ "src/core/db/*" ],
+            "infa/*"      : [ "src/core/infa/*" ],
+            "notify/*"    : [ "src/core/notify/*" ],
+            "payment/*"   : [ "src/core/payment/*" ],
+            "template/*"  : [ "src/core/template/*" ],
             "*": [
-                "node_modules/*",
-                "src/types/*"
+                "src/types/*",
+                "node_modules/*"
             ]
         }
     },
     "include": [
         "src/**/*",
-        "scripts/**/*"
+        "database/**/*",
+        "tests/**/*"
     ]
 }

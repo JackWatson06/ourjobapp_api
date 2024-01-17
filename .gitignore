@@ -5,13 +5,15 @@ lib-cov
 *.dat
 *.out
 *.pid
-*.gz
 *.swp
 
 pids
 logs
 results
 tmp
+
+# Node version
+.nvmrc
 
 # Coverage reports
 coverage
@@ -43,7 +45,13 @@ yarn.lock
 # ignore the .db folder
 /dist
 
-# ignore seed data in the raw-data directory.
-scripts/raw-data/*
+# ignore extraction source data, as well as the data that was loaded.
+database/extractions/source/*
+
+# ignore any data in the email chache
+.cache/*
+
+# ignore all documents
+documents/*
 
 !*.gitkeep

@@ -1,3 +1,4 @@
+import dependencies from "./bootstrap/dependencies";
 import errorHandler from "errorhandler";
 import app from "./bootstrap/app";
 
@@ -9,15 +10,23 @@ if (process.env.NODE_ENV === "development") {
 }
 
 /**
- * Start Express server.
+ * Start Express after we finished bootstrapping.
  */
-const server = app.listen(app.get("port"), () => {
-    console.log(
-        "  App is running at http://localhost:%d in %s mode",
-        app.get("port"),
-        app.get("env")
-    );
-    console.log("  Press CTRL-C to stop\n");
+app.on('ready', function() { 
+    app.listen(app.get("port"), () => {
+        console.log(
+            "  App is running at http://localhost:%d in %s mode",
+            app.get("port"),
+            app.get("env")
+        );
+        console.log("  Press CTRL-C to stop\n");
+    });
+}); 
+
+dependencies().then(() => {  
+    app.emit('ready'); 
+}).catch((err) => {
+    console.error(`Fatal Error. Could not start application: ${err}`);
 });
 
-export default server;
+export default app;
