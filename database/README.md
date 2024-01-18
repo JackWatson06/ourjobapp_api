@@ -15,14 +15,22 @@ acts as an undo method if we decide to change something back to the way it was.
 #### Run Commands
 ```
 npm run database-status
+```
+This will print out the migrations that still have to be ran.
+
+```
 npm run database-rollback
+```
+This will run the done method for the migrations that were ran last.
+
+```
 npm run database-migrate
 ```
-
-database-status: This will print out the migrations that still have to be ran.
-database-rollback: This will run the done method for the migrations that were ran last.
-database-migrate: Apply the migrations that have yet to be ran.
+Apply the migrations that have yet to be ran.
 
 #### Setup Commands
+
 ```
-npx miggra
+npx migrate-mongo create underscore_file_name_migration
+```
+Create a new migration file. 
