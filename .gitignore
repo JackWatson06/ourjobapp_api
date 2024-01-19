@@ -12,9 +12,6 @@ logs
 results
 tmp
 
-# Node version
-.nvmrc
-
 # Coverage reports
 coverage
 
