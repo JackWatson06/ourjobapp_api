@@ -1,7 +1,7 @@
 # Signup Module
 The signup module supports user signup to the application. In this module, we handle the
 verification process for new accounts. Verification methods are through SMS. This
-module also manages the contract process. Everytime an affiliate or an employer signs up they
+module also manages the contract process. Every time an affiliate or an employer signs up they
 receive a contract.
 
 ## Domain Concepts
