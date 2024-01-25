@@ -19,7 +19,7 @@ import CountryCode from "../entities/CountryCode";
 import * as EmployeeMapper from "../mappers/EmployeeMapper";
 
 // Constants imports
-import * as Constants from "infa/Constants";
+import { Constants } from "db/Constants";
 
 
 /**

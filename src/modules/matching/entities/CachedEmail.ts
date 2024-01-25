@@ -4,7 +4,7 @@
  * Purpose: The candidate email represents the email that we recieve when we are looking for candidates.
  */
 
-import {EmailNotification} from "notify/EmailNotification";
+import {Notification} from "notify/Notification";
 import {Email} from "notify/messages/Email";
 
 export default class CacheEmail
@@ -29,9 +29,9 @@ export default class CacheEmail
     /**
      * Send the email to the employer. Handle the result in this function.
      */
-    public async send(notify: EmailNotification, email: Email): Promise<boolean>
+    public async send(notify: Notification, email: Email): Promise<boolean>
     {
-        if(await notify.send(email))
+        if(await notify.email(email))
         {
             this.sent_at = Date.now();
             this.sent    = true;

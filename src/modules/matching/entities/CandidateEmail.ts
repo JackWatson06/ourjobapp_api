@@ -5,7 +5,8 @@
  */
 
 import { Email } from "notify/messages/Email";
-import { EmailNotification } from "notify/EmailNotification";
+import { Notification } from "notify/Notification";
+import { ITemplate } from "template/ITemplate";
 
 import BatchMatch from "./BatchMatch";
 import * as BatchMatchView from "../views/BatchMatchView"; // Not a huge fan of using view here but it is what we got.
@@ -32,42 +33,34 @@ export default class CandidateEmail
      * Render the email with relevent data from the match.
      * @param notify Notification service that we are using.
      */
-    public async render(notify: EmailNotification): Promise<Email>
+    public async render(templateEngine: ITemplate): Promise<Email>
     {
         const binds = BatchMatchView.transform(this.match);
-        
-        return notify.render({
+
+        const message = await templateEngine.render('email/candidates', binds); 
+
+        return {
             address: this.match.getEmployer().email,
-            subject: "Your Candidate Pool",
-            text: "candidates",
-            html: "candidates",
-        }, binds);
+            subject: 'Your Candidate Pool',
+            text: message,
+            html: message
+        }
     }
 
     /**
      * Immediatly build and send out the candidate email for the employer
      * @param notify Notification service we want to use for sending out this email
      */
-    public async send(notify: EmailNotification)
+    public async send(notify: Notification, templateEngine: ITemplate)
     {
-        const binds = BatchMatchView.transform(this.match);
-        
-        const email: Email = await notify.render({
-            address: this.match.getEmployer().email,
-            subject: "Your Candidate Pool",
-            text: "candidates",
-            html: "candidates",
-        }, binds);
+        const email = await this.render(templateEngine);
 
         // Send the notification email. If we fail then mark that as an error.
-        if(await notify.send(email))
-        {
+        if(await notify.email(email)) {
             this.sentAt = Date.now();
             this.sent = true;
             this.error = false;
-        }
-        else
-        {
+        } else {
             this.error = true;
         }
     }

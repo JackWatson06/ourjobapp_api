@@ -11,8 +11,9 @@ import CandidateEmail from "../entities/CandidateEmail";
 
 // Core Dependencies
 import fs from "infa/FileSystemAdaptor";
-import {EmailNotification} from "notify/EmailNotification";
+import {Notification} from "notify/Notification";
 import {Email} from "notify/messages/Email";
+import { HandlebarsAdaptor } from "template/HandlebarsAdaptor";
 
 
 
@@ -23,7 +24,9 @@ export default async function exec()
 {
     const batch = new Batch(BatchRepository.getId());
  
-    const emailNotification: EmailNotification = new EmailNotification();
+    const emailNotification: Notification = new Notification();
+    const templateEngine = new HandlebarsAdaptor();
+
 
     // Loop through the employers from the mapper. Since we are looping through all we map one at a time with the read
     // bulk command.
@@ -38,8 +41,8 @@ export default async function exec()
         const candidateEmail = new CandidateEmail(batchMatch);
 
         // Render the email, and write the email to the cache.        
-        const email: Email = await candidateEmail.render(emailNotification);
-        const token: string = await fs.write(fs.CACHE, email);
+        const email: Email = await candidateEmail.render(templateEngine);
+        const token: string = await fs.write(fs.CACHE, JSON.stringify(email));
         candidateEmail.setCacheIdentifier(token);
 
         await CandidateEmailMapper.create( candidateEmail );

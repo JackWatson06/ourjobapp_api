@@ -5,7 +5,6 @@
  * once during the signup process because we run matching on employer signup.
  */
 
-import {EmailNotification} from "notify/EmailNotification";
 import * as MatchingService from "../services/Matching";
 
 import * as EmployerMapper from "../mappers/EmployerMapper";
@@ -13,6 +12,9 @@ import * as CandidateEmailMapper from "../mappers/CandidateEmailMapper";
 
 import CandidateEmail from "../entities/CandidateEmail";
 import Employer from "../entities/Employer";
+
+import { Notification } from "notify/Notification";
+import { HandlebarsAdaptor } from "template/HandlebarsAdaptor";
 
 /**
  * I need to get the employer id in here.
@@ -23,7 +25,8 @@ export default async function exec(employerId: string)
     // bulk command.
     const employer: Employer|null = await EmployerMapper.read(employerId);
 
-    const emailNotification: EmailNotification = new EmailNotification();
+    const notification = new Notification();
+    const templateEngine = new HandlebarsAdaptor();
 
     if(employer != null)
     {
@@ -31,7 +34,7 @@ export default async function exec(employerId: string)
 
         const email = new CandidateEmail(batchMatch);
     
-        await email.send(emailNotification);
+        await email.send(notification, templateEngine);
         await CandidateEmailMapper.create( email ); 
     }
 }
