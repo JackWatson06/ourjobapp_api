@@ -20,14 +20,11 @@ installation process, background on the architecture, testing, and how to make c
 2. Copy _.env.example_ to _.env_. You can keep the defaults when developing locally. Note if you
 want email, text messaging, and PayPal you will have to configure those separately. The guides
 below will help. After setting each account up you can copy the necessary .env variables to their
-respective category.
-    - [Message Bird](https://developers.messagebird.com)
-    - [Node Mailer](https://nodemailer.com/usage/using-gmail/)
-    - [PayPal](https://developer.paypal.com/home)
+respective category. See the documentation in the _src/core/_ folder for more information.
 3. Run `nvm use` in the root directory.
 4. Run `docker-compose up`.
 5. Run `npm install`.
-6. Run `docker refresh-database`
+6. Run `npm run refresh-database`
 
 ### Architecture
 The application follows a 
@@ -79,6 +76,37 @@ service. These are done through _NGINX_ on the server.
 - api.ourjob.app: NGINX Api
 - db.ourjob.app: Mongo Express Container
 
+### PhantomJS
+The Dockerfile to create the _Node_ container requires _PhantomJS_. As of January 2024, the JavaScript
+community has been slowly moving away from _PhantomJS_ in favor of tools such as _Puppeteer_. We use
+_PhantomJS_ in this project to render PDFs. Originally we installed _PhantomJS_ in the Node
+docker container using a dockerized version of _PhantomJS_ called _phantomized_. This stopped 
+working in January 2024, because the 
+[_phantomized_ repository](https://github.com/dustinblackman/phantomized) was archived. To get 
+_PhantomJS_ to work we had to build _phantomized_ ourselves using this fork of the original
+repository.
+- [phantomized Fork](https://github.com/everlytic/phantomized)
+
+After you build the project replace _dockerized-phantomjs.tar.gz_ in the root directory of this
+application and rebuild all the containers. Note there are no plans to migrate over to _Puppeteer_
+given the inactive state of this project.
+
+## Services
+Our application interacts with a few external services to execute business tasks. The following
+sections go into each service and how to develop against it.
+
+
+
+
+
+### PayPal
+
+- [Message Bird](https://developers.messagebird.com)
+    - [Node Mailer](https://nodemailer.com/usage/using-gmail/)
+    - [PayPal](https://developer.paypal.com/home)
+
+### MailHog
+
 ## Dependencies
 - [Docker Engine](https://docs.docker.com/engine/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
@@ -100,53 +128,53 @@ docker-compose up
 
 To run a specific file as a script use the following command. 
 ```
-npm run script -- ./{path_to_script}
+docker exec -t unijobapp_api_node npm run script -- ./{path_to_script}
 ```
 
 This command will call the MatchAllCommand found in the _modules/matching/commands/_ directory. This
 will run the process of determining the matches for candidates and employers.
 ```
-npm run match
+docker exec -t unijobapp_api_node npm run match
 ```
 
 This command will call the EmailMatchesCommand found in the _modules/matching/commands/_ directory.
 When you run this command it will send out emails for the matches that were found in the matching
 process.
 ```
-npm run email
+docker exec -t unijobapp_api_node npm run email
 ```
 
 This command will refresh the database to the original seed data.
 ```
-npm run refresh-database
+docker exec -t unijobapp_api_node npm run refresh-database
 ```
 
 This command will seed the database with development data.
 ```
-npm run dev-seeder
+docker exec -t unijobapp_api_node npm run dev-seeder
 ```
 
 To run the unit test suite use the following command.
 ```
-npm run test:unit
+docker exec -t unijobapp_api_node npm run test:unit
 ```
 
 To run the integration(API) test suite use the following command.
 ```
-npm run test:int
+docker exec -t unijobapp_api_node npm run test:int
 ```
 
 This command will run both unit and integration test suites. It will also finish with resetting
 the database to its original state.
 ```
-npm run test
+docker exec -t unijobapp_api_node npm run test
 ```
 
 If you want to run a single unit test you can run the following command. A similar command applies
 to integration tests. To run a single integration test replace _jest.unit.config.js_ with
 _jest.integration.config.js_.
 ```
-npx jest --forceExit -c jest.unit.config.js -- {TestName}
+docker exec -t unijobapp_api_node npx jest --forceExit -c jest.unit.config.js -- {TestName}
 ```
 
 ## Learn More
@@ -164,3 +192,6 @@ follows DDD.
 ## Missing Features
 - [] Set up continuous integration and deployment pipelines.
 - [] Create a database migration process.
+
+## Cleanup TODO
+- Remove mongo-migrate
