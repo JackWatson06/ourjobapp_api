@@ -1,8 +1,8 @@
-# unijobapp_api
-Welcome to the UniJobApp API repository! This repository contains the backend code for the
-UniJobApp. UniJobApp stands for Universal Job Application and matches both employers and candidates
-together using advanced algorithms. This repository allows several different features including 
-signup and verification for candidates and employers. Additionally, it handles
+# OurJobApp API
+Welcome to the OurJobApp API repository! This repository contains the backend code for the
+OurJob.App website. OurJobApp stands for Our Job Application and matches both employers and 
+candidates together using advanced algorithms. This repository allows several different features 
+including signup and verification for candidates and employers. Additionally, it handles
 emailing every morning with matches found for the employer.
 
 ## Technical Details
@@ -11,20 +11,20 @@ database, _Express_ for the web server, and _Jest_ for our testing engine. We'll
 software more in the **Development Guide** section.
 
 ## Development Guide
-In this section, we outline how to develop the UniJobApp API. We cover the development
+In this section, we outline how to develop the OurJobApp API. We cover the development
 installation process, background on the architecture, testing, and how to make changes.
 
 ### Installation
 
 1. Gather all the necessary software from the **Dependencies** section.
-2. Copy _.env.example_ to _.env_. You can keep the defaults when developing locally. Note if you
-want email, text messaging, and PayPal you will have to configure those separately. The guides
-below will help. After setting each account up you can copy the necessary .env variables to their
-respective category. See the documentation in the _src/core/_ folder for more information.
-3. Run `nvm use` in the root directory.
-4. Run `docker-compose up`.
-5. Run `npm install`.
-6. Run `npm run refresh-database`
+2. Copy _.env.example_ to _.env_. You can keep the defaults when developing locally. 
+    - *Note:* If you want email, text messaging, and PayPal you will have to configure those 
+    separately. After setting each account up you can copy the necessary .env variables to their 
+    respective category. See the documentation in the _src/core/_ folder for setup information on
+    each service.
+3. Run `docker-compose up`.
+4. Run `docker exec -t unijobapp_api_node npm install`.
+5. Run `docker exec -t unijobapp_api_node npm run refresh-database`
 
 ### Architecture
 The application follows a 
@@ -33,8 +33,8 @@ with external dependencies pushed out to the farthest edge of the application. W
 architecture on two Github projects:
 - [Microsoft TypeScript Example](https://github.com/microsoft/TypeScript-Node-Starter): Generic 
 TypeScript app setup.
-- [White Label](https://github.com/stemmlerjs/white-label): A TypeScript project that follows the
-architecture outlined by Domain Driven Design.
+- [White Label](https://github.com/stemmlerjs/white-label): A TypeScript project that follows a 
+Domain Driven Design approach.
 
 ### Design
 We follow design principles set out by 
@@ -61,6 +61,14 @@ entity objects.
 are conducted on the entities.
 - **views**: Views are returned by controllers or commands depending on how we want to visualize
 queried data.
+
+### Testing
+Development on this project requires you to run the testing suite after all feature changes to
+confirm expectations. To run the testing suite follow these steps:
+1. Run `docker-compose up`
+2. Run `docker exec -t unijobapp_api_node npm run test`
+    - _Note_ This will refresh the database after test completion. This refresh will whip any data
+    added to the database and start with the initial seed data.
 
 ### Aliases
 This project uses a _JavaScript_ library called _module-alias_ which allows us to alias long path
@@ -92,35 +100,16 @@ application and rebuild all the containers. Note there are no plans to migrate o
 given the inactive state of this project.
 
 ## Services
-Our application interacts with a few external services to execute business tasks. The following
-sections go into each service and how to develop against it.
-
-
-
-
-
-### PayPal
-
-- [Message Bird](https://developers.messagebird.com)
-    - [Node Mailer](https://nodemailer.com/usage/using-gmail/)
-    - [PayPal](https://developer.paypal.com/home)
-
-### MailHog
+Our application interacts with a few external services to execute business tasks. View the
+documentation in sub-directories of the _src/core_ folder to learn more about these services.
 
 ## Dependencies
 - [Docker Engine](https://docs.docker.com/engine/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
-- [NVM (Node Version Manager)](https://docs.docker.com/compose/install/)
 
 ## Commands
-
-Use this command to set the node version to the version mandated by the _.nvmrc_ file.
-```
-nvm use
-```
-
 To start the application's docker containers run the following command. This will also start
-watching the code for any src changes. If you want to run in the background use the `-d` flag to run
+watching the code for any changes. If you want to run in the background use the `-d` flag to run
 in detached mode. 
 ```
 docker-compose up
