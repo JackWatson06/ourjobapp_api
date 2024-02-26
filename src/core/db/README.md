@@ -3,9 +3,9 @@ We use MongoDB for our persistence layer. Collections follow a schema defined in
 This document covers relevant _.env_ variables and the use of _MongoDB_ in the application. 
 
 ## Environment Settings
-- MONGO_PORT: Port our _MongoDB_ server runs on.
-- MONGO_HOST: Name of the host running our _MongoDB_ server.
-- MONGO_DB: Default database for our application.
+- **MONGO_PORT**: Port our _MongoDB_ server runs on.
+- **MONGO_HOST**: Name of the host running our _MongoDB_ server.
+- **MONGO_DB**: Default database for our application.
 
 ## Mongo DB
 To interface with the database simply import the _collections_ variable found in the _./MongoDb.ts_
