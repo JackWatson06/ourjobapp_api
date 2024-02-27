@@ -20,4 +20,4 @@ RUN apk add --no-cache curl && \
 
 # https://stackoverflow.com/questions/45395390/see-cron-output-via-docker-logs-without-using-an-extra-file
 COPY cron/crontab /etc/crontabs/root
-CMD crond && npm run dev
+CMD ([ -d node_modules ] || npm ci ) && crond && npm run dev
