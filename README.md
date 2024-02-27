@@ -1,8 +1,8 @@
-# unijobapp_api
-Welcome to the UniJobApp API repository! This repository contains the backend code for the
-UniJobApp. UniJobApp stands for Universal Job Application and matches both employers and candidates
-together using advanced algorithms. This repository allows several different features including 
-signup and verification for candidates and employers. Additionally, it handles
+# OurJobApp API
+Welcome to the OurJobApp API repository! This repository contains the backend code for the
+OurJob.App website. OurJobApp stands for Our Job Application and matches both employers and 
+candidates together using advanced algorithms. This repository allows several different features 
+including signup and verification for candidates and employers. Additionally, it handles
 emailing every morning with matches found for the employer.
 
 ## Technical Details
@@ -11,23 +11,20 @@ database, _Express_ for the web server, and _Jest_ for our testing engine. We'll
 software more in the **Development Guide** section.
 
 ## Development Guide
-In this section, we outline how to develop the UniJobApp API. We cover the development
+In this section, we outline how to develop the OurJobApp API. We cover the development
 installation process, background on the architecture, testing, and how to make changes.
 
 ### Installation
 
 1. Gather all the necessary software from the **Dependencies** section.
-2. Copy _.env.example_ to _.env_. You can keep the defaults when developing locally. Note if you
-want email, text messaging, and PayPal you will have to configure those separately. The guides
-below will help. After setting each account up you can copy the necessary .env variables to their
-respective category.
-    - [Message Bird](https://developers.messagebird.com)
-    - [Node Mailer](https://nodemailer.com/usage/using-gmail/)
-    - [PayPal](https://developer.paypal.com/home)
-3. Run `nvm use` in the root directory.
-4. Run `docker-compose up`.
-5. Run `npm install`.
-6. Run `docker refresh-database`
+2. Copy _.env.example_ to _.env_. You can keep the defaults when developing locally. 
+    - *Note:* If you want email, text messaging, and PayPal you will have to configure those 
+    separately. After setting each account up you can copy the necessary .env variables to their 
+    respective category. See the documentation in the _src/core/_ folder for setup information on
+    each service.
+3. Run `docker-compose up`.
+4. Run `docker exec -t ourjobapp_api_node npm install`.
+5. Run `docker exec -t ourjobapp_api_node npm run refresh-database`
 
 ### Architecture
 The application follows a 
@@ -36,8 +33,8 @@ with external dependencies pushed out to the farthest edge of the application. W
 architecture on two Github projects:
 - [Microsoft TypeScript Example](https://github.com/microsoft/TypeScript-Node-Starter): Generic 
 TypeScript app setup.
-- [White Label](https://github.com/stemmlerjs/white-label): A TypeScript project that follows the
-architecture outlined by Domain Driven Design.
+- [White Label](https://github.com/stemmlerjs/white-label): A TypeScript project that follows a 
+Domain Driven Design approach.
 
 ### Design
 We follow design principles set out by 
@@ -65,6 +62,14 @@ are conducted on the entities.
 - **views**: Views are returned by controllers or commands depending on how we want to visualize
 queried data.
 
+### Testing
+Development on this project requires you to run the testing suite after all feature changes to
+confirm expectations. To run the testing suite follow these steps:
+1. Run `docker-compose up`
+2. Run `docker exec -t ourjobapp_api_node npm run test`
+    - _Note_ This will refresh the database after test completion. This refresh will whip any data
+    added to the database and start with the initial seed data.
+
 ### Aliases
 This project uses a _JavaScript_ library called _module-alias_ which allows us to alias long path
 routes. You can view the paths that we have aliased in _package.json_. Remember that if you are
@@ -79,20 +84,32 @@ service. These are done through _NGINX_ on the server.
 - api.ourjob.app: NGINX Api
 - db.ourjob.app: Mongo Express Container
 
+### PhantomJS
+The Dockerfile to create the _Node_ container requires _PhantomJS_. As of January 2024, the JavaScript
+community has been slowly moving away from _PhantomJS_ in favor of tools such as _Puppeteer_. We use
+_PhantomJS_ in this project to render PDFs. Originally we installed _PhantomJS_ in the Node
+docker container using a dockerized version of _PhantomJS_ called _phantomized_. This stopped 
+working in January 2024, because the 
+[_phantomized_ repository](https://github.com/dustinblackman/phantomized) was archived. To get 
+_PhantomJS_ to work we had to build _phantomized_ ourselves using this fork of the original
+repository.
+- [phantomized Fork](https://github.com/everlytic/phantomized)
+
+After you build the project replace _dockerized-phantomjs.tar.gz_ in the root directory of this
+application and rebuild all the containers. Note there are no plans to migrate over to _Puppeteer_
+given the inactive state of this project.
+
+## Services
+Our application interacts with a few external services to execute business tasks. View the
+documentation in sub-directories of the _src/core_ folder to learn more about these services.
+
 ## Dependencies
 - [Docker Engine](https://docs.docker.com/engine/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
-- [NVM (Node Version Manager)](https://docs.docker.com/compose/install/)
 
 ## Commands
-
-Use this command to set the node version to the version mandated by the _.nvmrc_ file.
-```
-nvm use
-```
-
 To start the application's docker containers run the following command. This will also start
-watching the code for any src changes. If you want to run in the background use the `-d` flag to run
+watching the code for any changes. If you want to run in the background use the `-d` flag to run
 in detached mode. 
 ```
 docker-compose up
@@ -100,53 +117,53 @@ docker-compose up
 
 To run a specific file as a script use the following command. 
 ```
-npm run script -- ./{path_to_script}
+docker exec -t ourjobapp_api_node npm run script -- ./{path_to_script}
 ```
 
 This command will call the MatchAllCommand found in the _modules/matching/commands/_ directory. This
 will run the process of determining the matches for candidates and employers.
 ```
-npm run match
+docker exec -t ourjobapp_api_node npm run match
 ```
 
 This command will call the EmailMatchesCommand found in the _modules/matching/commands/_ directory.
 When you run this command it will send out emails for the matches that were found in the matching
 process.
 ```
-npm run email
+docker exec -t ourjobapp_api_node npm run email
 ```
 
 This command will refresh the database to the original seed data.
 ```
-npm run refresh-database
+docker exec -t ourjobapp_api_node npm run refresh-database
 ```
 
 This command will seed the database with development data.
 ```
-npm run dev-seeder
+docker exec -t ourjobapp_api_node npm run dev-seeder
 ```
 
 To run the unit test suite use the following command.
 ```
-npm run test:unit
+docker exec -t ourjobapp_api_node npm run test:unit
 ```
 
 To run the integration(API) test suite use the following command.
 ```
-npm run test:int
+docker exec -t ourjobapp_api_node npm run test:int
 ```
 
 This command will run both unit and integration test suites. It will also finish with resetting
 the database to its original state.
 ```
-npm run test
+docker exec -t ourjobapp_api_node npm run test
 ```
 
 If you want to run a single unit test you can run the following command. A similar command applies
 to integration tests. To run a single integration test replace _jest.unit.config.js_ with
 _jest.integration.config.js_.
 ```
-npx jest --forceExit -c jest.unit.config.js -- {TestName}
+docker exec -t ourjobapp_api_node npx jest --forceExit -c jest.unit.config.js -- {TestName}
 ```
 
 ## Learn More
@@ -164,3 +181,6 @@ follows DDD.
 ## Missing Features
 - [] Set up continuous integration and deployment pipelines.
 - [] Create a database migration process.
+
+## Cleanup TODO
+- Remove mongo-migrate

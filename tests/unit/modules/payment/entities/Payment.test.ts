@@ -1,9 +1,3 @@
-// import PayPalApiAdaptor from "infa/PayPalApiAdaptor";
-
-// jest.mock("infa/PayPalApiAdaptor");
-
-// const MockPaymentProcessing = PayPalApiAdaptor as jest.Mock<typeof PayPalApiAdaptor> 
-
 /**
  * How should we test that a pyament can only be used up once? If we pass in another payment id we should not 
  * be able to even get the payment... thats almost like permissions tbh. Maybe thats an integration test.
@@ -24,7 +18,7 @@ import Charity from "modules/payment/entities/Charity";
 
 import PayPalAdaptor from "payment/PayPalAdaptor";
 
-jest.mock("infa/PayPalAdaptor");
+jest.mock("payment/PayPalAdaptor");
 
 // Affiliates can be added to a payment so they can get access to the payout.
 test("can add affiliates", () => {

@@ -3,7 +3,7 @@ import { collections, ObjectId } from "db/MongoDb";
 import { Constants } from "db/Constants";
 
 import htmlPdf from "html-pdf";
-import fs from "infa/FileSystemAdaptor";
+import fs from "infra/FileSystemAdaptor";
 
 const options: htmlPdf.CreateOptions = {
     format: "A4",

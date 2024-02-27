@@ -5,6 +5,7 @@ import { Text } from "../messages/Text";
 
 const messageBirdSdk: MessageBird = messagebird(process.env.SMS_SECRET);
 const originator: string = process.env.SMS_NUMBER;
+const environment: string = process.env.NODE_ENV;
 
 /**
  * Send out en email using the current settings.
@@ -28,6 +29,11 @@ export async function sendText(text: Text)
                 console.error(err);
                 return reject(err);
             }
+
+            if(environment === 'development') {
+                console.log(response);
+            }
+
             resolve();
         });
     });

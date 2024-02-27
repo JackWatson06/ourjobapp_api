@@ -5,7 +5,7 @@ import router from "./router";
 // Create application
 const app = express();
 
-app.set("port", process.env.PORT || 3000);
+app.set("port", 80);
 
 // Call all of our middleware on the application.
 middleware(app);

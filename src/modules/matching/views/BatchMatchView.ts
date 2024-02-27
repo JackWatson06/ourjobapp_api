@@ -7,7 +7,7 @@
  import Location from "../entities/Location";
 
 import BatchMatch from "../entities/BatchMatch"
-import * as Constants from "infa/Constants";
+import { Constants } from "db/Constants";
 
 type MatchView = {
     name        : string,
@@ -24,14 +24,15 @@ type MatchView = {
     paymentLink : string
 }
 
+type EnumerationMapping = { [enumeration: number]: string };
+
 export type BatchMatchView = {
     name       : string,
     employees ?: Array<MatchView>,
     none      ?: Array<string>
 }
 
-
-const distanceMapping = {
+const distanceMapping: EnumerationMapping = {
     [ Constants.Distance.WORLDWIDE ]               : "Worldwide",
     [ Constants.Distance.NATIONWIDE ]              : "Nationwide",
     [ Constants.Distance.TWENTY_FIVE_MILES ]       : "25 Miles",
@@ -40,19 +41,19 @@ const distanceMapping = {
     [ Constants.Distance.TWO_HUNDRED_FIFTY_MILES ] : "250 Miles",
 }
 
-const commitmentMapping = {
+const commitmentMapping: EnumerationMapping = {
     [ Constants.Commitment.FULL_TIME ] : "Full Time",
     [ Constants.Commitment.PART_TIME ] : "Part Time",
     [ Constants.Commitment.BOTH ]      : "Either"
 }
 
-const whereMapping = {
+const whereMapping: EnumerationMapping = {
     [ Constants.Where.IN_PERSON ] : "In Person",
     [ Constants.Where.REMOTE ]    : "Remote",
     [ Constants.Where.BOTH ]      : "Either"
 }
 
-const educationMapping = {
+const educationMapping: EnumerationMapping = {
     [ Constants.Education.BELOW_HIGHSCHOOL ]    : "No Highschool Diploma",
     [ Constants.Education.HIGHSCHOOL ]          : "Highschool Diploma",
     [ Constants.Education.ASSOCIATES ]          : "Associates Degree",
@@ -61,7 +62,7 @@ const educationMapping = {
     [ Constants.Education.DOCTORATE ]           : "Doctorate"
 }
 
-const experienceMapping = {
+const experienceMapping: EnumerationMapping = {
     [ Constants.Experience.ENTRY ]        : "Entry",
     [ Constants.Experience.INTERMEDIATE ] : "Intermediate",
     [ Constants.Experience.EXPERIENCED ]  : "Experienced",
