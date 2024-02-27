@@ -23,8 +23,8 @@ installation process, background on the architecture, testing, and how to make c
     respective category. See the documentation in the _src/core/_ folder for setup information on
     each service.
 3. Run `docker-compose up`.
-4. Run `docker exec -t unijobapp_api_node npm install`.
-5. Run `docker exec -t unijobapp_api_node npm run refresh-database`
+4. Run `docker exec -t ourjobapp_api_node npm install`.
+5. Run `docker exec -t ourjobapp_api_node npm run refresh-database`
 
 ### Architecture
 The application follows a 
@@ -66,7 +66,7 @@ queried data.
 Development on this project requires you to run the testing suite after all feature changes to
 confirm expectations. To run the testing suite follow these steps:
 1. Run `docker-compose up`
-2. Run `docker exec -t unijobapp_api_node npm run test`
+2. Run `docker exec -t ourjobapp_api_node npm run test`
     - _Note_ This will refresh the database after test completion. This refresh will whip any data
     added to the database and start with the initial seed data.
 
@@ -117,53 +117,53 @@ docker-compose up
 
 To run a specific file as a script use the following command. 
 ```
-docker exec -t unijobapp_api_node npm run script -- ./{path_to_script}
+docker exec -t ourjobapp_api_node npm run script -- ./{path_to_script}
 ```
 
 This command will call the MatchAllCommand found in the _modules/matching/commands/_ directory. This
 will run the process of determining the matches for candidates and employers.
 ```
-docker exec -t unijobapp_api_node npm run match
+docker exec -t ourjobapp_api_node npm run match
 ```
 
 This command will call the EmailMatchesCommand found in the _modules/matching/commands/_ directory.
 When you run this command it will send out emails for the matches that were found in the matching
 process.
 ```
-docker exec -t unijobapp_api_node npm run email
+docker exec -t ourjobapp_api_node npm run email
 ```
 
 This command will refresh the database to the original seed data.
 ```
-docker exec -t unijobapp_api_node npm run refresh-database
+docker exec -t ourjobapp_api_node npm run refresh-database
 ```
 
 This command will seed the database with development data.
 ```
-docker exec -t unijobapp_api_node npm run dev-seeder
+docker exec -t ourjobapp_api_node npm run dev-seeder
 ```
 
 To run the unit test suite use the following command.
 ```
-docker exec -t unijobapp_api_node npm run test:unit
+docker exec -t ourjobapp_api_node npm run test:unit
 ```
 
 To run the integration(API) test suite use the following command.
 ```
-docker exec -t unijobapp_api_node npm run test:int
+docker exec -t ourjobapp_api_node npm run test:int
 ```
 
 This command will run both unit and integration test suites. It will also finish with resetting
 the database to its original state.
 ```
-docker exec -t unijobapp_api_node npm run test
+docker exec -t ourjobapp_api_node npm run test
 ```
 
 If you want to run a single unit test you can run the following command. A similar command applies
 to integration tests. To run a single integration test replace _jest.unit.config.js_ with
 _jest.integration.config.js_.
 ```
-docker exec -t unijobapp_api_node npx jest --forceExit -c jest.unit.config.js -- {TestName}
+docker exec -t ourjobapp_api_node npx jest --forceExit -c jest.unit.config.js -- {TestName}
 ```
 
 ## Learn More

@@ -6,7 +6,7 @@ volumes:
 services:
   nginx:
     image: nginx
-    container_name: unijobapp_api_nginx
+    container_name: ourjobapp_api_nginx
     ports: 
       - ${NGINX_PORT}:80
     volumes:
@@ -16,7 +16,7 @@ services:
 
   mongo-express:
     image: "mongo-express"
-    container_name: unijobapp_api_mongo_express
+    container_name: ourjobapp_api_mongo_express
     ports: 
       - ${MONGO_EXPRESS_PORT}:8081
     environment: 
@@ -28,12 +28,12 @@ services:
 
   node:
     build: "."
-    container_name: unijobapp_api_node
-    working_dir: "/srv/www/unijobapp_api"
+    container_name: ourjobapp_api_node
+    working_dir: "/srv/www/ourjobapp_api"
     expose: 
       - 80
     volumes:
-      - ".:/srv/www/unijobapp_api"
+      - ".:/srv/www/ourjobapp_api"
     environment: 
       MONGO_HOST: "mongo"
       MONGO_PORT: "27017"
@@ -42,7 +42,7 @@ services:
 
   mongo:
     image: "mongo"
-    container_name: unijobapp_api_mongo
+    container_name: ourjobapp_api_mongo
     volumes: 
       - "mongodata:/data/db"
     expose: 
@@ -50,7 +50,7 @@ services:
 
   mailhog:
     image: mailhog/mailhog
-    container_name: unijobapp_api_mailhog
+    container_name: ourjobapp_api_mailhog
     logging:
       driver: 'none'
     ports:

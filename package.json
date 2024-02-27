@@ -1,7 +1,7 @@
 {
-  "name": "unijobapp_api",
+  "name": "ourjobapp_api",
   "version": "1.0.0",
-  "description": "This project contains the backend data processing, storing mechanisms, and logic for the UniJobApplication.",
+  "description": "This project contains the backend data processing, storing mechanisms, and logic for the OurJob.App application.",
   "main": "index.js",
   "scripts": {
     "start": "node dist/bootstrap/server.js",
@@ -18,14 +18,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/universaljobapplication/unijobapp_api.git"
+    "url": "git+https://github.com/JackWatson06/ourjobapp_api.git"
   },
   "author": "Jack Watson",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/universaljobapplication/unijobapp_api/issues"
+    "url": "https://github.com/JackWatson06/ourjobapp_api/issues"
   },
-  "homepage": "https://github.com/universaljobapplication/unijobapp_api#readme",
+  "homepage": "https://github.com/JackWatson06/ourjobapp_api#readme",
   "dependencies": {
     "ajv": "^8.6.3",
     "axios": "^0.21.4",

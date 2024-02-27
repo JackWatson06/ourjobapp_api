@@ -1,5 +1,5 @@
 
-import { getLocationByPlaceId } from "infa/GoogleApiAdaptor";
+import { getLocationByPlaceId } from "infra/GoogleApiAdaptor";
 import { Schema } from "db/DatabaseSchema";
 
 import Location from "../entities/Location";
