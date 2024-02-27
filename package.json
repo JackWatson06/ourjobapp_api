@@ -80,7 +80,7 @@
   },
   "_moduleAliases": {
     "db": "src/core/db",
-    "infa": "src/core/infa",
+    "infra": "src/core/infra",
     "notify": "src/core/notify",
     "payment": "src/core/payment",
     "template": "src/core/template"

@@ -8,7 +8,7 @@
 import { Notification } from "notify/Notification";
 import {Email} from "notify/messages/Email";
 
-import fs from "infa/FileSystemAdaptor";
+import fs from "infra/FileSystemAdaptor";
 
 import CachedEmail from "../entities/CachedEmail";
 import * as CachedEmailMapper from "../mappers/CachedEmailMapper";

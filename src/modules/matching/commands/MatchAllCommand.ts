@@ -10,7 +10,7 @@ import Batch from "../entities/Batch";
 import CandidateEmail from "../entities/CandidateEmail";
 
 // Core Dependencies
-import fs from "infa/FileSystemAdaptor";
+import fs from "infra/FileSystemAdaptor";
 import {Notification} from "notify/Notification";
 import {Email} from "notify/messages/Email";
 import { HandlebarsAdaptor } from "template/HandlebarsAdaptor";

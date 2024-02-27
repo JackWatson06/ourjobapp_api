@@ -15,7 +15,7 @@ import { Signup } from "../entities/Signup";
 // External Dependencies
 import { Notification } from "notify/Notification";
 import { HandlebarsAdaptor } from "template/HandlebarsAdaptor";
-import fs from "infa/FileSystemAdaptor";
+import fs from "infra/FileSystemAdaptor";
 import express from "express";
 
 /**
