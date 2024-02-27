@@ -5,7 +5,7 @@
  * adaptor has a built in cache to prevent from querying against the API multiple times. We store this cache in MongoDB
  */
 import { Schema } from "db/DatabaseSchema";
-import { getLocationByPlaceId } from "infa/GoogleApiAdaptor";
+import { getLocationByPlaceId } from "infra/GoogleApiAdaptor";
 
 import { Address } from "../entities/Address";
 

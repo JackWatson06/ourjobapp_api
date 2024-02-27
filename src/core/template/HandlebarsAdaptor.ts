@@ -7,7 +7,7 @@
 
 import { ITemplate } from "./ITemplate";
 
-import fs from "infa/FileSystemAdaptor";
+import fs from "infra/FileSystemAdaptor";
 import Handlebars from "handlebars";
 
 export class HandlebarsAdaptor implements ITemplate

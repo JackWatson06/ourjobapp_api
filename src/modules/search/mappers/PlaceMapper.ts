@@ -5,7 +5,7 @@
  * mapping properties. 
  */
 
-import { getPlaceByName } from "../../../core/infa/GoogleApiAdaptor";
+import { getPlaceByName } from "../../../core/infra/GoogleApiAdaptor";
 import DictionaryResult from "../entities/DictionaryResult";
 
 export async function read(name: string): Promise<Array<DictionaryResult>>

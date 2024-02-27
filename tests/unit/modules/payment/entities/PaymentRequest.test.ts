@@ -3,7 +3,7 @@ import PaymentRequest from "modules/payment/entities/PaymentRequest";
 import { PaymentCreateResponse } from "payment/PaymentI";
 import PayPalAdaptor from "payment/PayPalAdaptor";
 
-jest.mock("infa/PayPalAdaptor");
+jest.mock("payment/PayPalAdaptor");
 
 test("can hire employee", () => {
 

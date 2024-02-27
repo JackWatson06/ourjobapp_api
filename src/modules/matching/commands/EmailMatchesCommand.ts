@@ -5,10 +5,10 @@
  * then send out the results every morning around 9.
  */
 
-import {EmailNotification} from "notify/EmailNotification";
+import { Notification } from "notify/Notification";
 import {Email} from "notify/messages/Email";
 
-import fs from "infa/FileSystemAdaptor";
+import fs from "infra/FileSystemAdaptor";
 
 import CachedEmail from "../entities/CachedEmail";
 import * as CachedEmailMapper from "../mappers/CachedEmailMapper";
@@ -18,7 +18,7 @@ import * as CachedEmailMapper from "../mappers/CachedEmailMapper";
  */
 export default async function exec()
 {   
-    const notify: EmailNotification = new EmailNotification();
+    const notify: Notification = new Notification();
 
     // Get latest batch
     const cachedEmails: Array<CachedEmail> = await CachedEmailMapper.read();

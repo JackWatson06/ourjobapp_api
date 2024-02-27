@@ -4,7 +4,7 @@
  * Purpose: This class is in charge of mapping a regular document to the persistance layer.
  */
 
-import fs from "infa/FileSystemAdaptor";
+import fs from "infra/FileSystemAdaptor";
 import { collections, ObjectId } from "db/MongoDb";
 import { Constants } from "db/Constants";
 
