@@ -1,6 +1,6 @@
 {
   "name": "ourjobapp_api",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "This project contains the backend data processing, storing mechanisms, and logic for the OurJob.App application.",
   "main": "index.js",
   "scripts": {

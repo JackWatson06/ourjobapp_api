@@ -5,6 +5,10 @@ candidates together using advanced algorithms. This repository allows several di
 including signup and verification for candidates and employers. Additionally, it handles
 emailing every morning with matches found for the employer.
 
+## Videos and Screenshots
+View the frontend repository for screenshots and videos!
+[OurJobApp Frontend](https://github.com/JackWatson06/ourjobapp)
+
 ## Technical Details
 Written in _TypeScript_, this project uses several different technologies. We use _MongoDB_ for the
 database, _Express_ for the web server, and _Jest_ for our testing engine. We'll go into each
