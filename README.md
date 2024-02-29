@@ -5,7 +5,7 @@ candidates together using advanced algorithms. This repository allows several di
 including signup and verification for candidates and employers. Additionally, it handles
 emailing every morning with matches found for the employer.
 
-## Video/Screenshots
+## Videos and Screenshots
 View the frontend repository for screenshots and videos!
 [OurJobApp Frontend](https://github.com/JackWatson06/ourjobapp)
 
