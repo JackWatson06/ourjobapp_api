@@ -2,8 +2,6 @@ import Affiliate from "modules/payment/entities/Affiliate";
 import Identification from "modules/payment/entities/Identification";
 import Charity from "modules/payment/entities/Charity";
 
-
-// Were only able to link
 test("test you can only set an affiliate on time", () => {
 
     const identity: Identification = new Identification("111-111-1111", "EFEFefefEFEFefefEFEFefef");

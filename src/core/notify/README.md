@@ -24,6 +24,7 @@ We use _Message Bird_ to deliver text messages for user verification. When runni
 mode you can view the responses from the Message Bird SDK by viewing the _ourjobapp\_api\_node_ 
 docker container log output. This will let you know the verification code so you can verify the new 
 account on signup.
+- [Message Bird Login Page](https://dashboard.messagebird.com/en-us/login)
 - [Message Bird Developer Documents](https://developers.messagebird.com)
 
 ### Environment Settings

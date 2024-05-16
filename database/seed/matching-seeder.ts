@@ -1,8 +1,6 @@
-
 import {collections, toObjectId, ObjectId, now} from "db/MongoDb";
 import {Constants}   from "db/Constants";
 import {Schema}      from "db/DatabaseSchema";
-
 
 async function findConstant(collection: string, search: string): Promise<ObjectId>
 {
@@ -20,10 +18,10 @@ export default async function exec()
     const austrailiaId: ObjectId = await findConstant( "countries", "Australia" );
 
     // Job Groups
-    const aerspaceEngineersId: ObjectId = await findConstant( "jobGroups", "Aerospace Engineers" );
-    const graphicDesignerId: ObjectId   = await findConstant( "jobGroups", "Graphic Designers" );
-    const financialAnalystId: ObjectId  = await findConstant( "jobGroups", "Financial Analysts" );
-    const financialManagerId: ObjectId  = await findConstant( "jobGroups", "Financial Managers" );
+    const aerspaceEngineersId: ObjectId = await findConstant( "job_groups", "Aerospace Engineers" );
+    const graphicDesignerId: ObjectId   = await findConstant( "job_groups", "Graphic Designers" );
+    const financialAnalystId: ObjectId  = await findConstant( "job_groups", "Financial Analysts" );
+    const financialManagerId: ObjectId  = await findConstant( "job_groups", "Financial Managers" );
 
     // Jobs
     const aircraftEngineer: ObjectId    = await findConstant( "jobs", "Aircraft Engineers" );

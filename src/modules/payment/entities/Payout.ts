@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/5/2021
- * Purpose: This class is in charge of paying the affiliate their due dilligance based on a successful payment.
+ * This class is in charge of paying the affiliate their due dilligance based on a successful payment.
  */
 import PaymentPlan from "./PaymentPlan";
 
@@ -10,22 +8,11 @@ import Donation from "./Donation";
 
 export default class Payout
 {
-    // The reward to the affilaite assoicated with this payout.
     private reward: Reward;
-
-    // The donation associated with this payout.
     private donation: Donation;
-
-    // The number associated with the batch of payouts that we sent out to other people.
     private batchId: string
-
-    // Was this payout successfully sent?
     private success: boolean;
-
-    // Did this payout have an error when we tried to send?
     private error: boolean;
-
-    // Get the data that we sent over the payout.
     private sentAt: number;
 
     constructor(reward: Reward, donation: Donation)
@@ -56,7 +43,6 @@ export default class Payout
         this.error = true;
     }
 
-    // === GETTERS ===
     public getSuccess(): boolean
     {
         return this.success;

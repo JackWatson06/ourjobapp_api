@@ -9,16 +9,9 @@ import PaymentPlan from "./PaymentPlan";
 
 export default class PaymentRequest
 {   
-    // Person who is hiring an employee
     private employerId: string;
-
-    // Person who is being hired
     private employeeId: string;
-
-    // Payment Identifier for this payment
     private paymentId: string;
-
-    // The redirect that we will send back to the user who is trying to pay.
     private redirect: string;
 
     constructor(employerId: string, employeeId: string)
@@ -47,7 +40,6 @@ export default class PaymentRequest
         }
     }
 
-    // === GETTERS ===
     public getEmployerId() : string
     {
         return this.employerId;

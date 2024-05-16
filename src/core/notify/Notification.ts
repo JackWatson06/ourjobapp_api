@@ -1,8 +1,5 @@
-
 /**
- * Original Author: Jack Watson
- * Created Date: 11/26/2021
- * Purpose: This class serves to execute notifications against our current implementations of the notification services.
+ * This class serves to execute notifications against our current implementations of the notification services.
  */
 
 import { Email } from "./messages/Email";

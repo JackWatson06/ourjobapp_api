@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 5/11/2021
- * Purpose: This file serves to map the payment aggregate root to the database so that we can keep records of all the payments
+ * This file serves to map the payment aggregate root to the database so that we can keep records of all the payments
  * that are moving through out system.
  */
 
@@ -16,11 +14,11 @@ import Identification from "../entities/Identification";
 import { ObjectId } from "mongodb";
 
 type UpdateQuery = {
-    success     : boolean, // State the payment is in.
-    error       : boolean, // State the payment is in.
+    success     : boolean,
+    error       : boolean,
     canceled    : boolean,
 
-    executed_at ?: number, // Time the payment was started from the paypal redirect
+    executed_at ?: number,
     canceled_at ?: number
 }
 
@@ -113,11 +111,11 @@ export async function read( paymentId: string ): Promise<Payment|null>
 export async function update( payment: Payment ): Promise<boolean>
 {
     const updatePayment: UpdateQuery = {
-        success     : payment.getSuccess(), // State the payment is in.
-        error       : payment.getError(), // State the payment is in.
+        success     : payment.getSuccess(),
+        error       : payment.getError(),
         canceled    : payment.getCanceled(),
 
-        executed_at  : payment.getExecutedAt(), // Time the payment was started from the paypal redirect
+        executed_at  : payment.getExecutedAt(),
         canceled_at  : payment.getCanceledAt()
     }
 

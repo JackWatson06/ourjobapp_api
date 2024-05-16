@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/4/2021
- * Purpose: This class represents the aggregate root for the Payment class. A payment is simply some object that has a 
+ * This class represents the aggregate root for the Payment class. A payment is simply some object that has a 
  * id which represents the current payment. This class will also hold all of the affiliates tied to the payment. As well
  * as any payouts that we are going to be sending out of the system.
  */
@@ -14,10 +12,7 @@ export default class Payment
 {
     private id: string;
 
-    // List of affiliates who will get paid on a successful payment.
     private affiliates: Array<Affiliate>;
-
-    // List of payouts that this class has.
     private payouts: Array<Payout>;
 
     // These represent different stages of a statemachine.
@@ -132,8 +127,6 @@ export default class Payment
         }
     }
 
-    // === GETTERS ===
-
     public getId(): string
     {
         return this.id;
@@ -149,8 +142,6 @@ export default class Payment
         return this.payouts;
     }
 
-
-    // State stuff below
     public getSuccess(): boolean
     {
         return this.success;

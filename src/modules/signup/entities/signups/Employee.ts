@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/28/2021
- * Purpose: This class defines a new process for an employee to signup into our system.
+ * This class defines a new process for an employee to signup into our system.
  */
 
 import { Token } from "../Token";

@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/2/2021
- * Purpose: This file maps the current in memory batch entity to the persistance of the batch entity wherever (currently
+ * This file maps the current in memory batch entity to the persistance of the batch entity wherever (currently
  * MongoDb)
  */
 import { collections, toObjectId, now } from "db/MongoDb";

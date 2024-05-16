@@ -1,11 +1,8 @@
 /**
- * Original Author: Jack Watson + Mark Chang (thx!)
- * Created Date: 11/3/2021
- * Purpose: This matching class holds the algorithm behind how we match the employer with the employee. We seek to improve this
+ * This matching class holds the algorithm behind how we match the employer with the employee. We seek to improve this
  * in the further seeing as it is quite archaic in it's current implementation. 
  */
 
-// Entities (Damn there a lot of entities. I guess this is quite the operation here.)
 import Location from "../entities/Location";
 import Batch from "../entities/Batch";
 import BatchMatch from "../entities/BatchMatch";
@@ -15,12 +12,8 @@ import Employer from "../entities/Employer";
 import Industry from "../entities/Industry";
 import CountryCode from "../entities/CountryCode";
 
-// Persistance Layer items
 import * as EmployeeMapper from "../mappers/EmployeeMapper";
-
-// Constants imports
 import { Constants } from "db/Constants";
-
 
 /**
  * Return a batch match which will list all of the employees which match that employer on the given batch.
@@ -40,7 +33,6 @@ export async function match(employer: Employer, batch?: Batch): Promise<BatchMat
         
         const match: Match|undefined = await createMatchIfExists(employer, employee);
 
-        // Zero is a no-no we do not want to match the employer with the employee with a zero... most matches will have a zero.
         if( match != undefined )
         {   
             newMatch.integrateMatch(match);
@@ -50,12 +42,7 @@ export async function match(employer: Employer, batch?: Batch): Promise<BatchMat
     return newMatch;
 }
 
-
-// Take in employee id & employer id:
 async function createMatchIfExists(employer: Employer, employee: Employee): Promise<Match|undefined> {
-
-    // return new Match(employee, new Job("507f1f77bcf86cd799439011", "TEsting", new Industry("Fatty")), 30);
-
     // ==== Match the experience ====
     if (!(employer.experience.includes( employee.experience)))
     {
@@ -80,8 +67,7 @@ async function createMatchIfExists(employer: Employer, employee: Employee): Prom
     } 
 
 
-    // ==== Match the jobs ====
-    
+    // ==== Match the jobs ====    
     // Determine if the job type matches that of the employers group.
     for(const desiredJob of employee.jobs)
     {
@@ -116,7 +102,6 @@ async function locationScore(employee: Employee, employer: Employer): Promise<nu
     const employeeAuthorized: Array<CountryCode> = employee.authorized;
 
     // Authorized
-    // if( (employer.authorized) && !(employeeAuthorized.includes( employerLocation.getCountry() ) ) )
     if( (employer.authorized) && !(employeeAuthorized.some(i => i.getCountryCode() === employerLocation.getCountry().getCountryCode())) )
     {
         console.log("Failed on Authorized! Employer authorization is : " + employer.authorized + " Employee authorization is : " + employeeAuthorized + "\n");
@@ -169,7 +154,7 @@ function checkDistance(employee: Employee, employerLocation: Location, employeeL
 }
 
 /**
- * Compute distance between the location that we pass in with the 
+ * Compute distance between the location that we pass in with the coordinates.
  */
 function computeDistance(cord1: Location, cord2: Location) 
 {

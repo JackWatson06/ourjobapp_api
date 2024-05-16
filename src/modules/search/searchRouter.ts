@@ -1,8 +1,6 @@
 
 /**
- * Original Author: Jack Watson
- * Created Date: 9/27/2021
- * Purpose: The purpose of this file is to load the routes which are required to use the Search API from http.
+ * The purpose of this file is to load the routes which are required to use the Search API from http.
  * 
  * Note this search may change at some point if the boundries of this application change. For instance I could see
  * the jobs section of this being moved to the employee section. The entities should be close to where they are actually
@@ -25,7 +23,6 @@ import {employeePhone} from "./controllers/ExistingPhoneController";
 
 let searchRouter: express.Router = express.Router();
 
-// Entites we can search through to find the one that matches closely.
 searchRouter.get("/places",     indexProperty);
 searchRouter.get("/charities",  indexCharity);
 searchRouter.get("/jobs",       indexJob);

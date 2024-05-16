@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/1/2021
- * Purpose: A location in our systems represents a mapping between a place id and the corresponding lat, long, and country data.
+ * A location in our systems represents a mapping between a place id and the corresponding lat, long, and country data.
  */
 
 import CountryCode from "./CountryCode";
@@ -28,7 +26,6 @@ export default class Location
         this.address = address;
     }
 
-    // === GETTERS ===
     public getLat(): number
     {
         return this.lat;

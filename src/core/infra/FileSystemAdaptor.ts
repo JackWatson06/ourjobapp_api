@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/3/2021
- * Purpose: This class serves as a wrapper to the fs dependency in node.js. I was debating having multiple methods to 
+ * This class serves as a wrapper to the fs dependency in node.js. I was debating having multiple methods to 
  * make it very strict which folders you can write to. But I have decided that it would be best to simply just write to
  * the different elements based on the parameter you pass in. So you pick from the folders that have read / write access
  * then you can read and write to those select folders.

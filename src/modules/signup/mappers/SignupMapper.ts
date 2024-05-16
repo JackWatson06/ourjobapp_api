@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/28/2021
- * Purpose: This file will map an active signup into the database.
+ * This file will map an active signup into the database.
  */
 import { collections, now, ObjectId, toObjectId } from "db/MongoDb";
 import { Constants } from "db/Constants";

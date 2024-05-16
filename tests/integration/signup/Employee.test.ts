@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/30/2021
- * Purpose: Test our signups for employeers to make sure they are working.
+ * Test our signups for employeers to make sure they are working.
  */
 
 import request       from "supertest";

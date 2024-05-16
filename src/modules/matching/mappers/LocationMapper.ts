@@ -1,4 +1,3 @@
-
 import { getLocationByPlaceId } from "infra/GoogleApiAdaptor";
 import { Schema } from "db/DatabaseSchema";
 

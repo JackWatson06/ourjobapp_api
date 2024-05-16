@@ -1,8 +1,7 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/3/2021
- * Purpose: This class will map the employee to our own internal memory represneation of an employee inside this entity framework.
+ * This class will map the employee to our own internal memory represneation of an employee inside this entity framework.
  */
+
 import { collections } from "db/MongoDb";
 import { Schema } from "db/DatabaseSchema";
 

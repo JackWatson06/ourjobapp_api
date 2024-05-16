@@ -1,8 +1,7 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/28/2021
- * Purpose: This class defines a new process for an affilaite to signup into our system.
+ * This class defines a new process for an affilaite to signup into our system.
  */
+
 import { Token } from "../Token";
 import { Verifiable } from "./Verifiable";
 import { Contractable } from "./Contractable";
@@ -21,7 +20,6 @@ export class Affiliate implements Verifiable, Contractable
         this.data = data;
     }   
 
-    // === GETTERS ===
     public getData(): NewAffiliate
     {
         return this.data;

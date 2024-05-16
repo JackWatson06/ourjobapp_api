@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/28/2021
- * Purpose: We use the handlbars library to interpret, and render our templates. So this class here represents that adaptor
+ * We use the handlbars library to interpret, and render our templates. So this class here represents that adaptor
  * pattern for the handlebars library.
  */
 

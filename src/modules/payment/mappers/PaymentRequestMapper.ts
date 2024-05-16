@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 5/11/2021
- * Purpose: This file persists the PaymentRequest aggregate root to the database for us to hopefully further process
+ * This file persists the PaymentRequest aggregate root to the database for us to hopefully further process
  * in the future.
  */
 
@@ -18,13 +16,13 @@ export async function create( paymentRequest: PaymentRequest ): Promise<boolean>
         employer_id : toObjectId( paymentRequest.getEmployerId() ),
         employee_id : toObjectId( paymentRequest.getEmployeeId() ),
     
-        paypal_id   : paymentRequest.getPaymentId(), // Information amount the actual payment.
+        paypal_id   : paymentRequest.getPaymentId(),
         currency    : paymentRequest.getCurrency(),
         amount      : paymentRequest.getAmount(),
     
-        success     : false, // State the payment is in.
-        error       : false, // State the payment is in.
+        success     : false,
+        error       : false,
     
-        started_at  : now(), // Time the payment was started from the paypal redirect
+        started_at  : now(),
     })).acknowledged;
 }

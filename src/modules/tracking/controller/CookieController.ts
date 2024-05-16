@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 10/29/2021
- * Purpose: The frontend needs a way to determine which affiliate link the user clicked on. Here we get the affiliate cookie
+ * The frontend needs a way to determine which affiliate link the user clicked on. Here we get the affiliate cookie
  * entity from the database and use that to return a response with the affiliates identifiers.
  */
 

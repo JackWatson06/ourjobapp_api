@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 10/19/2021
- * Purpose: This interface was riffed from stackoverflow. Essentially I was having type issues with the envionrment variables. 
+ * This interface was riffed from stackoverflow. Essentially I was having type issues with the envionrment variables. 
  * Strictly due to how process env works. So we have to declare our own interface in order for certain types to be used 
  * throghout the applciations
  */

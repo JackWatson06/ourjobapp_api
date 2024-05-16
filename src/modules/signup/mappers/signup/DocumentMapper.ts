@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/28/2021
- * Purpose: This class is in charge of mapping a regular document to the persistance layer.
+ * This class is in charge of mapping a regular document to the persistance layer.
  */
 
 import fs from "infra/FileSystemAdaptor";
