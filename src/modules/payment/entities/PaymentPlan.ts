@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/4/2021
- * Purpose: The payment plan represents the plan that we have to pay out affiliates as well as our plan to pay employers.
+ * The payment plan represents the plan that we have to pay out affiliates as well as our plan to pay employers.
  */
 
 export default class PaymentPlan

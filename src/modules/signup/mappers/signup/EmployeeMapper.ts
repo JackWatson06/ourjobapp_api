@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/28/2021
- * Purpose: This file is in charge of mapping the signup type for employees. All of the signup mappers use the same table
+ * This file is in charge of mapping the signup type for employees. All of the signup mappers use the same table
  * to map out the inheritance structure that.
  */
 import { collections, ObjectId } from "db/MongoDb";

@@ -10,8 +10,7 @@ export default class Reward
         this.phone = phone;
         this.affiliateId = affiliateId;
     }
-
-    // === GETTERS ===
+    
     public getAmount(): number
     {
         return this.amount;

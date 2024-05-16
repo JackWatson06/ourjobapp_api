@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/29/2021
- * Purpose: This mapper handles mappping from our persistance layer to our domain model.
+ * This mapper handles mappping from our persistance layer to our domain model.
  */
 
 import { collections, now, ObjectId, toObjectId, toObjectIds } from "db/MongoDb";

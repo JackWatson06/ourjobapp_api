@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/5/2021
- * Purpose: This class serves to handle interactions with the paypal API infastrucutre. We dependo on a interface just
+ * This class serves to handle interactions with the paypal API infastrucutre. We dependo on a interface just
  * in case we will want to change this in the future. This acts as an Adaptor pattern.
  * 
  * PayPal Hanldes Payments the following way:

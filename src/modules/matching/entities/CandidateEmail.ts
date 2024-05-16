@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/3/2021
- * Purpose: The candidate email represents the email that we recieve when we are looking for candidates.
+ * The candidate email represents the email that we recieve when we are looking for candidates.
  */
 
 import { Email } from "notify/messages/Email";
@@ -9,7 +7,7 @@ import { Notification } from "notify/Notification";
 import { ITemplate } from "template/ITemplate";
 
 import BatchMatch from "./BatchMatch";
-import * as BatchMatchView from "../views/BatchMatchView"; // Not a huge fan of using view here but it is what we got.
+import * as BatchMatchView from "../views/BatchMatchView";
 
 
 export default class CandidateEmail
@@ -74,7 +72,6 @@ export default class CandidateEmail
         this.cacheIdentifier = token;
     }
 
-    // === GETTERS ===
     public getCacheIdentifier(): string
     {
         return this.cacheIdentifier;

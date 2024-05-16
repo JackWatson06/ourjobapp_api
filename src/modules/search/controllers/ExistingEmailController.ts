@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/1/2021
- * Purpose: This class servers to search through existing emails on different entities in our system. Currently the employer entity
+ * This class servers to search through existing emails on different entities in our system. Currently the employer entity
  * is being searched.
  */
 

@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 9/27/2021
- * Purpose: The purpose of this function is to apply middleware to an instance of an application. Specificallyh this
+ * The purpose of this function is to apply middleware to an instance of an application. Specificallyh this
  * middleware is built around the OurJobApp use case. We are using several frameworks in order to protect, and improve
  * the application.
  */

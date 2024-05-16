@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/29/2021
- * Purpose: This file tests our implementation of the verification service. We want to make sure it matches our predicted
+ * This file tests our implementation of the verification service. We want to make sure it matches our predicted
  * use case of the verification entity.
  */
 

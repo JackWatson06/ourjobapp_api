@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/28/2021
- * Purpose: This class handles the idea of a generic signup for a non specific entity. Right now some examples of a couple
+ * This class handles the idea of a generic signup for a non specific entity. Right now some examples of a couple
  * signups we have are a affiliate, employer, and employee. The base requirement for a signupable entity would include
  * the ability to be verified. Everything else such as payment, and contracting are supplemental
  */
@@ -98,7 +96,6 @@ export class Signup
         return false;
     }
 
-    // === GETTERS ===
     public getEntity(): Verifiable
     {
         return this.entity;

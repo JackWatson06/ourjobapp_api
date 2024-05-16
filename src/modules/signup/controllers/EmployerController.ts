@@ -1,23 +1,14 @@
 /**
- * Original Author: Jack Watson
- * Created At: 11/28/2021
- * Purpose: This class will store a new employee using our signup system that we have in place.
+ * This class will store a new employee using our signup system that we have in place.
  * 
  */
-// Data Mappers
 import { create } from "../mappers/SignupMapper";
 import { findAddress } from "../mappers/AddressMapper";
-
-// Repos
 import { getId } from "../repositories/SignupRepository";
-
-// Entities
 import { Signup }    from "../entities/Signup";
 import { Employer }  from "../entities/signups/Employer";
 import { Address }   from "../entities/Address";
 import { Token }     from "../entities/Token";
-
-// Validator
 import { NewEmployer, schema } from "../validators/NewEmployerValidator";
 
 // External dependencies
@@ -33,14 +24,11 @@ import Ajv from "ajv";
  */
 export async function store(req: express.Request, res: express.Response)
 {
-    // Validate that the input coming on the request would be able to create a employee
     const ajv = new Ajv();
     const valid = ajv.compile(schema);
 
     const data: NewEmployer = req.body;
         
-
-    // Create the employee domain entity.
     if( valid(data) )
     {   
         const template: HandlebarsAdaptor = new HandlebarsAdaptor();

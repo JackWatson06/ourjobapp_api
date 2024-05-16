@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/6/2021
- * Purpose: This class simply validates a resume upload.
+ * This class simply validates a resume upload.
  */
 
 import * as fileUpload from "express-fileupload";

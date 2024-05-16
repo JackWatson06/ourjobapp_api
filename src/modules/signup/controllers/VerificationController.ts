@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/29/2021
- * Purpose: This file will allow us to control the verificiation process which can be somewhat involved in terms of the necessary
+ * This file will allow us to control the verificiation process which can be somewhat involved in terms of the necessary
  * steps that must be taken. This simplifies the design into a single file where in the past to much emphasis was gartnered towards
  * the invididual singup type controllers.
  */

@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/28/2021
- * Purpose: This class holds the concept of a document. A document could be a contract, a resume, or even a photo in the future.
+ * This class holds the concept of a document. A document could be a contract, a resume, or even a photo in the future.
  * We left it generic so we can easily extend it in the future.... see the Types constants below.
  */
 
@@ -20,7 +18,6 @@ export class LocalDocument {
         this.path = path;
     }
 
-    // === GETTERS ===
     public getPurpose(): Purpose
     {
         return this.purpose;

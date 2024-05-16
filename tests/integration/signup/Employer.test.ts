@@ -43,7 +43,7 @@ describe("employer", () => {
         // === Setup ===
         const employerUpload: EmployerUpload = {
             fname        : "Frodo",
-            lname        : "Baggans",
+            lname        : "Baggins",
             position     : "Manager",
             company_name : "Bagend",
             place_id     : "PLACEID",
@@ -86,7 +86,7 @@ describe("employer", () => {
         // === Setup ===
         const employerUpload: EmployerUpload = {
             fname        : "Frodo",
-            lname        : "Baggans",
+            lname        : "Baggins",
             position     : "Manager",
             company_name : "Bagend",
             place_id     : "HILL12345332",

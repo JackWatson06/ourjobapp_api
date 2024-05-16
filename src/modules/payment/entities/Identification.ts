@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/4/2021
- * Purpose: This class is a value object class to identify a user.
+ * This class is a value object class to identify a user.
  */
 
 export default class Identification
@@ -15,7 +13,6 @@ export default class Identification
         this.phone = phone;
     }
 
-    // === GETTERS ===
     public getId(): string
     {
         return this.id;

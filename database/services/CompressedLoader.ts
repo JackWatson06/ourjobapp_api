@@ -1,9 +1,6 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 10/3/2021
- * Purpose: The purpose of this class is to allow us to load in data from some generic raw json file into a collection
- * of our choosing. The raw file should already be formated to instantely be inserted into the database.
- * 
+ * The purpose of this class is to allow us to load in data from some generic raw json file into a collection
+ * of our choosing. The raw file should already be formated to instantely be inserted into the database. 
  */
 
 import { collections } from "db/MongoDb";

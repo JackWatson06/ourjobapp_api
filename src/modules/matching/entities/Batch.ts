@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/2/2021
- * Purpose: A batch represents a time when we matched all of the employers with their coresponding employees.
+ * A batch represents a time when we matched all of the employers with their coresponding employees.
  */
 
 export default class Batch

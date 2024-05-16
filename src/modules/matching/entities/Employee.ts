@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 3/11/2021
- * Purpose: We need to load up the employee as an in memory object to reduce database dependencies which we D0 NOT need right
+ * We need to load up the employee as an in memory object to reduce database dependencies which we D0 NOT need right
  * now seeing as how we are growing to become bigger. This is a good thing.
  */
 

@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/4/2021
- * Purpose: This class controls the payment process. We use paypal currently to pay the people who are in charge of the
+ * This class controls the payment process. We use paypal currently to pay the people who are in charge of the
  * affiliates, as well as paying the employers.
  * 
  * Nice I am pretty happy with this file!
@@ -17,7 +15,6 @@ import * as PaymentMapper from "./mappers/PaymentMapper";
 
 /**
  * Start a new payment that the employer triggered to hire an employee.
- * 
  * 
  * Couple things to know about this route. We are using the query parameters instead of having this be a post route becuase
  * this route will be triggered from the EMAIL. That gets sent out to the employer. So we don't have the ability to post

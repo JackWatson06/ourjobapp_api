@@ -1,8 +1,7 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/28/2021
- * Purpose: This file will map out an employer to the signup database.
+ * This file will map out an employer to the signup database.
  */
+
 import { collections, ObjectId, toObjectId } from "db/MongoDb";
 import { Schema } from "db/DatabaseSchema";
 import { Constants } from "db/Constants";
