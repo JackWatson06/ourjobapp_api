@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/3/2021
- * Purpose: This class takes a batch match and will return the view that we will show during the email.
+ * This class takes a batch match and will return the view that we will show during the email.
  */
 
  import Location from "../entities/Location";
@@ -108,8 +106,6 @@ export function transform(batchMatch: BatchMatch): BatchMatchView
                 experience  : experienceMapping[match.getEmployee().experience],
                 where       : whereMapping[match.getEmployee().experience],
                 commitment  : commitmentMapping[match.getEmployee().experience],
-
-                // Links also need the employees additional information
                 resume      : "",
                 paymentLink : `${process.env.DOMAIN}/api/v1/payment/start?epi=${batchMatch.getEmployer().id}&emi=${match.getEmployee().id}`
             }

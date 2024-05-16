@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/29/2021
- * Purpose: This file tests the token entity. The token entity is pretty simple luckily and does not have any
+ * This file tests the token entity. The token entity is pretty simple luckily and does not have any
  * dependencies on other areas of the code.
  */
 

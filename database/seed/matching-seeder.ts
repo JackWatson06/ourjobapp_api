@@ -1,8 +1,6 @@
-
 import {collections, toObjectId, ObjectId, now} from "db/MongoDb";
 import {Constants}   from "db/Constants";
 import {Schema}      from "db/DatabaseSchema";
-
 
 async function findConstant(collection: string, search: string): Promise<ObjectId>
 {

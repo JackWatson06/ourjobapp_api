@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/28/2021
- * Purpose: This test file tests our implementation of the signup entity in our signup system.
+ * This test file tests our implementation of the signup entity in our signup system.
  */
 
 import { Signup } from "modules/signup/entities/Signup";

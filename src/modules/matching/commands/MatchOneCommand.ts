@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/7/2021
- * Purpose: This file will notify a single employer of any matches that they got on signup. We will only be calling this class
+ * This file will notify a single employer of any matches that they got on signup. We will only be calling this class
  * once during the signup process because we run matching on employer signup.
  */
 

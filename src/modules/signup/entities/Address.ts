@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 7/11/2021
- * Purpose: This value object holds the address of the employer. 
+ * This value object holds the address of the employer. 
  */
 
 export class Address
@@ -13,9 +11,6 @@ export class Address
         this.address = address;
     }
 
-    /**
-     * Get the address for the current employer
-     */
     public getAddress(): string
     {
         return this.address;

@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created At: 11/29/2021
- * Purpose: This class holds the authetnication behavior for authenticating someone who is trying to use our system.
+ * This class holds the authetnication behavior for authenticating someone who is trying to use our system.
  */
 
 export class Proof {
@@ -42,7 +40,6 @@ export class Proof {
         return this.verified;
     }
 
-    // === Getters ===
     public getVerified(): boolean
     {
         return this.verified

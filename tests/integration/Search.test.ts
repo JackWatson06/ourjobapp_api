@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 12/1/2021
- * Purpose: This file holds the tests that we run to confirm that our searching module works. The whole point of the searching module
+ * This file holds the tests that we run to confirm that our searching module works. The whole point of the searching module
  * is to supply necessary lookups that the front-end needs during the signup process.
  */
 

@@ -1,16 +1,3 @@
-/**
- * How should we test that a pyament can only be used up once? If we pass in another payment id we should not 
- * be able to even get the payment... thats almost like permissions tbh. Maybe thats an integration test.
- * 
- * What also stops an individual from sending a post with a correct employeeId and employerId to the /payment
- * route then they also after they get redirected to the payment screen send a request to the success endpoint.
- * We need to generate some token internally. Maybe we need to generate a token internally then see if the paypayl
- * API token matches. Or JWT token might work for that?
- * 
- * 
- * If error and success are both false than that means the payout has yet to be sent.
- * 
- */
 import Payment from "modules/payment/entities/Payment";
 import Affiliate from "modules/payment/entities/Affiliate";
 import Identification from "modules/payment/entities/Identification";

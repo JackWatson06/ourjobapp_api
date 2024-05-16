@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/28/2021
- * Purpose: This class will give the signup system it's desired type for signup so we know who the individual is when they
+ * This class will give the signup system it's desired type for signup so we know who the individual is when they
  * are signing up into our system.
  * 
  * I don't like how we handle the verification here. We are passing to many variables. There is clearly an abstraction that I am

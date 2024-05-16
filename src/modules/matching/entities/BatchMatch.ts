@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/2/2021
- * Purpose: This module deviates from the standard web application framework. Technically the Batch should be the aggregate
+ * This module deviates from the standard web application framework. Technically the Batch should be the aggregate
  * root, and a match should be under neath the batch if we are doing a batch map. But we can't afford to store ALL of the matches
  * under a batch since we do not know how many matches there will be. Maybe the batch class dependa on the repo of all the matches?
  * That may make sense. Even then though a repo should only have a single aggregate root that it maps to. This is fine the way it
@@ -30,7 +28,7 @@ export default class BatchMatch
     }
 
     /**
-     * Inser the employee id in correct spot. Record the scores that we have as well.
+     * Insert the employee id in correct spot. Record the scores that we have as well.
      * @param employeeId Employee we are trying to put in this match.
      * @param score The score that the employee got for the match with the current employer in this class
      */
@@ -55,8 +53,6 @@ export default class BatchMatch
 
         this.matches = this.matches.slice(0, this.MATCH_LIMIT);
     }
-
-    // === GETTERS ===
 
     public getBatchId(): string|undefined
     {

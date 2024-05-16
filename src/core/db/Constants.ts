@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/28/2021
- * Purpose: This file holds constants which we use in the database. Hence it's location in the database infastructure folder.
+ * This file holds constants which we use in the database. Hence it's location in the database infastructure folder.
  */
 
 export namespace Constants {

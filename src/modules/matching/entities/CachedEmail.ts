@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/3/2021
- * Purpose: The candidate email represents the email that we recieve when we are looking for candidates.
+ * The candidate email represents the email that we recieve when we are looking for candidates.
  */
 
 import {Notification} from "notify/Notification";
@@ -44,7 +42,6 @@ export default class CacheEmail
         }
     }
 
-    // === GETTERS ===
     public getId(): string
     {
         return this.id;

@@ -1,7 +1,5 @@
 import * as BatchRepository from "../repositories/BatchRepository";
-
 import * as MatchingService from "../services/Matching";
-
 import * as BatchMapper from "../mappers/BatchMapper";
 import * as EmployerMapper from "../mappers/EmployerMapper";
 import * as CandidateEmailMapper from "../mappers/CandidateEmailMapper";
@@ -9,13 +7,10 @@ import * as CandidateEmailMapper from "../mappers/CandidateEmailMapper";
 import Batch from "../entities/Batch";
 import CandidateEmail from "../entities/CandidateEmail";
 
-// Core Dependencies
 import fs from "infra/FileSystemAdaptor";
 import {Notification} from "notify/Notification";
 import {Email} from "notify/messages/Email";
 import { HandlebarsAdaptor } from "template/HandlebarsAdaptor";
-
-
 
 /**
  * Execute the matching algorithm in our application. Prepare the matches to later be sent out through a seperate algorithm

@@ -1,18 +1,12 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/28/2021
- * Purpose: This file will handle interactions on the signup entity. Interactions such as reading a contract if we have a contract
+ * This file will handle interactions on the signup entity. Interactions such as reading a contract if we have a contract
  * attached to the signup, or resending the verification message for a second attempt if the client did not recieve the original 
  * message.
  */
 
-// Mapper
 import { find, update } from "../mappers/SignupMapper";
-
-// Entities
 import { Signup } from "../entities/Signup";
 
-// External Dependencies
 import { Notification } from "notify/Notification";
 import { HandlebarsAdaptor } from "template/HandlebarsAdaptor";
 import fs from "infra/FileSystemAdaptor";

@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/28/2021
- * Purpose: This class defines a new process for an employee to signup into our system.
+ * This class defines a new process for an employee to signup into our system.
  */
 
 import { Token } from "../Token";
@@ -56,8 +54,6 @@ export class Employer implements Verifiable, Contractable
     {
         const today = new Date();
      
-        // Figure out what to do here.
-        // This can be abstracted out into a different entity.
         return await template.render("contracts/placement", {
             VAR_DATE_OF_AGREEMENT      : (today).toLocaleDateString("en-US", {year: 'numeric', month: 'long', day: 'numeric'}),
             VAR_PARTNER_COMPANY_NAME   : this.getData().company_name,
@@ -67,7 +63,6 @@ export class Employer implements Verifiable, Contractable
         });
     }
 
-    // === GETTERS ===
     public getData(): NewEmployer
     {
         return this.data;

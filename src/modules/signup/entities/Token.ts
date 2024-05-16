@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created At: 11/28/2021
- * Purpose: This class holds the idea of a token. A token simple represents a thing given to someone who is trying to authorize
+ * This class holds the idea of a token. A token simple represents a thing given to someone who is trying to authorize
  * into the system through some third party. In our case our token can have a secret, or an optional code. The optional code
  * would symbolize the method in which the user was authenticated by. If they have a code then that would be a phone verification.
  */
@@ -52,7 +50,6 @@ export class Token{
         this.secret = crypto.randomUUID();
     }
 
-    // === GETTERS ===    
     public getSecret(): string|undefined
     {
         return this.secret;

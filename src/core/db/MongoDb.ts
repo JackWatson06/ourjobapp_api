@@ -34,8 +34,6 @@ interface CollectionMap extends StringKeys {
 
 export let collections: CollectionMap;
 
-// This export allows us to access collections without spelling the damn string!
-
 function initializeDatabase(): void
 {
     const db: Db = client.db(process.env.MONGO_DB);

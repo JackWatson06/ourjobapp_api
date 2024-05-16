@@ -1,10 +1,7 @@
 /**
- * Original Author: Jack Watson
- * Created At: 11/4/2021
- * Purpose: This class holds the routes for the payment API that we have. Tests are located in the integration tests for the payment
+ * This class holds the routes for the payment API that we have. Tests are located in the integration tests for the payment
  * module.
  */
-
 
 import express from "express"; 
 

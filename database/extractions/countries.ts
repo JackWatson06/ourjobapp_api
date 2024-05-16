@@ -1,8 +1,7 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 9/30/2021
- * Purpose: The purpose of this script is to turn the majors xcl file that we have into a json file.
+ * The purpose of this script is to turn the majors xcl file that we have into a json file.
  */
+
 import { now } from "db/MongoDb";
 import { Schema } from "db/DatabaseSchema";
 import { titleCase } from "title-case";

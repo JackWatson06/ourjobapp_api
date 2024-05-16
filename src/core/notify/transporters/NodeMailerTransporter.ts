@@ -39,7 +39,6 @@ function createTransporter(): nodemailer.Transporter {
  */
 export async function sendEmail(email: Email)
 {   
-  // send mail with defined transport object
   return await transporter.sendMail({
     from        : `"${fromName}" <${from}>`,
     to          : email.address,

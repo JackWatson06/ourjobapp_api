@@ -1,7 +1,5 @@
 /**
- * Original Author: Jack Watson
- * Created Date: 11/29/2021
- * Purpose: This domain entity handles the verification of a entity when they try to verify themselves by passing in the correct
+ * This domain entity handles the verification of a entity when they try to verify themselves by passing in the correct
  * code.
  */
 import { Proof } from "./Proof";
@@ -31,8 +29,6 @@ export class Verification
         return this.proof.prove(secret, code);
     }
 
-
-    // === Getters === 
     public getFormData(): Form
     {
         return this.form;
